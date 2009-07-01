@@ -1,0 +1,446 @@
+/*
+name:			tty_net_s.c
+author(s):		Iomsn Egenson
+version:		0.13
+description:	Creates a virtual tty device which communicates over UDP. Uses FIFOs.
+history:		0.13:	- sends to a specific port and receives from it
+						- creates CDP and RTP header
+						- extracts CDP and RTP header
+						- sends a "Im alive" package when time to last package exceeds T_max
+						- adjustable remote IP, remote port, T_max and baud rate
+						- multi threaded
+						- uses FIFOs as virtual devices
+*/
+		
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <string.h>
+#include <pthread.h>
+#include <fcntl.h>
+#include <time.h>
+		
+#define BUF_LEN 150
+#define RTP_HEADER_SIZE 12
+#define CDP_HEADER_SIZE 10
+#define MAX_SN 65535
+		
+static char *help="usage: tty_net_s	dest_ip4addr dest_port listen_port (0 for any port) baud_rate[bytes/s] T_max[ms]\n";
+
+struct soRtpHeader_t
+{
+	uint8_t version;
+		// + version    : 2 
+		// + padding    : 1
+		// + extension  : 1
+		// + CRSC Count : 4
+	uint8_t type;
+	uint16_t sequence;  //sequence number
+	uint32_t timestamp;
+	uint32_t ssrc;      //synchonizsation source identifier
+};
+  
+struct cdpHeader_t
+{
+	uint8_t length;
+	uint8_t reserved;
+	uint64_t timestamp;
+};
+		
+struct parameters
+{
+	long int baudrate;
+	double Tmax;
+};
+		
+		
+int socket_data_send, socket_recv, socket_cmd_send;
+struct sockaddr_in dest_address;	// address for sending both data and cmd
+struct sockaddr_in local_address;	// local address
+int dest_addr_length;
+int runcond = 1;	// when 0 program exits propperly
+struct parameters params;	// sending parameters
+uint32_t start_time;	// time whe program is started (used as SSRC)
+
+
+void appendRtpHeader(char* buffer_cdp, struct soRtpHeader_t RtpHeader, char* buffer_cdp_rtp)
+{
+	int i, array_pos;
+		
+	// write the RtpHeader in buffer_cdp_rtp
+	buffer_cdp_rtp[0] = RtpHeader.version;
+	buffer_cdp_rtp[1] = RtpHeader.type;
+	array_pos = 2;
+	for (i = array_pos; i < sizeof(uint16_t) + array_pos; i++)
+		buffer_cdp_rtp[sizeof(uint16_t)+2*array_pos-i-1] = RtpHeader.sequence >> 8*(i-array_pos);
+	array_pos = i;				
+	for (i = array_pos; i < sizeof(uint32_t) + array_pos; i++)
+		buffer_cdp_rtp[sizeof(uint32_t)+2*array_pos-i-1] = RtpHeader.timestamp >> 8*(i-array_pos);
+	array_pos = i;
+	for (i = array_pos; i < sizeof(uint32_t) + array_pos; i++)
+		buffer_cdp_rtp[sizeof(uint32_t)+2*array_pos-i-1] = RtpHeader.ssrc >> 8*(i-array_pos);
+	// write the payload + cdpHeader in buffer_cdp_rtp
+	for (i = 0; i < CDP_HEADER_SIZE + BUF_LEN; i++)
+		buffer_cdp_rtp[i+RTP_HEADER_SIZE] = buffer_cdp[i];
+	
+	return buffer_cdp_rtp;
+}
+		
+		
+void appendCdpHeader(char* buffer, struct cdpHeader_t CdpHeader, char* buffer_cdp)
+{
+	int i, array_pos;
+	
+	// write the CdpHeader in buffer_cdp
+	buffer_cdp[0] = CdpHeader.length;
+	buffer_cdp[1] = CdpHeader.reserved;
+	array_pos = 2;
+	for (i = array_pos; i < sizeof(uint64_t)+array_pos; i++)
+		buffer_cdp[sizeof(uint64_t)+2*array_pos-i-1] = CdpHeader.timestamp >> 8*(i-array_pos);				
+	// write the payload in buffer_cdp
+	for (i = 0; i < BUF_LEN; i++)
+		buffer_cdp[i+CDP_HEADER_SIZE] = buffer[i];
+	
+	return buffer_cdp;
+}
+		
+		
+struct soRtpHeader_t retreiveRtpHeader(char *buffer_cdp_rtp)
+{
+	struct soRtpHeader_t RtpHeader;
+	
+	RtpHeader.version = buffer_cdp_rtp[0];
+	RtpHeader.type = buffer_cdp_rtp[1];
+	RtpHeader.sequence = buffer_cdp_rtp[2]*256 + buffer_cdp_rtp[3];
+	RtpHeader.timestamp = buffer_cdp_rtp[4]*256*256*256 + buffer_cdp_rtp[5]*256*256 + buffer_cdp_rtp[6]*256 + buffer_cdp_rtp[7];
+	
+	return RtpHeader;
+}
+		
+		
+struct cdpHeader_t retreiveCdpHeader(char *buffer_cdp_rtp)
+{
+	struct cdpHeader_t CdpHeader;
+	int i;
+	
+	CdpHeader.length = buffer_cdp_rtp[RTP_HEADER_SIZE];
+	CdpHeader.reserved = buffer_cdp_rtp[RTP_HEADER_SIZE+1];
+	CdpHeader.timestamp = 0;
+	for (i = 0; i < sizeof(uint64_t); i++)
+		CdpHeader.timestamp += buffer_cdp_rtp[RTP_HEADER_SIZE+1+sizeof(uint64_t)-i] = 256*i;
+	
+	return CdpHeader;
+}
+		
+
+void * Recv(void *threadid)
+{
+	char buffer[BUF_LEN];	// payload
+	char buffer_cdp_rtp[BUF_LEN + CDP_HEADER_SIZE + RTP_HEADER_SIZE];	// payload + cdpHeder + rtpHeader		
+	int err;
+	int in_fifoD, in_fifoC;	// store data in infifoD and cmd in in_fifoC
+	struct cdpHeader_t cdpHeader;
+	struct soRtpHeader_t rtpHeader;
+	struct sockaddr_in recv_address;	// remote address
+	unsigned int recv_addr_length;
+	int i;
+	
+	// set up FIFOd.in
+	err = mkfifo("./FIFOd.in", 0666);
+	if(err < 0)
+	{
+		printf("error: cannot create FIFOd.in\n");
+		return(-1);
+	}	
+	in_fifoD = open("./FIFOd.in", O_RDWR);
+	if (in_fifoD < 0)
+	{
+		printf("error: cannot open FIFOd.in\n");
+		return(-1);
+	}
+	// set up FIFOc.in
+	err = mkfifo("./FIFOc.in", 0666);
+	if(err < 0)
+	{
+		printf("error: cannot create FIFOc.in\n");
+		return(-1);
+	}
+	in_fifoC = open("./FIFOc.in", O_RDWR);
+	if (in_fifoC < 0)
+	{
+		printf("error: cannot open FIFOd.in\n");
+		return(-1);
+	}
+	
+    // bind to the local address
+    if (bind(socket_recv, (struct sockaddr *) &local_address, sizeof(local_address)) < 0)
+        printf("bind() failed\n");
+	
+	// receive data and write into FIFO
+	while(runcond)
+	{
+		recv_addr_length = sizeof(recv_address);
+		// clear buffer
+		memset(buffer_cdp_rtp, 0, BUF_LEN + RTP_HEADER_SIZE + CDP_HEADER_SIZE);
+		
+		// retreive data from socket
+		err = recvfrom(socket_recv, buffer_cdp_rtp, BUF_LEN + CDP_HEADER_SIZE + RTP_HEADER_SIZE, 0, (struct sockaddress *) &recv_address, &recv_addr_length);
+		
+		if (err > 0)
+		{		
+			// split off the RtpHeader
+			rtpHeader = retreiveRtpHeader(buffer_cdp_rtp);
+			// split off the CdpHeader
+			cdpHeader = retreiveCdpHeader(buffer_cdp_rtp);
+			
+			// split off the payload
+			for (i = 0; i < BUF_LEN; i++)
+				buffer[i] = buffer_cdp_rtp[i + CDP_HEADER_SIZE + RTP_HEADER_SIZE];
+			
+			// write into FIFO
+			if (rtpHeader.type == 77)	// incoming data
+				write(in_fifoD, buffer, BUF_LEN);
+			if (rtpHeader.type == 37)	// incoming command
+				write(in_fifoC, buffer, BUF_LEN);
+		}			
+		if (err < 0)
+			printf("error: cannnot read from socket\n");
+	}
+	
+	close(socket_recv);
+	pthread_exit(NULL);
+}
+		
+		
+void * SendD(void *threadid)
+{
+	char buffer[BUF_LEN];	// payload
+	char* buffer_cdp = malloc(BUF_LEN + CDP_HEADER_SIZE);	// payload + cdpHeader
+	char* buffer_cdp_rtp = malloc(BUF_LEN + CDP_HEADER_SIZE + RTP_HEADER_SIZE);	// payload + cdpHeader + rtpHeader
+	int err;
+	int out_fifo;	// get from here the payload
+	struct cdpHeader_t cdpHeader;
+	struct soRtpHeader_t rtpHeader;
+	int sn;	// sequence number
+	clock_t t_last_sent = 0;	// time when last data package was sent
+	
+	// set up FIFOd.out
+	err = mkfifo("./FIFOd.out", 0666);
+	if (err < 0)
+	{
+		printf("error: cannot create FIFOd.out\n");
+		return(-1);
+	}		
+	out_fifo = open("./FIFOd.out", O_RDONLY);
+	if (out_fifo < 0)
+	{
+		printf("error: cannot open FIFOd.out\n");
+		return(-1);
+	}
+	
+	sn = 0;
+	// empty the buffer
+	memset(buffer, 0, BUF_LEN);
+	memset(buffer_cdp, 0, CDP_HEADER_SIZE + BUF_LEN);
+	memset(buffer_cdp_rtp, 0, RTP_HEADER_SIZE + CDP_HEADER_SIZE + BUF_LEN);
+	
+	while(runcond)
+	{		
+		// read data from FIFO
+		err = read(out_fifo, buffer, BUF_LEN);
+		if (err<0)
+			printf("error: cannot read from FIFO.out\n");
+		
+		// send package when we got real data or empty package after timeout Tmax
+		if ((err > 0) || difftime(clock(), t_last_sent)/CLOCKS_PER_SEC >= params.Tmax/1000.0)
+		{		
+			// make rtp header
+			rtpHeader.version = 2*64 + 0*32;	// Version 2 + Padding 0
+			rtpHeader.type = 77;	// for data
+			rtpHeader.sequence = sn;
+			rtpHeader.timestamp = sn*BUF_LEN;
+			
+			// make cdp header
+			cdpHeader.length = strlen(buffer);
+			cdpHeader.timestamp = difftime(clock(),start_time);
+			cdpHeader.timestamp = cdpHeader.timestamp << 4*8;
+			
+			if (sn == MAX_SN)
+				sn = 0;
+			else
+				sn++;
+			
+			// in case of timeout send "I'm alive"			
+			if (err == 0) {
+				buffer[0] = 'I'; buffer[1] = 'm'; buffer[2] = ' '; buffer[3] = 'a';
+				buffer[4] = 'l'; buffer[5] = 'i'; buffer[6] = 'v'; buffer[7] = 'e';
+				cdpHeader.length = 0;
+			}
+									 
+			// append headers !pay attention to the order!
+			appendCdpHeader(buffer, cdpHeader, buffer_cdp);
+			appendRtpHeader(buffer_cdp, rtpHeader, buffer_cdp_rtp);
+		
+			// wait if last package was sent too recently (baud rate)
+			while (difftime(clock(), t_last_sent)/CLOCKS_PER_SEC <= (double) BUF_LEN/params.baudrate) {} //wait
+			// send data through socket
+			err = sendto(socket_data_send, buffer_cdp_rtp, RTP_HEADER_SIZE + CDP_HEADER_SIZE + BUF_LEN, 0, (struct sockaddress *) &dest_address, dest_addr_length);
+			if (err < 0)
+				printf("error: cannot send data\n");
+			
+			t_last_sent = clock();
+			
+			// empty the buffer
+			memset(buffer, 0, BUF_LEN);			
+		}		
+	}
+	
+	close(socket_data_send);
+	pthread_exit(NULL);
+}
+		
+		
+void * SendC(void *threadid)
+{
+	char buffer[BUF_LEN];	// payload
+	char* buffer_cdp = malloc(BUF_LEN + CDP_HEADER_SIZE);	// payload + cdpHeader
+	char* buffer_cdp_rtp = malloc(BUF_LEN + CDP_HEADER_SIZE + RTP_HEADER_SIZE);	// payload + cdpHeader + rtpHeader
+	int err;
+	int out_fifo;	// get from here the payload
+	struct cdpHeader_t cdpHeader;
+	struct soRtpHeader_t rtpHeader;
+	int sn;	// sequence number
+	
+	// set up FIFOd.out
+	err = mkfifo("./FIFOc.out", 0666);
+	if (err < 0)
+	{
+		printf("error: cannot create FIFOc.out\n");
+		return(-1);
+	}		
+	out_fifo = open("./FIFOc.out", O_RDONLY);
+	if (out_fifo < 0)
+	{
+		printf("error: cannot open FIFOc.out\n");
+		return(-1);
+	}
+	
+	sn = 0;
+	// empty the buffer
+	memset(buffer, 0, BUF_LEN);
+	memset(buffer_cdp, 0, CDP_HEADER_SIZE + BUF_LEN);
+	memset(buffer_cdp_rtp, 0, RTP_HEADER_SIZE + CDP_HEADER_SIZE + BUF_LEN);
+	
+	while(runcond)
+	{		
+		// read data from FIFO
+		err = read(out_fifo, buffer, BUF_LEN);
+		if (err<0)
+			printf("error: cannot read from FIFO.out\n");
+		
+		// send package when we got real data or emtpy package after timeout Tmax
+		if (err > 0)
+		{		
+			// make rtp header
+			rtpHeader.version = 2*64 + 0*32;	// Version 2 + Padding 0
+			rtpHeader.type = 37;	// for data
+			rtpHeader.sequence = sn;
+			rtpHeader.timestamp = sn*BUF_LEN;
+			
+			// make cdp header
+			cdpHeader.length = strlen(buffer);
+			cdpHeader.timestamp = difftime(clock(),start_time);
+			cdpHeader.timestamp = cdpHeader.timestamp << 4*8;
+			
+			if (sn == MAX_SN)
+				sn = 0;
+			else
+				sn++;
+			
+			// append headers !pay attention to the order!
+			appendCdpHeader(buffer, cdpHeader, buffer_cdp);
+			appendRtpHeader(buffer_cdp, rtpHeader, buffer_cdp_rtp);
+		
+			// send data through socket
+			err = sendto(socket_data_send, buffer_cdp_rtp, RTP_HEADER_SIZE + CDP_HEADER_SIZE + BUF_LEN, 0, (struct sockaddress *) &dest_address, dest_addr_length);
+			if (err < 0)
+				printf("error: cannot send data\n");
+						
+			// empty the buffer
+			memset(buffer, 0, BUF_LEN);		
+		}		
+	}
+	
+	close(socket_data_send);
+	pthread_exit(NULL);	
+}	
+		
+
+int main(int argc, char *argv[])
+{
+	pthread_t threads[2];	// receive and send thread
+	int err;
+	
+	if (argc < 6){
+		printf(help);
+		return -1;
+	}
+	
+	start_time = clock();
+	srand(time(NULL));	// random seed numbers for the ssrc
+	// rtpHeader.ssrc = random();	// the SSRC 32bit iedentifies the sender
+	
+	printf("=== tty_net_s ===\n\n");
+				
+	// address structure of the destination
+	dest_address.sin_family = AF_INET;
+	dest_address.sin_addr.s_addr = inet_addr(argv[1]);
+	dest_address.sin_port = htons(atoi(argv[2]));
+	dest_addr_length = sizeof(dest_address);
+
+    // construct local address structure
+    memset(&local_address, 0, sizeof(local_address));	// zero out structure
+    local_address.sin_family = AF_INET;					// internet address family
+    local_address.sin_addr.s_addr = htonl(INADDR_ANY);	// any incoming interface
+    local_address.sin_port = htons(atoi(argv[3]));		// listen port (0 to accept from any port)
+	
+	// sending parameters
+	params.baudrate = atoi(argv[4]);
+	params.Tmax = atoi(argv[5]);
+			
+	// internet sockets with UDP protocol
+	socket_data_send = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	socket_recv = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	socket_cmd_send = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	
+	if ((socket_data_send < 0) || (socket_recv < 0) || (socket_cmd_send < 0))
+		printf("socket() failed\n");
+				
+	// receiving thread
+	err = pthread_create(&threads[1], NULL, Recv, (void *) 1);
+	if (err) {
+		printf("ERROR; return code from pthread_create() is %d\n", err);
+		exit(-1);
+	}
+	// sending data thread
+	err = pthread_create(&threads[2], NULL, SendD, (void *) 2);
+	if (err) {
+		printf("ERROR; return code from pthread_create() is %d\n", err);
+		exit(-1);
+	}
+	// sending cmd thread
+	err = pthread_create(&threads[2], NULL, SendC, (void *) 3);
+	if (err) {
+		printf("ERROR; return code from pthread_create() is %d\n", err);
+		exit(-1);
+	}
+			
+	pthread_exit(NULL);
+	
+	return 0;
+}

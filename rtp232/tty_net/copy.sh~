@@ -1,0 +1,3 @@
+sudo cp tty_net_s /nfs/home/
+sudo cp echo_client /nfs/home/
+sudo cp echo_server /nfs/home/

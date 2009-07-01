@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?fileVersion 3.1.0?>
+
+<ManagedProjectBuildInfo>
+<project id="atmelE.org.mrm.avr.project.avr.263279013" name="AVR Cross-Target Project" projectType="org.mrm.avr.project.avr">
+<configuration artifactExtension="elf" artifactName="atmelE" cleanCommand="rm -f" description="" errorParsers="org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser" id="org.mrm.avr.configuration.standard.187098804" name="Standard" parent="org.mrm.avr.configuration.standard" postannouncebuildStep="Invoking: Object to Hex Splitter" postbuildStep="avr-objsplit">
+<toolChain id="org.mrm.avr.toolchain.1985043424" name="AVR Toolchain" superClass="org.mrm.avr.toolchain">
+<tool id="org.mrm.avr.tools.compiler.1776065389" name="Compiler" superClass="org.mrm.avr.tools.compiler">
+<option id="org.mrm.avr.mcutype.444837954" superClass="org.mrm.avr.mcutype" value="org.mrm.avr.mcus.atmega128" valueType="enumerated"/>
+<option id="org.mrm.avr.fcpu.1751053980" superClass="org.mrm.avr.fcpu" value="14745600" valueType="string"/>
+</tool>
+<tool id="org.mrm.avr.tools.linker.1230088800" name="Linker" superClass="org.mrm.avr.tools.linker">
+<option id="org.mrm.avr.mcutype2.1886160298" superClass="org.mrm.avr.mcutype2" value="org.mrm.avr.mcus2.atmega128" valueType="enumerated"/>
+</tool>
+<macros expandEnvironmentMacros="true"/>
+</toolChain>
+</configuration>
+<macros/>
+</project>
+</ManagedProjectBuildInfo>

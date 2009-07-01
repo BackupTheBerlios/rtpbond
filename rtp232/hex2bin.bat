@@ -1,0 +1,1 @@
+avr-objcopy -I ihex -O binary aeb.elf aeb.bin

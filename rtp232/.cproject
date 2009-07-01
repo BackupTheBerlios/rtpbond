@@ -1,0 +1,682 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?>
+
+<cproject>
+<storageModule moduleId="org.eclipse.cdt.core.settings">
+
+<cconfiguration id="org.mrm.avr.configuration.standard.187098804.1293602645">
+<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.mrm.avr.configuration.standard.187098804.1293602645" moduleId="org.eclipse.cdt.core.settings" name="Bootloader">
+<externalSettings/>
+<extensions>
+<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+</extensions>
+</storageModule>
+<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+<configuration artifactExtension="elf" artifactName="aeb" buildProperties="" cleanCommand="rm -f" description="" errorParsers="org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser" id="org.mrm.avr.configuration.standard.187098804.1293602645" name="Bootloader" parent="org.mrm.avr.configuration.standard" postannouncebuildStep="Invoking: Object to Hex Splitter" postbuildStep="avr-objsplit" preannouncebuildStep="" prebuildStep="">
+<folderInfo id="org.mrm.avr.configuration.standard.187098804.1293602645." name="/" resourcePath="">
+<toolChain id="org.mrm.avr.toolchain.338991397" name="AVR Toolchain" nonInternalBuilderId="org.mrm.avr.builder1" resourceTypeBasedDiscovery="true" superClass="org.mrm.avr.toolchain">
+<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="org.mrm.avr.targetplatform.avr.150803340" isAbstract="false" name="AVR Cross-Target" osList="all" superClass="org.mrm.avr.targetplatform.avr"/>
+<builder autoBuildTarget="" buildPath="${workspace_loc:/aeb/Bootloader}" cleanBuildTarget="" enableAutoBuild="true" enableCleanBuild="true" enabledIncrementalBuild="true" id="org.mrm.avr.builder1.200586997" incrementalBuildTarget="" keepEnvironmentInBuildfile="false" name="Make" superClass="org.mrm.avr.builder1"/>
+<tool id="org.mrm.avr.tools.compiler.1562711210" name="Compiler" superClass="org.mrm.avr.tools.compiler">
+<option id="org.mrm.avr.mcutype.750736586" name="MCU Type" superClass="org.mrm.avr.mcutype" value="org.mrm.avr.mcus.atmega128" valueType="enumerated"/>
+<option id="org.mrm.avr.fcpu.1815623564" name="Frequency" superClass="org.mrm.avr.fcpu" value="14745600" valueType="string"/>
+<option id="org.mrm.avr.def.1389766356" name="Define Syms (-D)" superClass="org.mrm.avr.def" valueType="definedSymbols">
+<listOptionValue builtIn="false" value="APPLICATION_BOOTLOADER"/>
+<listOptionValue builtIn="false" value="REQUIRES_BOOTLOADER"/>
+<listOptionValue builtIn="false" value="REQUIRES_DOUBLYLINKEDLIST"/>
+<listOptionValue builtIn="false" value="REQUIRES_TFTP"/>
+<listOptionValue builtIn="false" value="CONFIG_IP4_ADDRESS=0xAA00A8C0"/>
+<listOptionValue builtIn="false" value="CONFIG_IP4_SUBNET=0x00FFFFFF"/>
+<listOptionValue builtIn="false" value="CONFIG_IP4_GATEWAY=0x0100A8C0"/>
+<listOptionValue builtIn="false" value="CONFIG_MAC_GROUP1=0x0013"/>
+<listOptionValue builtIn="false" value="CONFIG_MAC_GROUP2=0x0231"/>
+<listOptionValue builtIn="false" value="CONFIG_MAC_GROUP3=0x9135"/>
+</option>
+<option id="org.mrm.avr.warnerr.1408819014" name="Warnings as Errors (-Werror)" superClass="org.mrm.avr.warnerr" value="true" valueType="boolean"/>
+<option id="org.mrm.avr.optimize.1385591327" name="Optimizations" superClass="org.mrm.avr.optimize" value="org.mrm.avr.heavyopt" valueType="enumerated"/>
+<option id="org.mrm.avr.sizeopt.190392740" name="Optimize for Size (-Os)" superClass="org.mrm.avr.sizeopt" value="true" valueType="boolean"/>
+<option id="org.mrm.avr.verbose.1375999494" name="Verbose (-v)" superClass="org.mrm.avr.verbose" value="false" valueType="boolean"/>
+<option id="org.mrm.avr.otherargs.759226936" name="Other Arguments" superClass="org.mrm.avr.otherargs" value="-mcall-prologues  -c" valueType="string"/>
+<inputType id="org.mrm.avr.inputs.c.181272436" name="C Source Files" superClass="org.mrm.avr.inputs.c"/>
+<inputType id="org.mrm.avr.inputs.c.322698763" name="C Source Files" superClass="org.mrm.avr.inputs.c"/>
+</tool>
+<tool id="org.mrm.avr.tools.linker.1492610727" name="Linker" superClass="org.mrm.avr.tools.linker">
+<option id="org.mrm.avr.mcutype2.1573461602" name="MCU Type" superClass="org.mrm.avr.mcutype2" value="org.mrm.avr.mcus2.atmega128" valueType="enumerated"/>
+<option id="org.mrm.avr.otherlinkargs.52272509" name="Other Arguments" superClass="org.mrm.avr.otherlinkargs" value="-Wl,-section-start=.text=0x1e000" valueType="string"/>
+</tool>
+</toolChain>
+</folderInfo>
+<sourceEntries>
+<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
+</sourceEntries>
+</configuration>
+</storageModule>
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+
+
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping">
+<project-mappings/>
+</storageModule>
+<storageModule moduleId="scannerConfiguration">
+<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile"/>
+<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="true"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="true"/>
+</buildOutputProvider>
+<scannerInfoProvider id="makefileGenerator">
+<runAction arguments="-f ${project_name}_scd.mk" command="make" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="false" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+<buildOutputProvider>
+<openAction enabled="false" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+<buildOutputProvider>
+<openAction enabled="false" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="false" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileCPP">
+<buildOutputProvider>
+<openAction enabled="false" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileC">
+<buildOutputProvider>
+<openAction enabled="false" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<scannerConfigBuildInfo instanceId="org.mrm.avr.configuration.standard.187098804.1293602645">
+<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile"/>
+<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="true"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="true"/>
+</buildOutputProvider>
+<scannerInfoProvider id="makefileGenerator">
+<runAction arguments="-f ${project_name}_scd.mk" command="make" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileCPP">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileC">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+</scannerConfigBuildInfo>
+</storageModule>
+</cconfiguration>
+<cconfiguration id="org.mrm.avr.configuration.standard.187098804.882678620">
+<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.mrm.avr.configuration.standard.187098804.882678620" moduleId="org.eclipse.cdt.core.settings" name="SerialBridge">
+<externalSettings/>
+<extensions>
+<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+</extensions>
+</storageModule>
+<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+<configuration artifactExtension="elf" artifactName="aeb" buildProperties="" cleanCommand="rm -f" description="" errorParsers="org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser" id="org.mrm.avr.configuration.standard.187098804.882678620" name="SerialBridge" parent="org.mrm.avr.configuration.standard" postannouncebuildStep="Invoking: Object to Hex Splitter" postbuildStep="avr-objsplit" preannouncebuildStep="" prebuildStep="">
+<folderInfo id="org.mrm.avr.configuration.standard.187098804.882678620." name="/" resourcePath="">
+<toolChain id="org.mrm.avr.toolchain.763433685" name="AVR Toolchain" nonInternalBuilderId="org.mrm.avr.builder1" superClass="org.mrm.avr.toolchain">
+<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="org.mrm.avr.targetplatform.avr.1549113315" isAbstract="false" name="AVR Cross-Target" osList="all" superClass="org.mrm.avr.targetplatform.avr"/>
+<builder autoBuildTarget="" buildPath="${workspace_loc:/aeb/SerialBridge}" cleanBuildTarget="" enableAutoBuild="true" enableCleanBuild="true" enabledIncrementalBuild="true" id="org.mrm.avr.builder1.547880809" incrementalBuildTarget="" keepEnvironmentInBuildfile="false" name="Make" superClass="org.mrm.avr.builder1"/>
+<tool id="org.mrm.avr.tools.compiler.1816925307" name="Compiler" superClass="org.mrm.avr.tools.compiler">
+<option id="org.mrm.avr.mcutype.1343333453" name="MCU Type" superClass="org.mrm.avr.mcutype" value="org.mrm.avr.mcus.atmega128" valueType="enumerated"/>
+<option id="org.mrm.avr.fcpu.197479726" name="Frequency" superClass="org.mrm.avr.fcpu" value="14745600" valueType="string"/>
+<option id="org.mrm.avr.def.1147027787" name="Define Syms (-D)" superClass="org.mrm.avr.def" valueType="definedSymbols">
+<listOptionValue builtIn="false" value="APPLICATION_SERIALBRIDGE"/>
+<listOptionValue builtIn="false" value="REQUIRES_SERIAL"/>
+<listOptionValue builtIn="false" value="REQUIRES_WATCHDOG"/>
+<listOptionValue builtIn="false" value="REQUIRES_DOUBLYLINKEDLIST"/>
+<listOptionValue builtIn="false" value="REQUIRES_QUEUE"/>
+<listOptionValue builtIn="false" value="REQUIRES_RTP"/>
+<listOptionValue builtIn="false" value="CONFIG_IP4_ADDRESS=0xAA00A8C0"/>
+<listOptionValue builtIn="false" value="CONFIG_IP4_SUBNET=0x00FFFFFF"/>
+<listOptionValue builtIn="false" value="CONFIG_IP4_GATEWAY=0x0100A8C0"/>
+<listOptionValue builtIn="false" value="CONFIG_MAC_GROUP1=0x0013"/>
+<listOptionValue builtIn="false" value="CONFIG_MAC_GROUP2=0x0231"/>
+<listOptionValue builtIn="false" value="CONFIG_MAC_GROUP3=0x9135"/>
+</option>
+<option id="org.mrm.avr.warnerr.2059441447" name="Warnings as Errors (-Werror)" superClass="org.mrm.avr.warnerr" value="true" valueType="boolean"/>
+<option id="org.mrm.avr.optimize.344860875" name="Optimizations" superClass="org.mrm.avr.optimize" value="org.mrm.avr.heavyopt" valueType="enumerated"/>
+<option id="org.mrm.avr.sizeopt.1896867910" name="Optimize for Size (-Os)" superClass="org.mrm.avr.sizeopt" value="false" valueType="boolean"/>
+<option id="org.mrm.avr.verbose.1003867306" name="Verbose (-v)" superClass="org.mrm.avr.verbose" value="false" valueType="boolean"/>
+<inputType id="org.mrm.avr.inputs.c.546271286" name="C Source Files" superClass="org.mrm.avr.inputs.c"/>
+<inputType id="org.mrm.avr.inputs.c.1722791326" name="C Source Files" superClass="org.mrm.avr.inputs.c"/>
+</tool>
+<tool id="org.mrm.avr.tools.linker.2119557454" name="Linker" superClass="org.mrm.avr.tools.linker">
+<option id="org.mrm.avr.mcutype2.180053478" name="MCU Type" superClass="org.mrm.avr.mcutype2" value="org.mrm.avr.mcus2.atmega128" valueType="enumerated"/>
+</tool>
+</toolChain>
+</folderInfo>
+<sourceEntries>
+<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+</sourceEntries>
+</configuration>
+</storageModule>
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+
+
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping">
+<project-mappings/>
+</storageModule>
+<storageModule moduleId="scannerConfiguration">
+<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile"/>
+<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="true"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="true"/>
+</buildOutputProvider>
+<scannerInfoProvider id="makefileGenerator">
+<runAction arguments="-f ${project_name}_scd.mk" command="make" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="false" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+<buildOutputProvider>
+<openAction enabled="false" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+<buildOutputProvider>
+<openAction enabled="false" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="false" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileCPP">
+<buildOutputProvider>
+<openAction enabled="false" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileC">
+<buildOutputProvider>
+<openAction enabled="false" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<scannerConfigBuildInfo instanceId="org.mrm.avr.configuration.standard.187098804.1293602645">
+<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile"/>
+<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="true"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="true"/>
+</buildOutputProvider>
+<scannerInfoProvider id="makefileGenerator">
+<runAction arguments="-f ${project_name}_scd.mk" command="make" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileCPP">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileC">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+</scannerConfigBuildInfo>
+</storageModule>
+</cconfiguration>
+<cconfiguration id="org.mrm.avr.configuration.standard.187098804.882678620.1010620678">
+<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.mrm.avr.configuration.standard.187098804.882678620.1010620678" moduleId="org.eclipse.cdt.core.settings" name="GPIBBridge">
+<externalSettings/>
+<extensions>
+<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+<extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+<extension id="org.eclipse.cdt.core.MakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+</extensions>
+</storageModule>
+<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+<configuration artifactExtension="elf" artifactName="aeb" buildProperties="" cleanCommand="rm -f" description="" errorParsers="org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser" id="org.mrm.avr.configuration.standard.187098804.882678620.1010620678" name="GPIBBridge" parent="org.mrm.avr.configuration.standard" postannouncebuildStep="Invoking: Object to Hex Splitter" postbuildStep="avr-objsplit" preannouncebuildStep="" prebuildStep="">
+<folderInfo id="org.mrm.avr.configuration.standard.187098804.882678620.1010620678." name="/" resourcePath="">
+<toolChain id="org.mrm.avr.toolchain.1822416344" name="AVR Toolchain" nonInternalBuilderId="org.mrm.avr.builder1" superClass="org.mrm.avr.toolchain">
+<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="org.mrm.avr.targetplatform.avr.668178414" isAbstract="false" name="AVR Cross-Target" osList="all" superClass="org.mrm.avr.targetplatform.avr"/>
+<builder autoBuildTarget="" buildPath="${workspace_loc:/aeb/SerialBridge}" cleanBuildTarget="" enableAutoBuild="true" enableCleanBuild="true" enabledIncrementalBuild="true" id="org.mrm.avr.builder1.430193066" incrementalBuildTarget="" keepEnvironmentInBuildfile="false" name="Make" superClass="org.mrm.avr.builder1"/>
+<tool id="org.mrm.avr.tools.compiler.648353844" name="Compiler" superClass="org.mrm.avr.tools.compiler">
+<option id="org.mrm.avr.mcutype.1324362311" name="MCU Type" superClass="org.mrm.avr.mcutype" value="org.mrm.avr.mcus.atmega128" valueType="enumerated"/>
+<option id="org.mrm.avr.fcpu.1158869794" name="Frequency" superClass="org.mrm.avr.fcpu" value="14745600" valueType="string"/>
+<option id="org.mrm.avr.def.1028917527" name="Define Syms (-D)" superClass="org.mrm.avr.def" valueType="definedSymbols">
+<listOptionValue builtIn="false" value="APPLICATION_GPIBBRIDGE"/>
+<listOptionValue builtIn="false" value="REQUIRES_DOUBLYLINKEDLIST"/>
+<listOptionValue builtIn="false" value="REQUIRES_RTP"/>
+<listOptionValue builtIn="false" value="REQUIRES_QUEUE"/>
+<listOptionValue builtIn="false" value="REQUIRES_GPIB"/>
+<listOptionValue builtIn="false" value="CONFIG_IP4_ADDRESS=0xAA00A8C0"/>
+<listOptionValue builtIn="false" value="CONFIG_IP4_SUBNET=0x00FFFFFF"/>
+<listOptionValue builtIn="false" value="CONFIG_IP4_GATEWAY=0x0100A8C0"/>
+<listOptionValue builtIn="false" value="CONFIG_MAC_GROUP1=0x0013"/>
+<listOptionValue builtIn="false" value="CONFIG_MAC_GROUP2=0x0231"/>
+<listOptionValue builtIn="false" value="CONFIG_MAC_GROUP3=0x9135"/>
+</option>
+<option id="org.mrm.avr.warnerr.2132003532" name="Warnings as Errors (-Werror)" superClass="org.mrm.avr.warnerr" value="true" valueType="boolean"/>
+<option id="org.mrm.avr.optimize.8433489" name="Optimizations" superClass="org.mrm.avr.optimize" value="org.mrm.avr.heavyopt" valueType="enumerated"/>
+<option id="org.mrm.avr.sizeopt.550635060" name="Optimize for Size (-Os)" superClass="org.mrm.avr.sizeopt" value="false" valueType="boolean"/>
+<option id="org.mrm.avr.verbose.2055258112" name="Verbose (-v)" superClass="org.mrm.avr.verbose" value="false" valueType="boolean"/>
+<inputType id="org.mrm.avr.inputs.c.2110733422" name="C Source Files" superClass="org.mrm.avr.inputs.c"/>
+<inputType id="org.mrm.avr.inputs.c.1348125804" name="C Source Files" superClass="org.mrm.avr.inputs.c"/>
+</tool>
+<tool id="org.mrm.avr.tools.linker.534316529" name="Linker" superClass="org.mrm.avr.tools.linker">
+<option id="org.mrm.avr.mcutype2.209672408" name="MCU Type" superClass="org.mrm.avr.mcutype2" value="org.mrm.avr.mcus2.atmega128" valueType="enumerated"/>
+</tool>
+</toolChain>
+</folderInfo>
+<sourceEntries>
+<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+</sourceEntries>
+</configuration>
+</storageModule>
+<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+
+
+<storageModule moduleId="org.eclipse.cdt.core.language.mapping">
+<project-mappings/>
+</storageModule>
+<storageModule moduleId="scannerConfiguration">
+<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile"/>
+<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="true"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="true"/>
+</buildOutputProvider>
+<scannerInfoProvider id="makefileGenerator">
+<runAction arguments="-f ${project_name}_scd.mk" command="make" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="false" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+<buildOutputProvider>
+<openAction enabled="false" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+<buildOutputProvider>
+<openAction enabled="false" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="false" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileCPP">
+<buildOutputProvider>
+<openAction enabled="false" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileC">
+<buildOutputProvider>
+<openAction enabled="false" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<scannerConfigBuildInfo instanceId="org.mrm.avr.configuration.standard.187098804.1293602645">
+<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile"/>
+<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="true"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.make.core.GCCStandardMakePerFileProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="true"/>
+</buildOutputProvider>
+<scannerInfoProvider id="makefileGenerator">
+<runAction arguments="-f ${project_name}_scd.mk" command="make" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileCPP">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfile">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/${specs_file}" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileCPP">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.cpp" command="g++" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+<profile id="org.eclipse.cdt.managedbuilder.core.GCCWinManagedMakePerProjectProfileC">
+<buildOutputProvider>
+<openAction enabled="true" filePath=""/>
+<parser enabled="false"/>
+</buildOutputProvider>
+<scannerInfoProvider id="specsFile">
+<runAction arguments="-E -P -v -dD ${plugin_state_location}/specs.c" command="gcc" useDefault="true"/>
+<parser enabled="true"/>
+</scannerInfoProvider>
+</profile>
+</scannerConfigBuildInfo>
+</storageModule>
+</cconfiguration>
+</storageModule>
+<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+<project id="atmelE.org.mrm.avr.project.avr.263279013" name="AVR Cross-Target Project" projectType="org.mrm.avr.project.avr"/>
+</storageModule>
+</cproject>
