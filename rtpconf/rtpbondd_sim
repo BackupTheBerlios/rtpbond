@@ -1,0 +1,90 @@
+#!/bin/bash
+# rtpbondd simulator
+# ==================
+#
+# WARNING: very basic functionality implemented for now!
+
+if [ "$1" == "status" ]
+then
+  cat rtpbondd_status.dummy
+  exit 0
+fi
+
+declare -a MY_IP=( "192.168.22.23" "192.168.22.42" )
+declare -a MY_SUBNET=( "255.255.255.0" "255.255.255.0" )
+declare -a MY_GW=( "192.168.22.1" "192.168.22.1" )
+declare -a MY_BAUD=( "9600" "115200" )
+declare -a MY_MAC=( "00:00:00:00:00:01" "00:00:00:00:00:02" )
+declare -a MY_DestIP_Data=( "192.168.22.100" "192.168.22.100" )
+declare -a MY_DestPort_Data=( "9000" "9001" )
+declare -a MY_DestIP_Config=( "192.168.22.100" "192.168.22.100" )
+declare -a MY_DestPort_Config=( "9000" "9001" )
+
+DEVICES=( FIFO1 FIFO3 )
+for each in ${DEVICES[@]}
+do
+   mkfifo $each.37.{in,out}
+done
+
+trap "killall $(basename $0); exit" TERM INT
+
+counter=0
+for device in ${DEVICES[@]}
+do
+
+  (
+  echo $counter  
+  while [ 1 ]
+  do
+    read input param < ${device}.37.out
+    echo "$device: $input"
+
+  #gets
+    if [ $input == ":getip?" ]
+    then
+      echo "${MY_IP[$counter]}OK" > ${device}.37.in
+    elif [ $input == ":getbaud?" ]
+    then
+      echo "${MY_BAUD[$counter]}OK" > ${device}.37.in
+    elif [ $input == ":getnet?" ]
+    then
+      echo "${MY_IP[$counter]} ${MY_SUBNET[$counter]} ${MY_GW[$counter]}OK" > ${device}.37.in
+    elif [ $input == ":getmac?" ]
+    then
+      echo "${MY_MAC[$counter]}OK" > ${device}.37.in
+    elif [ $input == ":getdip_data?" ]
+    then
+      echo "${MY_DestIP_Data[$counter]}OK" > ${device}.37.in
+    elif [ $input == ":getdip_config?" ]
+    then
+      echo "${MY_DestIP_Config[$counter]}OK" > ${device}.37.in
+    elif [ $input == ":getdport_data?" ]
+    then
+      echo "${MY_DestPort_Data[$counter]}OK" > ${device}.37.in
+    elif [ $input == ":getdport_config?" ]
+    then
+      echo "${MY_DestPort_Config[$counter]}OK" > ${device}.37.in
+
+  #sets
+    elif [ ${input:0:6} == ":setip" ]
+    then
+      MY_IP[$counter]=$(echo $param | awk 'BEGIN{ FS="[?]" } { print $1 }')
+      echo "${MY_IP[$counter]}OK" > ${device}.37.in
+    elif [ ${input:0:8} == ":setbaud" ]
+    then
+      MY_BAUD[$counter]=$(echo $param | awk 'BEGIN{ FS="[?]" } { print $1 }')
+      echo "${MY_BAUD[$counter]}OK" > ${device}.37.in
+
+  #error
+    else
+      echo "Error located between ears of user" > ${device}.37.in
+    fi
+  done
+  ) &
+
+let "counter = $counter + 1"
+
+pids=( $pids $! )
+done
+
+wait ${pids[@]}

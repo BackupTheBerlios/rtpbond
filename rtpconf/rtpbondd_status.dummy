@@ -1,0 +1,38 @@
+Configfile loaded: tty_net.conf                         
+2 device(s) running:                                    
+FIFO1:                                                  
+	path: .                               
+	destIp4Addr: 192.168.22.23     destPort: 9000  
+	listenPort: 9000                               
+	baudRate: 1000  TMax: 1000                      
+	payloadType: 37                                 
+	Packets sent: 11 (0 data/11 alive)      Packets received: 0 (0 data/0 alive)    status: inactive
+	Avg payload sent: 0.00 byte      Avg payload received: 0.00 byte                                
+	Packets lost: 0                                                                                 
+FIFO2:                                                                                                  
+	path: .                                                                                         
+	destIp4Addr: 192.168.22.129     destPort: 34567                                                 
+	listenPort: 56789                                                                               
+	baudRate: 1500  TMax: 2000                                                                      
+	payloadType: 77                                                                                 
+	Packets sent: 5 (0 data/5 alive)        Packets received: 0 (0 data/0 alive)    status: inactive
+	Avg payload sent: 0.00 byte      Avg payload received: 0.00 byte                                
+	Packets lost: 0
+FIFO3:                                                  
+	path: .                               
+	destIp4Addr: 192.168.22.42     destPort: 9001  
+	listenPort: 9001                               
+	baudRate: 1000  TMax: 1000                      
+	payloadType: 37                                 
+	Packets sent: 11 (0 data/11 alive)      Packets received: 0 (0 data/0 alive)    status: inactive
+	Avg payload sent: 0.00 byte      Avg payload received: 0.00 byte                                
+	Packets lost: 0                                                                                 
+FIFO4:                                                                                                  
+	path: .                                                                                         
+	destIp4Addr: 192.168.22.131     destPort: 34567                                                 
+	listenPort: 56789                                                                               
+	baudRate: 1500  TMax: 2000                                                                      
+	payloadType: 77                                                                                 
+	Packets sent: 5 (0 data/5 alive)        Packets received: 0 (0 data/0 alive)    status: inactive
+	Avg payload sent: 0.00 byte      Avg payload received: 0.00 byte                                
+	Packets lost: 0

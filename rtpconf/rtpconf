@@ -1,0 +1,772 @@
+#!/bin/bash
+#
+# rtpconf
+#
+SCRIPT_VERSION="v0.7.1 (2009/07/12) >> Highly Unstable! <<"
+TTY_NET_DIR="."
+TTY_NET_NAME="rtpbondd_sim"
+
+#-------------------------------------------
+#Declarations
+#-------------------------------------------
+declare -a TTYNET_STATUS
+declare -a TTYNET_DEVICES
+declare -a USER_INPUT_ARRAY
+
+#BEGIN: presets
+GLOBAL_DEBUG_MODE=0
+CONFIG_PAYLOAD_TYPE=37
+CONFIG_FILE="rtpconf.conf"
+
+#BEGIN: initial values to ensure deterministic behaviour, don't change!!
+FLAG_INTERACTIVE_MODE=0
+PROMPT=""
+DEVICE=""
+#END: initial values to ensure deterministic behaviour, don't change!!
+
+#-------------------------------------------
+#Functions
+#-------------------------------------------
+exitHooks() {
+  #temp-file remove or device setting etc
+  [ -e "/tmp/rtpconf.tmp" ] && rm /tmp/rtpconf.tmp
+  [ -e "/tmp/rtpconf.status.tmp" ] && rm /tmp/rtpconf.status.tmp
+  [ -e "/tmp/rtpconf.locconf.tmp" ] && rm /tmp/rtpconf.locconf.tmp
+}
+
+print_usage() {
+  echo "rtpconf $SCRIPT_VERSION"
+  echo "Usage: $0 [command] [command-parameter/device]"
+  echo "If no command is committed, rtpconf will start in 'interactive mode'. All following commands can be used either in interactive mode or as a single command"
+  echo "* errors     prints all error states (exit codes of script) with a short explanation"
+  echo "* help       print this"
+  echo "* quit       quits the interactive mode (alias: exit)"
+  echo "* restart    restarts remote device (aliases: reset, reboot) ACHTUNG: BISHER NUR RESTART VON TTY_NET-THREAD"    
+  echo "* status     prints status output - if remote status available even this"
+  echo "* verison    print current version of this script"
+  echo ""
+  echo "Remote commands:"
+  echo "* open       opens a device for easy use"
+  echo "* close      close current opened device"
+  echo "* send       transmit text to device. first open a device or use syntax 'send FIFONAME TEXT'"
+}
+
+checkIP() {
+  local IP=$1
+  declare -a IPArray
+  IPArray=( $(echo $IP | awk 'BEGIN{ RS="." } { print $0 }') )
+  if [ ${#IPArray[@]} -ne 4 ]
+  then
+    echo "  ERROR: Invalid ip address! IP4 address is required!"
+    return 1
+  fi
+  local counter=0
+  for each in ${IPArray[@]}
+  do
+    ((counter++))
+    if [ $each -gt 255 -o $each -lt 0 ]
+    then
+      echo "  ERROR: Invalid address range. Each tuple must be in range of 1 to 255."
+      unset IPArray
+      return 1
+    fi
+    [ $counter -eq 4 -a $each -eq 0 ] && echo "  ERROR: Broadcast addresses are not allowed!" && return 1
+  done
+  unset IPArray
+  return 0
+}
+
+configureDevice() { #dev!! ueberarbeite/erneuere function!!! + funzt nicht, vermutl. probleme mit array/verschiebt sich was
+  local device=$1
+  local array_pointer=0
+
+  #find device array index
+  local counter=0
+  for each in ${TTYNET_DEVICES[@]}
+  do
+    if [ $device == $each ]
+    then
+      break
+    fi
+    ((counter++))
+  done
+  
+  let "array_pointer = 3 + ( 8 * $counter )"
+  local VALID_VALUE=1
+  
+  echo "Configuring device '$device'..."
+
+  while [ $VALID_VALUE -ne 0 ]
+  do
+    echo -n "  Set IP (${TTYNET_STATUS[$array_pointer]}) >"
+    read -e newIP
+    [ -z "$newIP" ] && newIP=${TTYNET_STATUS[$array_pointer]}
+    checkIP $newIP
+    VALID_VALUE=$?
+  done
+  ((array_pointer++))
+  
+  echo -n "  Set destination port (${TTYNET_STATUS[$array_pointer]}) >"
+  read -e newDestPort
+  [ -z "$newDestPort" ] && newDestPort=${TTYNET_STATUS[$array_pointer]}
+  ((array_pointer++))
+  echo -n "  Set listen port (${TTYNET_STATUS[$array_pointer]}) >"
+  read -e newListenPort
+  [ -z "$newListenPort" ] && newListenPort=${TTYNET_STATUS[$array_pointer]}
+  ((array_pointer++))
+  echo -n "  Set baudrate (${TTYNET_STATUS[$array_pointer]}) >"
+  read -e newBaud
+  [ -z "$newBaud" ] && newBaud=${TTYNET_STATUS[$array_pointer]}
+  ((array_pointer++))
+  echo -n "  Set TMax [local data limiter] (${TTYNET_STATUS[$array_pointer]}) >"
+  read -e newTMax
+  [ -z "$newTMax" ] && newTMax=${TTYNET_STATUS[$array_pointer]}
+  ((array_pointer++))
+
+  #importend for following transmission  
+  local restorePayload=${TTYNET_STATUS[$array_pointer]}
+  echo -n "  Set payload type of channel (${TTYNET_STATUS[$array_pointer]}) >"
+  read -e newPayload
+  [ -z "$newPayload" ] && newPayload=${TTYNET_STATUS[$array_pointer]}
+  ((array_pointer++))
+
+  echo -e "\nYour entered setup:"
+  echo "  IP address:        $newIP"
+  echo "  Destination port:  $newDestPort"
+  echo "  Listen port:       $newListenPort"
+  echo "  Baudrate:          $newBaud"
+  echo "  TMax:              $newTMax"
+  echo "  Payload type:      $newPayload"
+  echo -n "Do you want to use this setup for device '$device'? (y/N) >"
+  read confirmation
+  if [ -z "$confirmation" -o "${confirmation:0:1}" != "y" -a "${confirmation:0:1}" != "Y" -a "${confirmation:0:1}" != "j" -a "${confirmation:0:1}" != "J" ]
+  then
+    echo "Configuration aborted!"
+  else
+    #clear input-fifo
+    while read -t1 fifoIn
+    do
+      [ -z $fifoIn ] && break || echo $fifoIn
+    done
+
+    echo "Writing setup to remote device..."
+
+#dev!!!!
+#falsche commands!!
+    echo -n "  writing IP adress..."    
+    echo ":setip $newIP?" > $device.$restorePayload.out
+    read -t5 fifoIn < $device.$restorePayload.in
+    [ "$fifoIn" == "${newIP}OK" ] && echo "OK" || echo "Failed ('$fifoin')"
+
+    echo -n "  writing destination port..."    
+    echo ":setip? $newDestPort" > $device.$restorePayload.out
+    read -t5 fifoIn < $device.$restorePayload.in
+    [ "$fifoIn" == "${newDestPort}OK" ] && echo "OK" || echo "Failed"
+
+    echo -n "  writing listen port..."    
+    echo ":setip? $newListenPort" > $device.$restorePayload.out
+    read -t5 fifoIn < $device.$restorePayload.in
+    [ "$fifoIn" == "${newListenPort}OK" ] && echo "OK" || echo "Failed"
+
+    echo -n "  writing baudrate..."    
+    echo ":setbaud $newBaud?" > $device.$restorePayload.out
+    read -t5 fifoIn < $device.$restorePayload.in
+    [ "$fifoIn" == "${newBaud}OK" ] && echo "OK" || echo "Failed"
+
+    echo -n "  writing TMax..."    
+    echo ":setip? $newTMax" > $device.$restorePayload.out
+    read -t5 fifoIn < $device.$restorePayload.in
+    [ "$fifoIn" == "${newTMax}OK" ] && echo "OK" || echo "Failed"
+
+    echo -n "  writing payload type..."    
+    echo ":setip? $newPayload" > $device.$restorePayload.out
+    read -t5 fifoIn < $device.$restorePayload.in
+    [ "$fifoIn" == "${newPayload}OK" ] && echo "OK" || echo "Failed"
+
+    echo "Ok, if no error occured, you can reboot our device"
+  fi
+}
+
+doOperation() {
+  local ERROR_STATE=0
+
+  if [ "$1" ]
+  then
+    local operation=$1
+    shift
+  else
+    ERROR_STATE=2
+  fi
+
+  [ "$1" ] && local parameter=$1 && shift
+  [ "$1" ] && local value=$1 && shift
+
+  case $operation in
+    configtype)
+      if [ "$parameter" ]
+      then
+        CONFIG_PAYLOAD_TYPE=$parameter
+        echo "Payload type for config channels is now '$CONFIG_PAYLOAD_TYPE'"
+      else
+        echo "Current payload type for config channels: $CONFIG_PAYLOAD_TYPE"
+      fi
+    ;;
+    select|open)
+      local FLAG_VALID=0
+      if [ "$parameter" ]
+      then
+        #exists device??
+        local FLAG_VALID=0
+        for each in ${TTYNET_DEVICES[@]}
+        do
+          if [ $parameter == $each ]
+          then
+            FLAG_VALID=1
+            break
+          fi
+        done
+
+        if [ $FLAG_VALID -eq 1 ]
+        then
+          #is device a config device?
+          local FLAG_CONFIG_VALID=0
+          for each in ${TTYNET_CONFIG_DEVICES[@]}
+          do
+            if [ $parameter == $each ]
+            then
+              FLAG_CONFIG_VALID=1
+              break
+            fi
+          done
+          
+          if [ $FLAG_CONFIG_VALID -eq 1 ]
+          then
+            echo "Selecting remote device '$parameter' ..."
+            PROMPT="$parameter"
+          else
+            echo "ATTENTION: Device '$parameter' exists but is not a config channel!"
+            echo "           All chances of configuration will affect only local rtp232d"
+            echo "           Moreover be aware of using 'send' in this context unless you REALLY know what you are doing!!"
+            PROMPT="$parameter"
+          fi
+        else
+          echo "ERROR: Device '$parameter' does not exist!"
+          ERROR_STATE=11
+        fi
+      else
+#        echo "ERROR: No remote device specified!"
+        local PS3BACKUP=$PS3
+        PS3="Select one device > "
+        select one in ${TTYNET_DEVICES[@]}
+        do
+          if [ -z "$one" ]
+          then
+            ERROR_STATE=10
+            [ $REPLY -eq 0 ] && break
+            echo "No device associated with number '$REPLY'. Type '0' to abort command"
+            continue
+          else
+            PROMPT=$one && break
+          fi
+        done
+        PS3=$PS3BACKUP
+      fi
+    ;;
+
+    deselect|close)
+      if [ "$PROMPT" ]
+      then
+        #echo "Unselecting '$PROMPT' ..."
+        PROMPT=""
+      else
+        echo "No remote device selected!"
+      fi
+      ERROR_STATE=1
+    ;;
+
+    stat|status|scan|configuration)
+      #getTtyNetStatus
+      if [ "$parameter" ]
+      then
+        #dev!! wenn config channel=> remote status fehlt noch
+        echo "Status of '$parameter'"
+        $TTY_NET_DIR/$TTY_NET_NAME status | awk -v device="^$parameter" '$0 ~ device { a=NR } a && NR <= a + 8 { print $0 }'
+      elif [ "$PROMPT" ]
+      then
+        echo "Status of '$PROMPT'"
+        $TTY_NET_DIR/$TTY_NET_NAME status | awk -v device="^$PROMPT" '$0 ~ device { a=NR } a && NR <= a + 8 { print $0 }'
+        
+        printRemoteStatus $PROMPT
+        
+      else
+        #kompletter statusbericht - unterteilen in einzelne devices
+        #dev!!! konflikt mit getTtyNetStatus!! (neue csv struktur!)
+        $TTY_NET_DIR/$TTY_NET_NAME status > /tmp/rtpconf.status.tmp
+        num_lines=$(cat /tmp/rtpconf.status.tmp | wc -l)
+        let "num_lines = ($num_lines - 2) / 9"
+        counter=0
+        while [ $counter -le $num_lines ]
+        do
+          cat /tmp/rtpconf.status.tmp | awk -v start_at=$counter 'NR >= 3 + start_at * 9 && NR < 12 + start_at * 9 { print $0 }' > /tmp/rtpconf.dev${counter}.tmp
+          ((counter++))
+        done
+        mycounter=0
+        while [ $mycounter -le $num_lines ]
+        do
+          cat /tmp/rtpconf.dev${mycounter}.tmp
+          curdevice=$(cat /tmp/rtpconf.dev${mycounter}.tmp | awk 'BEGIN{ FS=":" } NR==1{ print $1; exit }')
+          if [ "$(typeOf $curdevice)" == $CONFIG_PAYLOAD_TYPE ]
+          then
+            printRemoteStatus $curdevice
+          else
+            :
+            #dev!!!
+            #datenkanal.. ausgeben,dass...
+          fi
+          ((mycounter++))
+        done
+#        cat /tmp/rtpconf.status.tmp | awk 'BEGIN{ FS="[:\t ]" } /payloadType/{ print $4 }'
+      fi
+    ;;
+
+    configure)
+      local device
+      if [ -z "$parameter" -a -z "$PROMPT" ]
+      then
+        echo "ERROR: No remote device specified!"
+        ERROR_STATE=10
+      elif [ "$PROMPT" ]
+      then
+        configureDevice $PROMPT
+      else
+        #devicetest
+        configureDevice $parameter
+      fi
+    ;;
+
+    reset|restart|reboot)
+      local device
+      if [ -z "$parameter" -a -z "$PROMPT" ]
+      then
+        echo "ERROR: No remote device specified!"
+        ERROR_STATE=10
+      elif [ "$PROMPT" ]
+      then
+        echo t"Restarting rtpbondd device '$PROMPT' ..."
+        $TTY_NET_DIR/$TTY_NET_NAME restart $PROMPT
+      else
+        #devicetest
+        echo "Restarting rtpbondd device '$parameter' ..."
+        $TTY_NET_DIR/$TTY_NET_NAME restart $parameter
+      fi
+    ;;
+
+    send|put)
+      local device=""
+      local usercommand=""
+      if [ -z "$parameter" -a -z "$PROMPT" ]
+      then
+        echo "ERROR: No remote device specified!"
+        ERROR_STATE=10
+        break
+      elif [ "$PROMPT" ]
+      then
+        device=$PROMPT
+        [ "$value" ] && parameter="$parameter $value"
+        [ "$*" ] && parameter="$parameter $*"
+        usercommand=$parameter
+      else
+        device=$parameter
+        [ "$*" ] && value="$value $*"
+        usercommand=$value
+      fi
+
+      if [ "$(typeOf $device)" == $CONFIG_PAYLOAD_TYPE ]
+      then
+        echo -n "Transmitting '$usercommand' to '$device.$(typeOf $device).out' ... "
+        echo $usercommand > $TTY_NET_DIR/$device.$(typeOf $device).out
+        echo "OK"
+        read -t 4 fifoInput < $TTY_NET_DIR/$device.$(typeOf $device).in
+        [ "$fifoInput" ] && echo "Response: '$fifoInput'" || echo "ERROR: Timeout of fifo-read. No input!"
+      else
+        echo "ERROR: Your device is not a config channel!"
+        ERROR_STATE=13
+      fi
+    ;;
+
+    reinit)
+      getTtyNetStatus
+    ;;
+
+    vars)
+      echo "Config-devs: " ${TTYNET_CONFIG_DEVICES[@]}
+      echo "All devs: " ${TTYNET_DEVICES[@]}
+    ;;
+
+    version)
+      echo "rtpconf $SCRIPT_VERSION"
+    ;;
+    errors)
+      echo "jaja, kommt noch alles"
+    ;;
+    help)
+      print_usage
+    ;;
+    q|exit|quit)
+      exitHooks
+      exit 0
+    ;;
+    *)
+      echo "Unknown command!"
+      ERROR_STATE=1
+    ;;
+  esac
+return $ERROR_STATE
+}
+
+typeOf(){
+  local device=$1
+  
+  local counter=0
+  for each in ${TTYNET_DEVICES[@]}
+  do
+    [ "$device" == "$each" ] && break
+    ((counter++))
+  done
+  local pointer=0
+  let "pointer = 8 + ( 8 * $counter )"
+  echo ${TTYNET_STATUS[$pointer]}
+  return 0
+}
+
+pathOf(){
+  local device=$1
+  
+  local counter=0
+  for each in ${TTYNET_DEVICES[@]}
+  do
+    [ "$device" == "$each" ] && break
+    ((counter++))
+  done
+  local pointer=0
+  let "pointer = 2 + ( 8 * $counter )"
+  echo ${TTYNET_STATUS[$pointer]}
+  return 0
+}
+
+transmitTo() { #parameter: device text-to-transmit
+  if [ -z "$1" ]
+  then
+    echo "ERROR: no device given in transmitTo() Line $LINENO" >&2 
+    return 1
+  fi
+
+  if [ -z "$2" ]
+  then
+    echo "ERROR: no message given in transmitTo() Line $LINENO" >&2
+    return 1
+  fi
+
+  local device=$1
+  local devtype=$(typeOf $device)
+  local devpath=$TTY_NET_DIR/$(pathOf $device)
+  local message=$2
+  local input
+  local output
+
+  echo "$message" > $devpath/$device.$devtype.out
+  read -t1 input < $devpath/$device.$devtype.in
+  echo $input
+}
+
+printRemoteStatus(){
+  #erreichbarkeitstest
+  local reply
+  local locdev=$1
+  reply=$(transmitTo $locdev ':getip?')
+  if [ "$reply" ]
+  then
+    reply=${reply:0:((${#reply} - 2))}
+    
+  fi  
+  echo -ne "\n\tAvailability check: "
+
+  if [ "$reply" ]
+  then
+    echo "Positive"
+
+    declare -a REMOTE_STATUS
+    REMOTE_STATUS=( $(getRemoteStatus $locdev) )
+    echo -e "\n\tRemote Status:"
+    counter=0
+    echo -e "\t  IP: ${REMOTE_STATUS[$counter]}"
+    ((counter++))
+    echo -e "\t  Netmask: ${REMOTE_STATUS[$counter]}"
+    ((counter++))
+    echo -e "\t  Gateway: ${REMOTE_STATUS[$counter]}"
+    ((counter++))
+    echo -e "\t  Mac-Address: ${REMOTE_STATUS[$counter]}"
+    ((counter++))
+    echo -e "\t  Data_Dest_IP: ${REMOTE_STATUS[$counter]}"
+    ((counter++))
+    echo -e "\t  Data_Dest_Port: ${REMOTE_STATUS[$counter]}"
+    ((counter++))
+    echo -e "\t  Config_Dest_IP: ${REMOTE_STATUS[$counter]}"
+    ((counter++))
+    echo -e "\t  Config_Dest_Port: ${REMOTE_STATUS[$counter]}"
+    ((counter++))
+    echo -e "\t  Baudrate: ${REMOTE_STATUS[$counter]}"
+    ((counter++))
+  else
+    echo "Negative"
+  fi
+}
+
+getRemoteStatus() { #Parameter: Device; Returns: Array-like List of Settings 
+  [ -z "$1" ] && echo "ERROR: No device given in getRemoteStatus() Line $LINENO" >&2 && exitHooks && exit 1
+  
+  local device=$1
+  local devtype="$(typeOf $device)"
+  local input
+
+  if [ "$devtype" != $CONFIG_PAYLOAD_TYPE ]
+  then
+    echo "ERROR: Device '$device' in getRemoteStatus() Line $LINENO is NOT a Control-Device!" >&2
+    return 1
+  fi
+  
+  #getnet (ip,mask,gw)
+  input=$(transmitTo $device ":getnet?") #transmission! nice!! :-)
+  input=${input:0:((${#input} - 2))}
+  output=( $input )
+
+  #getmac
+  input=$(transmitTo $device ":getmac?")
+  input=${input:0:((${#input} - 2))}
+  output=( ${output[@]} $input )
+
+  #getdip_data (ziel-ip daten)
+  input=$(transmitTo $device ":getdip_data?")
+  input=${input:0:((${#input} - 2))}
+  output=( ${output[@]} $input )
+  
+  #getdport_data (ziel-port daten)
+  input=$(transmitTo $device ":getdport_data?")
+  input=${input:0:((${#input} - 2))}
+  output=( ${output[@]} $input )
+
+  #getdip_config
+  input=$(transmitTo $device ":getdip_config?")
+  input=${input:0:((${#input} - 2))}
+  output=( ${output[@]} $input )
+
+  #getdport_config
+  input=$(transmitTo $device ":getdport_config?")
+  input=${input:0:((${#input} - 2))}
+  output=( ${output[@]} $input )
+
+  #getbaud
+  input=$(transmitTo $device ":getbaud?")
+  input=${input:0:((${#input} - 2))}
+  output=( ${output[@]} $input )
+
+  echo ${output[@]}
+}
+
+getTtyNetStatus() {
+  #get raw status output
+  (
+  cd $TTY_NET_DIR
+  ./$TTY_NET_NAME status > /tmp/rtpconf.tmp
+  )
+
+  #process raw status output to cvs file
+  cat /tmp/rtpconf.tmp | awk '
+    BEGIN{ IFS="[\t :]+"; ORS=";"; OFS=";" }
+    NR == 1 && /Configfile loaded:/ {
+      printf $3 "\n" > "/tmp/rtpconf.locconf.tmp"
+    }
+    /^[^\t ]+:[\t ]*$/ {
+      print substr($1,1,length($1)-1)
+    }
+    /path/{
+      print $2
+    }
+    /destIp4Addr/ {
+      print $2,$4
+    }
+    /listenPort/ {
+      print $2
+    }
+    /baudRate/ {
+      print $2,$4
+    }
+    /payloadType/ {
+      print $2
+    }
+    /status/ {
+      print $14
+    }
+    NR > 3 && ( NR - 2 ) % 9 == 0 {
+      printf "\n"
+    }
+  ' > /tmp/rtpconf.status.tmp
+
+  #following: keep it in code for compatibility reasons for now
+  #dev!!!
+  TTYNET_STATUS=( $(cat /tmp/rtpconf.tmp | awk '
+    BEGIN {
+      FS="[: \t]+"
+    }
+
+    #config file
+    /Configfile/ {
+      print $3
+    }
+
+    #pfad
+    /path/ {
+      print $3
+    }
+
+    #fifoname
+    NR % 9 == 3 { #Aktuelle Zeile mod 9 == 3
+      print $1
+    }
+
+    #ip + baud
+    /destIp4Addr/ || /baudRate/{ 
+      print $3 "\n" $5 
+    }
+
+    #port + payload
+    /listenPort/ || /payloadType/{
+      print $3
+    }
+  ') )
+
+  TTYNET_DEVICES=( $(cat /tmp/rtpconf.tmp | awk '
+    BEGIN {
+      FS="[: \t]+"
+    }
+
+    NR % 9 == 3 {
+      print $1
+    }
+  ') )
+ 
+  TTYNET_CONFIG_DEVICES=( $(cat /tmp/rtpconf.tmp | awk -v payloadtype=$CONFIG_PAYLOAD_TYPE '
+    BEGIN {
+      FS="[: \t]+"
+      temp=""
+    }
+
+    NR % 9 == 3 {
+      temp=$1
+      deviceflag="active"
+    }
+    
+    deviceflag && deviceflag != "" && /payloadType/ {
+      if ( $3 == payloadtype ) { print temp; deviceflag="" }
+    }
+  ') )
+
+  for each in ${TTYNET_CONFIG_DEVICES[@]}
+  do
+    declare -a "REMOTESTATUS_$each"
+    eval "REMOTESTATUS_$each=( $(getRemoteStatus $each) )"
+    [ "$GLOBAL_DEBUG_MODE" == "1" ] && eval "echo \${each}: \${REMOTESTATUS_$each[@]}"
+  done
+
+  if [ "$GLOBAL_DEBUG_MODE" == "1" ]
+  then
+    echo "config devs: " ${TTYNET_CONFIG_DEVICES[@]}
+    echo "status: " ${TTYNET_STATUS[@]}
+    echo "all devs: " ${TTYNET_DEVICES[@]}
+  fi
+
+
+  rm /tmp/rtpconf.tmp
+}
+
+analyseConfigFile() {
+  local file=$1
+
+  while read line
+  do
+    case $( echo $line | awk '{ print $1 }') in
+      ^#)
+        continue
+      ;;
+      use)
+        echo "  Found option: use"
+        [ "$(echo $line | awk '{ print $2 }')" == "no" ] && return 0 || continue
+      ;;
+      debugmode)
+        echo "  Found option: debugmode"
+        GLOBAL_DEBUG_MODE=$(echo $line | awk '{ print $2 }')
+      ;;
+    esac
+  done < $file
+  return 0
+}
+
+#-------------------------------------------
+#Init
+#-------------------------------------------
+trap "echo -e '\nShutting down rtpconf ...'; exitHooks; exit 1" TERM INT
+
+#analyse optional configfile ./rtpconf.conf
+if [ -e "$CONFIG_FILE" ]
+then
+  if [ -r "$CONFIG_FILE" ]
+  then
+    echo "Analysing config file..."
+    analyseConfigFile $CONFIG_FILE && echo "Done" || echo "Failed!"
+  else
+    echo "WARNING: Found optional config file 'rtpconf.conf', but could not read! Check permissions."
+  fi
+fi
+
+#set up all interactive variables + check for rtpbondd
+[ $# -le 0 ] && FLAG_INTERACTIVE_MODE=1
+[ -n $1 ] && USER_CMD=$1
+[ -n $2 ] && USER_PARAM=$2
+if [ ! -x $TTY_NET_DIR/$TTY_NET_NAME ]
+then
+  ERROR_STATE=30
+  echo "ERROR #$ERROR_STATE: $TTY_NET_DIR/$TTY_NET_NAME is not executable"
+  exitHooks
+  exit $ERROR_STATE
+fi
+
+#exit 1
+
+getTtyNetStatus
+
+#-------------------------------------------
+# Main
+#-------------------------------------------
+#Single Operation
+if [ $FLAG_INTERACTIVE_MODE -eq 0 ]
+then
+  doOperation $@
+
+#Interactive Mode
+elif [ $FLAG_INTERACTIVE_MODE -eq 1 ]
+then
+  echo "rtpconf $SCRIPT_VERSION"
+  while [ 1 ]
+  do
+    read -e -p"$PROMPT> " -a USER_INPUT_ARRAY
+    doOperation ${USER_INPUT_ARRAY[@]}
+  done
+
+#Internal State Error
+else
+  echo "Internal State Error: FLAG_INTERACTIVE_MODE='$FLAG_INTERACTIVE_MODE'"
+  exit 1
+fi
+
+exitHooks
+exit 0
