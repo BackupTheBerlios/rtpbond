@@ -1,9 +1,9 @@
-# Makefile for tty_net.c
-EXEC_TTY_NET = tty_net
-EXEC_TTY_NET_BF = tty_net_bf
-OBJS_TTY_NET = tty_net.o
-OBJS_TTY_NET_BF = tty_net_bf.o
-SRC_TTY_NET = tty_net.c
+# Makefile for rtpbondd.c
+EXEC_RTPBONDD = rtpbondd
+EXEC_RTPBONDD_BF = rtpbondd_bf
+OBJS_RTPBONDD = rtpbondd.o
+OBJS_RTPBONDD_BF = rtpbondd_bf.o
+SRC_RTPBONDD = rtpbondd.c
 
 #The configuration for the Linuxhost
 LDFLAGS = -lpthread -o $@ -lm
@@ -16,22 +16,22 @@ INCLDIR_BF = /home/mike/opt/uClinux/bfin-uclinux/bfin-uclinux/runtime/usr/includ
 LIBDIR_BF = /home/mike/opt/uClinux/bfin-linux-uclibc/bfin-linux-uclibc/runtime/lib/
 LDFLAGS_BF = -pthread -o $@ -lm -L$(LIBDIR_BF)
 		
-all: $(EXEC_TTY_NET) 
+all: $(EXEC_RTPBONDD) 
 
 
-$(EXEC_TTY_NET): $(OBJS_TTY_NET)
-	$(CC) -I$(INCLDIR) $(LDFLAGS) $(OBJS_TTY_NET) -lm -lc
+$(EXEC_RTPBONDD): $(OBJS_RTPBONDD)
+	$(CC) -I$(INCLDIR) $(LDFLAGS) $(OBJS_RTPBONDD) -lm -lc
 
-$(OBJS_TTY_NET):
-	$(CC) -c -I$(INCLDIR) $(SRC_TTY_NET)
+$(OBJS_RTPBONDD):
+	$(CC) -c -I$(INCLDIR) $(SRC_RTPBONDD)
 	
-dnp: $(EXEC_TTY_NET_BF)
+dnp: $(EXEC_RTPBONDD_BF)
 
-$(EXEC_TTY_NET_BF): $(OBJS_TTY_NET_BF)
-	$(CC_BF) -I$(INCLDIR_BF) $(LDFLAGS_BF) $(CFLAGS_BF) $(OBJS_TTY_NET_BF) -lm
+$(EXEC_RTPBONDD_BF): $(OBJS_RTPBONDD_BF)
+	$(CC_BF) -I$(INCLDIR_BF) $(LDFLAGS_BF) $(CFLAGS_BF) $(OBJS_RTPBONDD_BF) -lm
 
-$(OBJS_TTY_NET_BF):
-	$(CC_BF) -c -o $@ -I$(INCLDIR_BF) $(CFLAGS_BF) $(SRC_TTY_NET)
+$(OBJS_RTPBONDD_BF):
+	$(CC_BF) -c -o $@ -I$(INCLDIR_BF) $(CFLAGS_BF) $(SRC_RTPBONDD)
 
 clean:
-	-rm -f $(EXEC_TTY_NET) $(EXEC_TTY_NET_BF) *.elf *.gdb *.o
+	-rm -f $(EXEC_RTPBONDD) $(EXEC_RTPBONDD_BF) *.elf *.gdb *.o

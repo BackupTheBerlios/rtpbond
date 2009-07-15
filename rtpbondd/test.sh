@@ -1,7 +1,7 @@
 #!/bin/bash
-killall tty_net
+killall rtpbondd
 make clean
 make
-./tty_net tty_net.conf &
+./rtpbondd rtpbondd.conf &
 sleep 1
-./tty_net status
+./rtpbondd status

@@ -1,5 +1,5 @@
 /*
-name:			tty_net.c
+name:			rtpbondd.c
 author(s):		Iomsn Egenson, Mike Mueller
 version:		0.15
 description:	Creates a virtual tty device which communicates over UDP. Uses FIFOs.
@@ -75,7 +75,7 @@ size_t strlcpy(char *dst, const char *src, size_t siz) {
 }
 
 
-static char *help="usage: tty_net deviceName destIp4Addr destPort listenPort (0 for any) baudRate[bytes/s] TMax[ms] payloadType \nor: tty_net config-file\n";
+static char *help="usage: rtpbondd deviceName destIp4Addr destPort listenPort (0 for any) baudRate[bytes/s] TMax[ms] payloadType \nor: rtpbondd config-file\n";
 
 // contains info about the device
 struct netSerDev
@@ -256,7 +256,7 @@ void * recvRtp(void* deviceAttr)
     int socketRecv;
 	socketRecv = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if (socketRecv < 0) {
-		printf("tty_net: error: creating socket(s) failed\n");
+		printf("rtpbondd: error: creating socket(s) failed\n");
 		exit(1);
 	}
 
@@ -292,7 +292,7 @@ void * recvRtp(void* deviceAttr)
     err = mkfifo(inFifoName, 0666);
     if(err < 0)
     {
-        printf("tty_net: error: cannot create %s in %s. ", inFifoName, devConf.path);
+        printf("rtpbondd: error: cannot create %s in %s. ", inFifoName, devConf.path);
         if(errno == 13)
             printf("Permission denied.\n");
         else
@@ -303,7 +303,7 @@ void * recvRtp(void* deviceAttr)
 	inFifo = open(inFifoName, O_RDWR | O_NONBLOCK);
 	if (inFifo < 0)
 	{
-        printf("tty_net: error: cannot open %s\n", inFifoName);
+        printf("rtpbondd: error: cannot open %s\n", inFifoName);
 	}
     
 	// bind socket to the local address
@@ -311,7 +311,7 @@ void * recvRtp(void* deviceAttr)
 	err = bind(socketRecv, (struct sockaddr *) &localAddress, sizeof(localAddress));
     if ((err) < 0)
 	{		
-        printf("tty_net: error: bind(socketRecv) failed. ");
+        printf("rtpbondd: error: bind(socketRecv) failed. ");
         if(errno == 98) 
             printf("Socket already in use!\n");
         else
@@ -360,7 +360,7 @@ void * recvRtp(void* deviceAttr)
             
 		}			
 		if (err < 0)
-			printf("tty_net: error: cannnot read from socket\n");
+			printf("rtpbondd: error: cannnot read from socket\n");
 	}
 	
 	close(inFifo);
@@ -399,7 +399,7 @@ void * sendRtp(void* deviceAttr)
     int socketSend;
 	socketSend = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if (socketSend < 0) {
-		printf("tty_net: error: creating socket(s) failed\n");
+		printf("rtpbondd: error: creating socket(s) failed\n");
 		exit(1);
 	}
 
@@ -434,13 +434,13 @@ void * sendRtp(void* deviceAttr)
     //create the FIFO
 	err = mkfifo(outFifoName, 0666);
     if(err) {
-        printf("tty_net: error: cannot create %s in %s\n", outFifoName, devConf.path);
+        printf("rtpbondd: error: cannot create %s in %s\n", outFifoName, devConf.path);
         exit(1);
     }
 	outFifo = open(outFifoName, O_RDONLY | O_NONBLOCK);
 	if (outFifo < 0)
 	{
-		printf("tty_net: error: cannot open FIFO %s\n", outFifoName);
+		printf("rtpbondd: error: cannot open FIFO %s\n", outFifoName);
 		exit(1);
 	}
 	
@@ -457,7 +457,7 @@ void * sendRtp(void* deviceAttr)
 		err = read(outFifo, buffer, PL_SIZE);
 	/*	if (err < 0)
 		{
-			printf("tty_net: error: cannot read from %s\n", outFifoName);
+			printf("rtpbondd: error: cannot read from %s\n", outFifoName);
 			exit(1);
 		}
 	*/	
@@ -484,8 +484,6 @@ void * sendRtp(void* deviceAttr)
 			// in case of timeout send "Im alive"			
 			if (err == 0) {
                 strncpy(buffer, "Im alive", 8);
-				//buffer[0] = 'I'; buffer[1] = 'm'; buffer[2] = ' '; buffer[3] = 'a';
-				//buffer[4] = 'l'; buffer[5] = 'i'; buffer[6] = 'v'; buffer[7] = 'e';
 				cdpHeader.length = 0;
 			}
 									 
@@ -533,7 +531,7 @@ void * sendRtp(void* deviceAttr)
 //prints out an error message
 void badConfig(int lineNumber)
 {
-	printf("tty_net: error: there is something wrong with the config file in line %i\n", lineNumber);
+	printf("rtpbondd: error: there is something wrong with the config file in line %i\n", lineNumber);
 	exit(1);
 }
 
@@ -699,7 +697,7 @@ int readConf(char *fileName)
 	}
 
     if(nextDev == 0) {
-        printf("tty_net: error in configfile. Device %s is not correctly configured! Aborting\n", devices[devCounter].name);
+        printf("rtpbondd: error in configfile. Device %s is not correctly configured! Aborting\n", devices[devCounter].name);
         exit(1);
     }
 
@@ -717,13 +715,13 @@ void startDevices(int n) {
         //start the recv-thread for this device
         err = pthread_create(&threads[2*n], NULL, recvRtp, (void*) &devices[n]);
         if (err) {
-            printf("tty_net: error: creating recvRtp for device %d failed\n", n);
+            printf("rtpbondd: error: creating recvRtp for device %d failed\n", n);
             exit(1);
         }
         //start the send-thread for this device
         err = pthread_create(&threads[2*n+1], NULL, sendRtp, (void*) &devices[n]);
         if (err) {
-            printf("tty_net: error: creating sendRtp for device %d failed\n", n);
+            printf("rtpbondd: error: creating sendRtp for device %d failed\n", n);
             exit(1);
         }
     }
@@ -739,25 +737,25 @@ void restartDevice(char* name, char* filename) {
             //cancel the old recv-thread for this device
             err = pthread_cancel(threads[2*running]);
             if(err) {
-                printf("tty_net: error: canceling recvRtp for device %d failed\n", running);
+                printf("rtpbondd: error: canceling recvRtp for device %d failed\n", running);
                 exit(1);
             }
             //cancel the old send-thread for this device
             err = pthread_cancel(threads[2*running+1]);
             if(err) {
-                printf("tty_net: error: canceling sendRtp for device %d failed\n", running);
+                printf("rtpbondd: error: canceling sendRtp for device %d failed\n", running);
                 exit(1);
             }
             //start the new send-thread for this device
             err = pthread_create(&threads[2*running+1], NULL, sendRtp, (void*) &devices[running]);
             if (err) {
-                printf("tty_net: error: creating sendRtp for device %d failed\n", running);
+                printf("rtpbondd: error: creating sendRtp for device %d failed\n", running);
                 exit(1);
             }
             //start the new recv-thread for this device
             err = pthread_create(&threads[2*running], NULL, recvRtp, (void*) &devices[running]);
             if (err) {
-                printf("tty_net: error: creating recvRtp for device %d failed\n", running);
+                printf("rtpbondd: error: creating recvRtp for device %d failed\n", running);
                 exit(1);
             }
         }
@@ -796,7 +794,7 @@ void printStatus(char* configFile, int runningDevices, clock_t actualClock) {
         printf("\tPackets sent: %i (%i data/%i alive)", pkgSent, devicestats[i].pkgDataSent, devicestats[i].pkgAliveSent);
         printf("\tPackets received: %i (%i data/%i alive)", pkgRcvd, devicestats[i].pkgDataRcvd, devicestats[i].pkgAliveRcvd);
         printf("\tstatus: ");
-        if(difftime(actualClock, devicestats[i].TLastPkg)/CLOCKS_PER_SEC >= devices[i].TMax/1000.0)
+        if(pkgRcvd == 0 || difftime(actualClock, devicestats[i].TLastPkg)/CLOCKS_PER_SEC >= devices[i].TMax/1000.0)
             printf("inactive\n");
         else
             printf("active\n");
@@ -817,13 +815,153 @@ void printStatus(char* configFile, int runningDevices, clock_t actualClock) {
 }
 
 
+void sendStatusRequest(/*int localSocketOut, struct sockaddr_un* outAddress, unsigned int* outAddressLength*/) {
+	int localSocketOut; // socket to communicate with other rtpbondd process (kind of IPC)
+	struct sockaddr_un outAddress;
+	unsigned int outAddressLength;
+
+	char cmd[256+8];	// command from other rtpbondd process
+
+    //create the socket, with whom we send the command to the other process
+    if ((localSocketOut = socket(AF_LOCAL, SOCK_DGRAM, 0)) == -1)
+    {
+        perror("rtpbondd: error: could not open socketOut\n");
+        exit(1);
+    }
+        
+    //the socket which we use to request the status
+    outAddress.sun_family = AF_LOCAL;
+    strncpy(outAddress.sun_path, "ttynet.in", 11);
+    outAddressLength = strlen(outAddress.sun_path) + sizeof(outAddress.sun_family) + 1;
+     
+    //get all parameters (send "getstatus" to the other process through the socket)
+    strncpy(cmd, "getstatus", 9);
+    if (sendto(localSocketOut, cmd, strlen(cmd), 0, (struct sockaddr *) &outAddress, outAddressLength) < 0)
+    {
+        printf("rtpbondd: error: status request failed.\n");
+        if(errno == 61 || errno == 111) printf("rtpbondd not running!\n");
+        printf("%d\n", errno);
+        exit(1);
+    }
+}
+
+
+void getStatusResponse(int* localSocketIn, struct sockaddr_un* inAddress, unsigned int* inAddressLength) {
+    struct netSerDev recvDevice[1];
+    struct devStats recvStats[1];
+    int runningDevices = 0, i;
+    clock_t actualClock = 0;
+    char configFile[256];
+
+    //create the socket, from which we get the status
+    if ((*localSocketIn = socket(AF_LOCAL, SOCK_DGRAM, 0)) == -1)
+    {
+        perror("rtpbondd: error: could not open socketIn\n");
+        exit(1);
+    }
+    //the socket where we get the status from
+    inAddress->sun_family = AF_LOCAL;
+    strlcpy(inAddress->sun_path, "ttynet.ou", 11);
+    unlink(inAddress->sun_path);
+    *inAddressLength = strlen(inAddress->sun_path) + sizeof(inAddress->sun_family) + 1;	
+    bind(*localSocketIn, /*(struct sockaddr*)&*/inAddress, *inAddressLength);
+    
+    //receive config
+    //receive the clock value
+    recvfrom(*localSocketIn, &actualClock, sizeof(clock_t), 0, /*(struct sockaddr *) &*/inAddress, inAddressLength);
+    //receive the name of the configfile
+    recvfrom(*localSocketIn, configFile, 256, 0, /*(struct sockaddr *) &*/inAddress, inAddressLength);
+    //receive the number of devices first
+    recvfrom(*localSocketIn, &runningDevices, sizeof(int), 0, /*(struct sockaddr *) &*/inAddress, inAddressLength);
+
+    //receive the status of every device and save it in the arrays
+    for(i=0; i< runningDevices; i++) {
+        recvfrom(*localSocketIn, recvDevice, sizeof(devices[i]), 0, /*(struct sockaddr *) &*/inAddress, inAddressLength);
+        recvfrom(*localSocketIn, recvStats, sizeof(devices[i]), 0, /*(struct sockaddr *) &*/inAddress, inAddressLength);
+        devices[i] = recvDevice[0];
+        devicestats[i] = recvStats[0];
+    }
+    //print the statusmessages
+    printStatus(configFile, runningDevices, actualClock);
+}
+
+
+void sendRestartRequest(char* devicename) {
+	int localSocketOut; // socket to communicate with other rtpbondd process (kind of IPC)
+	struct sockaddr_un outAddress;
+	unsigned int outAddressLength;
+
+    //create the socket, with whom we send the command to the other process
+    if ((localSocketOut = socket(AF_LOCAL, SOCK_DGRAM, 0)) == -1)
+    {
+        perror("rtpbondd: error: could not open socketOut\n");
+        exit(1);
+    }
+    //the socket which we use to request the status
+    outAddress.sun_family = AF_LOCAL;
+    strncpy(outAddress.sun_path, "ttynet.in", 11);
+    outAddressLength = strlen(outAddress.sun_path) + sizeof(outAddress.sun_family) + 1;
+    //restart the device (send "restart" to the other process through the socket)
+    if (sendto(localSocketOut, "restart", strlen("restart"), 0, (struct sockaddr *) &outAddress, outAddressLength) < 0)
+    {
+        printf("rtpbondd: error: restart request failed\n");
+        exit(1);
+    }
+    //send the name of the device we want to restart
+    if (sendto(localSocketOut, devicename, strlen(devicename), 0, (struct sockaddr *) &outAddress, outAddressLength) < 0)
+    {
+        printf("rtpbondd: error: restart request failed\n");
+        exit(1);
+    }
+}
+
+
+void sendStatusResponse(int runningDevices, char* configFile) {
+	int localSocketOut, i, err; // socket to communicate with other rtpbondd process (kind of IPC)
+	struct sockaddr_un outAddress;
+	unsigned int outAddressLength;
+    clock_t actualClock;
+
+    //the socket where we write the config to
+    if ((localSocketOut = socket(AF_UNIX, SOCK_DGRAM, 0)) == -1)
+    {
+        printf("rtpbondd: creating localSocketOut failed\n");
+        exit(1);
+    }
+
+    outAddress.sun_family = AF_LOCAL;
+    strncpy(outAddress.sun_path, "ttynet.ou", 11);
+    outAddressLength = strlen(outAddress.sun_path) + sizeof(outAddress.sun_family) + 1;
+
+    //send the current clockvalue to other process
+    actualClock = clock();
+    sendto(localSocketOut, &actualClock, sizeof(clock_t), 0, (struct sockaddr *) &outAddress, outAddressLength);
+
+    //send the name of the configfile to other process
+    sendto(localSocketOut, configFile, strlen(configFile), 0, (struct sockaddr *) &outAddress, outAddressLength);
+    
+    //send number of devices to other process
+    sendto(localSocketOut, &runningDevices, sizeof(int), 0, (struct sockaddr *) &outAddress, outAddressLength);
+    //send config and stats to other process
+    for(i=0; i < runningDevices; i++) {
+        //send deviceconf
+        err = sendto(localSocketOut, (struct netSerDev *) &devices[i], sizeof(devices[i]), 0, (struct sockaddr *) &outAddress, outAddressLength);
+        //send devicestats
+        err = sendto(localSocketOut, (struct devStats *) &devicestats[i], sizeof(devicestats[i]), 0, (struct sockaddr *) &outAddress, outAddressLength);
+    }
+}
+
+
+
+
+
 //the main function.
 int main(int argc, char *argv[]) {
 	pthread_t threads[MAX_DEV*2];	// receive and send threads
 	int err, i;
-	char cmd[256+8];	// command from other tty_net process
+	char cmd[256+8];	// command from other rtpbondd process
     char configFile[256];
-	int localSocketIn, localSocketOut; // socket to communicate with other tty_net process (kind of IPC)
+	int localSocketIn, localSocketOut; // socket to communicate with other rtpbondd process (kind of IPC)
 	struct sockaddr_un inAddress, outAddress;
 	unsigned int inAddressLength, outAddressLength;
     struct netSerDev recvDevice[1];
@@ -849,92 +987,19 @@ int main(int argc, char *argv[]) {
     }
 
     //if the first parameter is status
-    //handle a status request
+    //perform a status request
     else if (!strcmp(argv[1], "status")) {
-        //create the socket, with whom we send the command to the other process
-        if ((localSocketOut = socket(AF_LOCAL, SOCK_DGRAM, 0)) == -1)
-        {
-            perror("tty_net: error: could not open socketOut\n");
-            exit(1);
-        }
-        //create the socket, from which we get the status
-        if ((localSocketIn = socket(AF_LOCAL, SOCK_DGRAM, 0)) == -1)
-        {
-            perror("tty_net: error: could not open socketIn\n");
-            exit(1);
-        }
-        // if opening socket fails -> device does not exist or opening just failed
-            
-        //the socket which we use to request the status
-        outAddress.sun_family = AF_LOCAL;
-        strncpy(outAddress.sun_path, "ttynet.in", 11);
-        outAddressLength = strlen(outAddress.sun_path) + sizeof(outAddress.sun_family) + 1;
-        //the socket where we get the status from
-        inAddress.sun_family = AF_LOCAL;
-        strlcpy(inAddress.sun_path, "ttynet.ou", 11);
-        unlink(inAddress.sun_path);
-        inAddressLength = strlen(inAddress.sun_path) + sizeof(inAddress.sun_family) + 1;	
-        bind(localSocketIn, (struct sockaddr*)&inAddress, inAddressLength);
-         
-        //get all parameters (send "getstatus" to the other process through the socket)
-        strncpy(cmd, "getstatus", 9);
-        if (sendto(localSocketOut, cmd, strlen(cmd), 0, (struct sockaddr *) &outAddress, outAddressLength) < 0)
-        {
-            printf("tty_net: error: status request failed. ");
-            if(errno == 61) printf("tty_net not running!\n");
-            else printf("%d", errno);
-            return 1;
-        }
-        
-        //receive config
-        //receive the clock value
-        recvfrom(localSocketIn, &actualClock, sizeof(clock_t), 0, (struct sockaddr *) &inAddress, &inAddressLength);
-        //receive the name of the configfile
-        recvfrom(localSocketIn, configFile, 256, 0, (struct sockaddr *) &inAddress, &inAddressLength);
-        //receive the number of devices first
-        recvfrom(localSocketIn, &runningDevices, sizeof(int), 0, (struct sockaddr *) &inAddress, &inAddressLength);
-
-        //receive the status of every device and save it in the arrays
-        for(i=0; i< runningDevices; i++) {
-            recvfrom(localSocketIn, recvDevice, sizeof(devices[i]), 0, (struct sockaddr *) &inAddress, &inAddressLength);
-            recvfrom(localSocketIn, recvStats, sizeof(devices[i]), 0, (struct sockaddr *) &inAddress, &inAddressLength);
-            devices[i] = recvDevice[0];
-            devicestats[i] = recvStats[0];
-        }
-        //print the statusmessages
-        printStatus(configFile, runningDevices, actualClock);
+        sendStatusRequest();
+        getStatusResponse(&localSocketIn, &inAddress, &inAddressLength);
         return 0;
-
-    
     }
-    //handle a restart request
+    //perform a restart request
     else if (!strcmp(argv[1], "restart")) {
         if(argc < 3) {
-            printf("usage: tty_net restart deviceName\n");
+            printf("usage: rtpbondd restart deviceName\n");
             exit(1);
         }
-        //create the socket, with whom we send the command to the other process
-        if ((localSocketOut = socket(AF_LOCAL, SOCK_DGRAM, 0)) == -1)
-        {
-            perror("tty_net: error: could not open socketOut\n");
-            exit(1);
-        }
-        //the socket which we use to request the status
-        outAddress.sun_family = AF_LOCAL;
-        strncpy(outAddress.sun_path, "ttynet.in", 11);
-        outAddressLength = strlen(outAddress.sun_path) + sizeof(outAddress.sun_family) + 1;
-        //restart the device (send "restart" to the other process through the socket)
-        if (sendto(localSocketOut, argv[1], strlen(argv[1]), 0, (struct sockaddr *) &outAddress, outAddressLength) < 0)
-        {
-            printf("tty_net: error: restart request failed\n");
-            return 1;
-        }
-        //send the name of the device we want to restart
-        if (sendto(localSocketOut, argv[2], strlen(argv[2]), 0, (struct sockaddr *) &outAddress, outAddressLength) < 0)
-        {
-            printf("tty_net: error: restart request failed\n");
-            return 1;
-        }
+        sendRestartRequest(argv[2]);
     }
 
     else {
@@ -947,20 +1012,14 @@ int main(int argc, char *argv[]) {
         //change back to cwd
         chdir(cwd);
 	    
-        //create local sockets for communication with other tty_net process that calls status
+        //create local sockets for communication with other rtpbondd process that calls status
         //the socket from where we read the command from other processes
 	    if ((localSocketIn = socket(AF_UNIX, SOCK_DGRAM, 0)) == -1)
         {
-            printf("tty_net: creating localSocketIn failed\n");
+            printf("rtpbondd: creating localSocketIn failed\n");
             exit(1);
         }
-        //the socket where we write the config to
-        if ((localSocketOut = socket(AF_UNIX, SOCK_DGRAM, 0)) == -1)
-        {
-            printf("tty_net: creating localSocketOut failed\n");
-            exit(1);
-        }
-
+        
         //the socket from where we get the commands
         inAddress.sun_family = AF_UNIX;
         strncpy(inAddress.sun_path, "ttynet.in", 11);
@@ -969,44 +1028,27 @@ int main(int argc, char *argv[]) {
         //bind the inputsocket
         if (bind(localSocketIn, (struct sockaddr *) &inAddress, inAddressLength) < 0)
         {
-            printf("tty_net: error: binding local socket failed! Possibly another tty_net process running already!\n");
+            printf("rtpbondd: error: binding local socket failed! Possibly another rtpbondd process running already!\n");
             exit(1);
         }
         
-        // waiting for command from other tty_net process
+        printf("rtpbondd started. Listening on %d device(s). PID=%d\n", runningDevices, getpid());
+
+        // waiting for command from other rtpbondd process
         cmd[0] = 0;
         while (cmd[0] == 0)
         {
             //receive a command from the local socket
             if (recvfrom(localSocketIn, cmd, 256+8, 0, (struct sockaddr*) &inAddress, &inAddressLength) < 0)
             {
-                printf("tty_net: error: receiving from local socket failed\n");
+                printf("rtpbondd: error: receiving from local socket failed\n");
                 exit(1);
             }
             //if the command is "getstatus", send the config and status of all devices to the other process
             if (strstr(cmd, "getstatus"))
             {
-                outAddress.sun_family = AF_LOCAL;
-                strncpy(outAddress.sun_path, "ttynet.ou", 11);
-                outAddressLength = strlen(outAddress.sun_path) + sizeof(outAddress.sun_family) + 1;
-
-                //send the current clockvalue to other process
-                actualClock = clock();
-                sendto(localSocketOut, &actualClock, sizeof(clock_t), 0, (struct sockaddr *) &outAddress, outAddressLength);
-
-                //send the name of the configfile to other process
-                sendto(localSocketOut, argv[1], strlen(argv[1])+1, 0, (struct sockaddr *) &outAddress, outAddressLength);
-                
-                //send number of devices to other process
-                sendto(localSocketOut, &runningDevices, sizeof(int), 0, (struct sockaddr *) &outAddress, outAddressLength);
-                //send config and stats to other process
-                for(i=0; i < runningDevices; i++) {
-                    //send deviceconf
-                    err = sendto(localSocketOut, (struct netSerDev *) &devices[i], sizeof(devices[i]), 0, (struct sockaddr *) &outAddress, outAddressLength);
-                    //send devicestats
-                    err = sendto(localSocketOut, (struct devStats *) &devicestats[i], sizeof(devicestats[i]), 0, (struct sockaddr *) &outAddress, outAddressLength);
-                }
-
+                usleep(200);
+                sendStatusResponse(runningDevices, argv[1]);
                 cmd[0] = 0;
             }
             
