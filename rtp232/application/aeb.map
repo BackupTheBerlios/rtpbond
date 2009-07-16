@@ -39,7 +39,7 @@ Common symbol       size              file
 CommandBuffer       0x2a              com1_debug.o
 menge2              0x2               aeb.o
 hEnc28j60           0x1               enc28j60.o
-hUsart0             0x100             com0.o
+hUsart0             0x101             com0.o
 debug               0x2               aeb.o
 __brkval            0x2               c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(malloc.o)
 com1_recv           0x2a              com1_debug.o
@@ -185,7 +185,7 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000     0x5f1a
+.text           0x00000000     0x6124
  *(.vectors)
  .vectors       0x00000000       0x8c c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
                 0x00000000                __vectors
@@ -306,193 +306,195 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a
                 0x00001710                onUdpResponse
                 0x00001794                onUdpRequest
  .text          0x0000180c        0x0 tftp.o
- .text          0x0000180c      0x1de serial.o
-                0x000018a2                serialEepromSetConfig
-                0x00001910                onSerial
-                0x00001970                serialSendBytes
+ .text          0x0000180c      0x206 serial.o
+                0x000018b6                serialEepromSetConfig
+                0x0000192a                onSerial
+                0x0000198a                serialSendBytes
                 0x0000180c                serialEepromGetConfig
-                0x00001976                onInitSerial
- .text          0x000019ea       0x12 clock.o
-                0x000019f6                clockGetTimeStamp
-                0x000019f0                clockGetShortTimeStamp
-                0x000019ea                onInitClock
- .text          0x000019fc      0x404 timer.o
-                0x000019fc                onInitTimer
-                0x00001a0e                timerClearTimeout
-                0x00001a2a                timerAddTimeout
-                0x00001c22                DebugTimerList
-                0x00001b80                onTimer
- .text          0x00001e00      0x1ca doublyLinkedList.o
-                0x00001e00                insertDlNodeAfter
-                0x00001e4c                insertDlNodeBefore
-                0x00001eea                insertDlNodeLast
-                0x00001f7e                removeDlNode
-                0x00001e8c                insertDlNodeBeginning
- .text          0x00001fca       0x8a queue.o
-                0x0000201c                queueIsFull
-                0x0000200a                queueIsEmpty
-                0x00001fca                pushQueueEntry
-                0x0000202c                popQueueEntry
- .text          0x00002054      0x11a rtc.o
-                0x000020d8                rtcGetTime64
-                0x00002128                rtcGetTime32
-                0x000020a0                rtcInitialize
-                0x00002150                rtcGetTime16
-                0x00002054                __vector_16
- .text          0x0000216e      0x3d6 com0.o
-                0x00002454                __vector_19
-                0x0000219e                com0HasBytes
-                0x00002274                com0Initialize
-                0x000023c2                onCom0Timeout
-                0x00002300                com0RotateRecvBuffer
-                0x0000221e                com0RecvBytes
-                0x000021a8                com0RotateSendBuffer
-                0x0000216e                com0putChar
-                0x00002176                com0putBuffer
-                0x000023dc                __vector_18
-                0x0000219c                com0SendBytes
- .text          0x00002544      0xbc8 enc28j60.o
-                0x00002662                enc28j60_init
-                0x00002568                enc28j60_write_byte
-                0x00002696                enc28j60_bmputs
-                0x00002b6e                enc28j60_crputw
-                0x00002736                enc28j60_bmgets
-                0x000026bc                enc28j60_reset
-                0x00002c36                enc28j60_crputs
-                0x000026ca                enc28j60_bmgetc
-                0x00002544                enc28j60_write
-                0x00002f3e                enc28j60_crgetc
-                0x000026f4                enc28j60_bmgetw
-                0x00002922                enc28j60_crbfc
-                0x00002860                enc28j60_crbfs
-                0x000029e4                enc28j60_wcr
-                0x00002e44                enc28j60_crgetw
-                0x0000259e                enc28j60_read
-                0x00002678                enc28j60_calcOffset
-                0x00002764                enc28j60_rcr2
-                0x00002cfe                enc28j60_prputw
-                0x00003010                enc28j60_crgets
-                0x00002aac                enc28j60_crputc
-                0x000025d4                enc28j60_select_bank
- .text          0x0000310c      0x408 nic.o
-                0x00003298                nicReceiveResponse
-                0x000031c2                nicFreeRequest
-                0x0000312a                nicResponseSize
-                0x00003140                nicResponseRead
-                0x000032dc                nicInitialize
-                0x0000317c                nicFreeResponse
-                0x00003288                nicNewRequest
-                0x0000310c                nicGetPacketSize
-                0x000033de                nicWaitForSend
-                0x00003208                nicAddPacketHeader
-                0x0000341a                nicSendPacket
- .text          0x00003514        0x0 bootloader.o
- .text          0x00003514       0x22 serialbridge.o
-                0x0000352a                onRtpData
-                0x00003514                onInitApplication
-                0x00003516                onSerialData
- .text          0x00003536        0x0 watchdog.o
- .text          0x00003536       0x80 netlib.o
-                0x00003536                calculateCheckSum
- .text          0x000035b6     0x1776 commands.o
-                0x00003b1e                rcfg_setDPORT_Data
-                0x00003e5a                rcfg_setNM
-                0x00003d6a                rcfg_setNet
-                0x00003946                rcfg_setStopBits
-                0x00003a26                rcfg_setBaud
-                0x00003b7a                rcfg_getDPORT_Config
-                0x0000420a                rcfg_getDIP_Data
-                0x00004710                rcfg_getIP
-                0x00003fc8                ip2str
-                0x00004604                rcfg_getNM
-                0x000035ec                rcfg_getDataBits
-                0x00003692                rcfg_getStopBits
-                0x00003ee6                rcfg_getMAC
-                0x000040f6                rcfg_getDIP_Config
-                0x0000373c                rcfg_getParity
-                0x0000481a                rcfg_getConfig
-                0x00003cc2                rcfg_setDIP_Config
-                0x00003ea2                rcfg_setIP
-                0x0000431c                rcfg_getNet
-                0x000044f8                rcfg_getGW
-                0x000035d2                rcfg_Reboot
-                0x000039b8                rcfg_setParity
-                0x00003816                rcfg_getBaud
-                0x00003e10                rcfg_setGW
-                0x000035dc                rcfg_Disable
-                0x000035e6                Config_is_Disabled
-                0x00003c1e                rcfg_getDPORT_Data
-                0x000038d4                rcfg_setDataBits
-                0x00004048                rcfg_setMAC
-                0x00003d18                rcfg_setDIP_Data
-                0x00003ac2                rcfg_setDPORT_Config
-                0x000035b6                stringLength
- .text          0x00004d2c      0x35a parser.o
-                0x00004e18                rcfg_parseIP
-                0x00004db6                rcfg_parseUHex
-                0x00004d2c                rcfg_parseUInt
- .text          0x00005086      0x1c2 rcfg.o
-                0x00005086                onRtpControl
- .text          0x00005248      0x5b6 config.o
-                0x00005742                onInitConfig
-                0x000052ee                EepromReadConfig
-                0x00005542                configEepromSetConfig
-                0x00005270                EepromWriteConfig
-                0x0000537e                configEepromGetConfig
- .text          0x000057fe      0x294 com1_debug.o
-                0x0000588c                __vector_32
-                0x000058be                ExecuteCommand
-                0x0000585a                __vector_31
-                0x00005950                __vector_30
-                0x0000583c                putChar
-                0x000057fe                com1Initialize
-                0x0000584c                getChar
-                0x000058a0                putString
- .text          0x00005a92        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_mulsi3.o)
- .text          0x00005a92        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodsi4.o)
- .text          0x00005a92        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
- .text          0x00005a92        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_clear_bss.o)
- .text          0x00005a92      0x204 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(malloc.o)
-                0x00005a92                malloc
-                0x00005be6                free
- .text          0x00005c96       0x12 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(strcmp.o)
-                0x00005c96                strcmp
- .text          0x00005ca8        0xe c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(strcpy.o)
-                0x00005ca8                strcpy
- .text          0x00005cb6       0x38 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(eerd_block.o)
-                0x00005cb6                __eerd_block
- .text          0x00005cee       0x38 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(eewr_block.o)
-                0x00005cee                __eewr_block
- .text          0x00005d26       0x42 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(itoa.o)
-                0x00005d26                itoa
- .text          0x00005d68       0x4a c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(ultoa.o)
-                0x00005d68                ultoa
- .text          0x00005db2       0x2c c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(utoa.o)
-                0x00005db2                utoa
- .text          0x00005dde       0x20 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(strrev.o)
-                0x00005dde                strrev
- .text          0x00005dfe        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodhi4.o)
- .text          0x00005dfe        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_prologue.o)
- .text          0x00005dfe        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_epilogue.o)
-                0x00005dfe                . = ALIGN (0x2)
+                0x00001990                onInitSerial
+ .text          0x00001a12       0x12 clock.o
+                0x00001a1e                clockGetTimeStamp
+                0x00001a18                clockGetShortTimeStamp
+                0x00001a12                onInitClock
+ .text          0x00001a24      0x404 timer.o
+                0x00001a24                onInitTimer
+                0x00001a36                timerClearTimeout
+                0x00001a52                timerAddTimeout
+                0x00001c4a                DebugTimerList
+                0x00001ba8                onTimer
+ .text          0x00001e28      0x1ca doublyLinkedList.o
+                0x00001e28                insertDlNodeAfter
+                0x00001e74                insertDlNodeBefore
+                0x00001f12                insertDlNodeLast
+                0x00001fa6                removeDlNode
+                0x00001eb4                insertDlNodeBeginning
+ .text          0x00001ff2       0x8a queue.o
+                0x00002044                queueIsFull
+                0x00002032                queueIsEmpty
+                0x00001ff2                pushQueueEntry
+                0x00002054                popQueueEntry
+ .text          0x0000207c      0x11a rtc.o
+                0x00002100                rtcGetTime64
+                0x00002150                rtcGetTime32
+                0x000020c8                rtcInitialize
+                0x00002178                rtcGetTime16
+                0x0000207c                __vector_16
+ .text          0x00002196      0x3f2 com0.o
+                0x00002498                __vector_19
+                0x000021c6                com0HasBytes
+                0x0000229c                com0Initialize
+                0x000023f2                onCom0Timeout
+                0x00002330                com0RotateRecvBuffer
+                0x00002246                com0RecvBytes
+                0x000021d0                com0RotateSendBuffer
+                0x00002196                com0putChar
+                0x0000219e                com0putBuffer
+                0x0000240c                __vector_18
+                0x000021c4                com0SendBytes
+ .text          0x00002588      0xbc8 enc28j60.o
+                0x000026a6                enc28j60_init
+                0x000025ac                enc28j60_write_byte
+                0x000026da                enc28j60_bmputs
+                0x00002bb2                enc28j60_crputw
+                0x0000277a                enc28j60_bmgets
+                0x00002700                enc28j60_reset
+                0x00002c7a                enc28j60_crputs
+                0x0000270e                enc28j60_bmgetc
+                0x00002588                enc28j60_write
+                0x00002f82                enc28j60_crgetc
+                0x00002738                enc28j60_bmgetw
+                0x00002966                enc28j60_crbfc
+                0x000028a4                enc28j60_crbfs
+                0x00002a28                enc28j60_wcr
+                0x00002e88                enc28j60_crgetw
+                0x000025e2                enc28j60_read
+                0x000026bc                enc28j60_calcOffset
+                0x000027a8                enc28j60_rcr2
+                0x00002d42                enc28j60_prputw
+                0x00003054                enc28j60_crgets
+                0x00002af0                enc28j60_crputc
+                0x00002618                enc28j60_select_bank
+ .text          0x00003150      0x408 nic.o
+                0x000032dc                nicReceiveResponse
+                0x00003206                nicFreeRequest
+                0x0000316e                nicResponseSize
+                0x00003184                nicResponseRead
+                0x00003320                nicInitialize
+                0x000031c0                nicFreeResponse
+                0x000032cc                nicNewRequest
+                0x00003150                nicGetPacketSize
+                0x00003422                nicWaitForSend
+                0x0000324c                nicAddPacketHeader
+                0x0000345e                nicSendPacket
+ .text          0x00003558        0x0 bootloader.o
+ .text          0x00003558       0x22 serialbridge.o
+                0x0000356e                onRtpData
+                0x00003558                onInitApplication
+                0x0000355a                onSerialData
+ .text          0x0000357a        0x0 watchdog.o
+ .text          0x0000357a       0x80 netlib.o
+                0x0000357a                calculateCheckSum
+ .text          0x000035fa     0x1954 commands.o
+                0x00003d18                rcfg_setDPORT_Data
+                0x00004054                rcfg_setNM
+                0x00003f64                rcfg_setNet
+                0x00003b0a                rcfg_setStopBits
+                0x00003c0e                rcfg_setBaud
+                0x00003d74                rcfg_getDPORT_Config
+                0x00004404                rcfg_getDIP_Data
+                0x0000490a                rcfg_getIP
+                0x000041c2                ip2str
+                0x000047fe                rcfg_getNM
+                0x000036e2                rcfg_getDataBits
+                0x00003798                rcfg_getStopBits
+                0x000040e0                rcfg_getMAC
+                0x000042f0                rcfg_getDIP_Config
+                0x00003852                rcfg_getParity
+                0x00004a14                rcfg_getConfig
+                0x00003ebc                rcfg_setDIP_Config
+                0x0000409c                rcfg_setIP
+                0x00004516                rcfg_getNet
+                0x000046f2                rcfg_getGW
+                0x00003a00                rcfg_setBufferSizeLimit
+                0x00003616                rcfg_Reboot
+                0x00003b8e                rcfg_setParity
+                0x0000393e                rcfg_getBaud
+                0x00003630                rcfg_getBufferSizeLimit
+                0x0000400a                rcfg_setGW
+                0x00003620                rcfg_Disable
+                0x0000362a                Config_is_Disabled
+                0x00003e18                rcfg_getDPORT_Data
+                0x00003a86                rcfg_setDataBits
+                0x00004242                rcfg_setMAC
+                0x00003f12                rcfg_setDIP_Data
+                0x00003cbc                rcfg_setDPORT_Config
+                0x000035fa                stringLength
+ .text          0x00004f4e      0x35a parser.o
+                0x0000503a                rcfg_parseIP
+                0x00004fd8                rcfg_parseUHex
+                0x00004f4e                rcfg_parseUInt
+ .text          0x000052a8      0x1c2 rcfg.o
+                0x000052a8                onRtpControl
+ .text          0x0000546a      0x5b6 config.o
+                0x00005964                onInitConfig
+                0x00005510                EepromReadConfig
+                0x00005764                configEepromSetConfig
+                0x00005492                EepromWriteConfig
+                0x000055a0                configEepromGetConfig
+ .text          0x00005a20      0x27c com1_debug.o
+                0x00005aae                __vector_32
+                0x00005ae0                ExecuteCommand
+                0x00005a7c                __vector_31
+                0x00005b72                __vector_30
+                0x00005a5e                putChar
+                0x00005ac2                putString_com1
+                0x00005a20                com1Initialize
+                0x00005a6e                getChar
+ .text          0x00005c9c        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_mulsi3.o)
+ .text          0x00005c9c        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodsi4.o)
+ .text          0x00005c9c        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
+ .text          0x00005c9c        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_clear_bss.o)
+ .text          0x00005c9c      0x204 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(malloc.o)
+                0x00005c9c                malloc
+                0x00005df0                free
+ .text          0x00005ea0       0x12 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(strcmp.o)
+                0x00005ea0                strcmp
+ .text          0x00005eb2        0xe c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(strcpy.o)
+                0x00005eb2                strcpy
+ .text          0x00005ec0       0x38 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(eerd_block.o)
+                0x00005ec0                __eerd_block
+ .text          0x00005ef8       0x38 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(eewr_block.o)
+                0x00005ef8                __eewr_block
+ .text          0x00005f30       0x42 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(itoa.o)
+                0x00005f30                itoa
+ .text          0x00005f72       0x4a c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(ultoa.o)
+                0x00005f72                ultoa
+ .text          0x00005fbc       0x2c c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(utoa.o)
+                0x00005fbc                utoa
+ .text          0x00005fe8       0x20 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(strrev.o)
+                0x00005fe8                strrev
+ .text          0x00006008        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodhi4.o)
+ .text          0x00006008        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_prologue.o)
+ .text          0x00006008        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_epilogue.o)
+                0x00006008                . = ALIGN (0x2)
  *(.text.*)
- .text.libgcc   0x00005dfe       0x3e c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_mulsi3.o)
-                0x00005dfe                __mulsi3
- .text.libgcc   0x00005e3c       0x44 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodsi4.o)
-                0x00005e3c                __udivmodsi4
- .text.libgcc   0x00005e80        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
- .text.libgcc   0x00005e80        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_clear_bss.o)
- .text.libgcc   0x00005e80       0x28 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodhi4.o)
-                0x00005e80                __udivmodhi4
- .text.libgcc   0x00005ea8       0x38 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_prologue.o)
-                0x00005ea8                __prologue_saves__
- .text.libgcc   0x00005ee0       0x36 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_epilogue.o)
-                0x00005ee0                __epilogue_restores__
-                0x00005f16                . = ALIGN (0x2)
+ .text.libgcc   0x00006008       0x3e c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_mulsi3.o)
+                0x00006008                __mulsi3
+ .text.libgcc   0x00006046       0x44 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodsi4.o)
+                0x00006046                __udivmodsi4
+ .text.libgcc   0x0000608a        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
+ .text.libgcc   0x0000608a        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_clear_bss.o)
+ .text.libgcc   0x0000608a       0x28 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodhi4.o)
+                0x0000608a                __udivmodhi4
+ .text.libgcc   0x000060b2       0x38 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_prologue.o)
+                0x000060b2                __prologue_saves__
+ .text.libgcc   0x000060ea       0x36 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_epilogue.o)
+                0x000060ea                __epilogue_restores__
+                0x00006120                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00005f16        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
-                0x00005f16                exit
-                0x00005f16                _exit
+ .fini9         0x00006120        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
+                0x00006120                exit
+                0x00006120                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -511,11 +513,11 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00005f16        0x4 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
+ .fini0         0x00006120        0x4 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
  *(.fini0)
-                0x00005f1a                _etext = .
+                0x00006124                _etext = .
 
-.data           0x00800100      0x6e0 load address 0x00005f1a
+.data           0x00800100      0x734 load address 0x00006124
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
@@ -528,134 +530,135 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a
                 0x0080011e                hIPv4
  .data          0x0080012c        0x0 udp.o
  .data          0x0080012c        0x0 tftp.o
- .data          0x0080012c        0x5 serial.o
+ .data          0x0080012c        0x6 serial.o
                 0x0080012c                serialSettings
- .data          0x00800131        0x0 clock.o
- .data          0x00800131       0x85 timer.o
- .data          0x008001b6        0x0 doublyLinkedList.o
- .data          0x008001b6        0x0 queue.o
- .data          0x008001b6        0x0 rtc.o
- .data          0x008001b6       0x1f com0.o
- .data          0x008001d5        0x0 enc28j60.o
- .data          0x008001d5       0x12 nic.o
- .data          0x008001e7        0x0 bootloader.o
- .data          0x008001e7        0x0 serialbridge.o
- .data          0x008001e7        0x0 watchdog.o
- .data          0x008001e7        0x0 netlib.o
- .data          0x008001e7      0x2f1 commands.o
- .data          0x008004d8        0x0 parser.o
- .data          0x008004d8      0x2b5 rcfg.o
-                0x00800715                rcfg_commands
- .data          0x0080078d        0x0 config.o
- .data          0x0080078d       0x4d com1_debug.o
- .data          0x008007da        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_mulsi3.o)
- .data          0x008007da        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodsi4.o)
- .data          0x008007da        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
- .data          0x008007da        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_clear_bss.o)
- .data          0x008007da        0x6 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(malloc.o)
-                0x008007dc                __malloc_heap_start
-                0x008007de                __malloc_heap_end
-                0x008007da                __malloc_margin
- .data          0x008007e0        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(strcmp.o)
- .data          0x008007e0        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(strcpy.o)
- .data          0x008007e0        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(eerd_block.o)
- .data          0x008007e0        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(eewr_block.o)
- .data          0x008007e0        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(itoa.o)
- .data          0x008007e0        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(ultoa.o)
- .data          0x008007e0        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(utoa.o)
- .data          0x008007e0        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(strrev.o)
- .data          0x008007e0        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodhi4.o)
- .data          0x008007e0        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_prologue.o)
- .data          0x008007e0        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_epilogue.o)
+ .data          0x00800132        0x0 clock.o
+ .data          0x00800132       0x85 timer.o
+ .data          0x008001b7        0x0 doublyLinkedList.o
+ .data          0x008001b7        0x0 queue.o
+ .data          0x008001b7        0x0 rtc.o
+ .data          0x008001b7       0x23 com0.o
+ .data          0x008001da        0x0 enc28j60.o
+ .data          0x008001da       0x12 nic.o
+ .data          0x008001ec        0x0 bootloader.o
+ .data          0x008001ec        0x0 serialbridge.o
+ .data          0x008001ec        0x0 watchdog.o
+ .data          0x008001ec        0x0 netlib.o
+ .data          0x008001ec      0x315 commands.o
+ .data          0x00800501        0x0 parser.o
+ .data          0x00800501      0x2e5 rcfg.o
+                0x00800766                rcfg_commands
+ .data          0x008007e6        0x0 config.o
+ .data          0x008007e6       0x47 com1_debug.o
+ .data          0x0080082d        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_mulsi3.o)
+ .data          0x0080082d        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodsi4.o)
+ .data          0x0080082d        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
+ .data          0x0080082d        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_clear_bss.o)
+ .data          0x0080082d        0x6 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(malloc.o)
+                0x0080082f                __malloc_heap_start
+                0x00800831                __malloc_heap_end
+                0x0080082d                __malloc_margin
+ .data          0x00800833        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(strcmp.o)
+ .data          0x00800833        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(strcpy.o)
+ .data          0x00800833        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(eerd_block.o)
+ .data          0x00800833        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(eewr_block.o)
+ .data          0x00800833        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(itoa.o)
+ .data          0x00800833        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(ultoa.o)
+ .data          0x00800833        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(utoa.o)
+ .data          0x00800833        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(strrev.o)
+ .data          0x00800833        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodhi4.o)
+ .data          0x00800833        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_prologue.o)
+ .data          0x00800833        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_epilogue.o)
  *(.data*)
  *(.rodata)
  *(.rodata*)
  *(.gnu.linkonce.d*)
-                0x008007e0                . = ALIGN (0x2)
-                0x008007e0                _edata = .
-                0x008007e0                PROVIDE (__data_end, .)
+                0x00800834                . = ALIGN (0x2)
+ *fill*         0x00800833        0x1 00
+                0x00800834                _edata = .
+                0x00800834                PROVIDE (__data_end, .)
 
-.bss            0x008007e0      0x1b0
-                0x008007e0                PROVIDE (__bss_start, .)
+.bss            0x00800834      0x1b1
+                0x00800834                PROVIDE (__bss_start, .)
  *(.bss)
- .bss           0x008007e0        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
- .bss           0x008007e0        0x0 aeb.o
- .bss           0x008007e0        0x0 arp.o
- .bss           0x008007e0        0x0 rtp.o
- .bss           0x008007e0        0x0 ethernet.o
- .bss           0x008007e0        0x0 ip.o
- .bss           0x008007e0        0x0 udp.o
- .bss           0x008007e0        0x0 tftp.o
- .bss           0x008007e0        0x0 serial.o
- .bss           0x008007e0        0x0 clock.o
- .bss           0x008007e0        0x0 timer.o
- .bss           0x008007e0        0x0 doublyLinkedList.o
- .bss           0x008007e0        0x0 queue.o
- .bss           0x008007e0        0x0 rtc.o
- .bss           0x008007e0        0x0 com0.o
- .bss           0x008007e0        0x0 enc28j60.o
- .bss           0x008007e0        0x0 nic.o
- .bss           0x008007e0        0x0 bootloader.o
- .bss           0x008007e0        0x0 serialbridge.o
- .bss           0x008007e0        0x0 watchdog.o
- .bss           0x008007e0        0x0 netlib.o
- .bss           0x008007e0        0x1 commands.o
- .bss           0x008007e1        0x0 parser.o
- .bss           0x008007e1        0x0 rcfg.o
- .bss           0x008007e1        0x0 config.o
- .bss           0x008007e1        0x0 com1_debug.o
- .bss           0x008007e1        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_mulsi3.o)
- .bss           0x008007e1        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodsi4.o)
- .bss           0x008007e1        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
- .bss           0x008007e1        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_clear_bss.o)
- .bss           0x008007e1        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(malloc.o)
- .bss           0x008007e1        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(strcmp.o)
- .bss           0x008007e1        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(strcpy.o)
- .bss           0x008007e1        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(eerd_block.o)
- .bss           0x008007e1        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(eewr_block.o)
- .bss           0x008007e1        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(itoa.o)
- .bss           0x008007e1        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(ultoa.o)
- .bss           0x008007e1        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(utoa.o)
- .bss           0x008007e1        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(strrev.o)
- .bss           0x008007e1        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodhi4.o)
- .bss           0x008007e1        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_prologue.o)
- .bss           0x008007e1        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_epilogue.o)
+ .bss           0x00800834        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51/crtm128.o
+ .bss           0x00800834        0x0 aeb.o
+ .bss           0x00800834        0x0 arp.o
+ .bss           0x00800834        0x0 rtp.o
+ .bss           0x00800834        0x0 ethernet.o
+ .bss           0x00800834        0x0 ip.o
+ .bss           0x00800834        0x0 udp.o
+ .bss           0x00800834        0x0 tftp.o
+ .bss           0x00800834        0x0 serial.o
+ .bss           0x00800834        0x0 clock.o
+ .bss           0x00800834        0x0 timer.o
+ .bss           0x00800834        0x0 doublyLinkedList.o
+ .bss           0x00800834        0x0 queue.o
+ .bss           0x00800834        0x0 rtc.o
+ .bss           0x00800834        0x0 com0.o
+ .bss           0x00800834        0x0 enc28j60.o
+ .bss           0x00800834        0x0 nic.o
+ .bss           0x00800834        0x0 bootloader.o
+ .bss           0x00800834        0x0 serialbridge.o
+ .bss           0x00800834        0x0 watchdog.o
+ .bss           0x00800834        0x0 netlib.o
+ .bss           0x00800834        0x1 commands.o
+ .bss           0x00800835        0x0 parser.o
+ .bss           0x00800835        0x0 rcfg.o
+ .bss           0x00800835        0x0 config.o
+ .bss           0x00800835        0x0 com1_debug.o
+ .bss           0x00800835        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_mulsi3.o)
+ .bss           0x00800835        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodsi4.o)
+ .bss           0x00800835        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_exit.o)
+ .bss           0x00800835        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_clear_bss.o)
+ .bss           0x00800835        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(malloc.o)
+ .bss           0x00800835        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(strcmp.o)
+ .bss           0x00800835        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(strcpy.o)
+ .bss           0x00800835        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(eerd_block.o)
+ .bss           0x00800835        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(eewr_block.o)
+ .bss           0x00800835        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(itoa.o)
+ .bss           0x00800835        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(ultoa.o)
+ .bss           0x00800835        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(utoa.o)
+ .bss           0x00800835        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(strrev.o)
+ .bss           0x00800835        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_udivmodhi4.o)
+ .bss           0x00800835        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_prologue.o)
+ .bss           0x00800835        0x0 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a(_epilogue.o)
  *(.bss*)
  *(COMMON)
- COMMON         0x008007e1        0x6 aeb.o
-                0x008007e1                menge2
-                0x008007e3                debug
-                0x008007e5                menge
- COMMON         0x008007e7       0x38 arp.o
-                0x008007e7                hArp
- COMMON         0x0080081f        0x2 rtp.o
-                0x0080081f                rtpSequence
- COMMON         0x00800821        0x4 timer.o
-                0x00800821                timerList
- COMMON         0x00800825        0x4 rtc.o
-                0x00800825                overflows
- COMMON         0x00800829      0x100 com0.o
-                0x00800829                hUsart0
- COMMON         0x00800929        0x1 enc28j60.o
-                0x00800929                hEnc28j60
- COMMON         0x0080092a        0xe config.o
-                0x0080092a                Config
- COMMON         0x00800938       0x54 com1_debug.o
-                0x00800938                CommandBuffer
-                0x00800962                com1_recv
- COMMON         0x0080098c        0x4 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(malloc.o)
-                0x0080098c                __brkval
-                0x0080098e                __flp
-                0x00800990                PROVIDE (__bss_end, .)
-                0x00005f1a                __data_load_start = LOADADDR (.data)
-                0x000065fa                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00800835        0x6 aeb.o
+                0x00800835                menge2
+                0x00800837                debug
+                0x00800839                menge
+ COMMON         0x0080083b       0x38 arp.o
+                0x0080083b                hArp
+ COMMON         0x00800873        0x2 rtp.o
+                0x00800873                rtpSequence
+ COMMON         0x00800875        0x4 timer.o
+                0x00800875                timerList
+ COMMON         0x00800879        0x4 rtc.o
+                0x00800879                overflows
+ COMMON         0x0080087d      0x101 com0.o
+                0x0080087d                hUsart0
+ COMMON         0x0080097e        0x1 enc28j60.o
+                0x0080097e                hEnc28j60
+ COMMON         0x0080097f        0xe config.o
+                0x0080097f                Config
+ COMMON         0x0080098d       0x54 com1_debug.o
+                0x0080098d                CommandBuffer
+                0x008009b7                com1_recv
+ COMMON         0x008009e1        0x4 c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/../../../../avr/lib/avr51\libc.a(malloc.o)
+                0x008009e1                __brkval
+                0x008009e3                __flp
+                0x008009e5                PROVIDE (__bss_end, .)
+                0x00006124                __data_load_start = LOADADDR (.data)
+                0x00006858                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800990        0x0
-                0x00800990                PROVIDE (__noinit_start, .)
+.noinit         0x008009e5        0x0
+                0x008009e5                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x00800990                PROVIDE (__noinit_end, .)
-                0x00800990                _end = .
-                0x00800990                PROVIDE (__heap_start, .)
+                0x008009e5                PROVIDE (__noinit_end, .)
+                0x008009e5                _end = .
+                0x008009e5                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
  *(.eeprom*)
@@ -754,7 +757,7 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a
                 0x000002a0       0x20 com1_debug.o
 
 .debug_pubnames
-                0x00000000      0xdcc
+                0x00000000      0xe09
  *(.debug_pubnames)
  .debug_pubnames
                 0x00000000       0x3a aeb.o
@@ -791,17 +794,17 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a
  .debug_pubnames
                 0x00000984       0x28 netlib.o
  .debug_pubnames
-                0x000009ac      0x267 commands.o
+                0x000009ac      0x29f commands.o
  .debug_pubnames
-                0x00000c13       0x49 parser.o
+                0x00000c4b       0x49 parser.o
  .debug_pubnames
-                0x00000c5c       0x35 rcfg.o
+                0x00000c94       0x35 rcfg.o
  .debug_pubnames
-                0x00000c91       0x8d config.o
+                0x00000cc9       0x8d config.o
  .debug_pubnames
-                0x00000d1e       0xae com1_debug.o
+                0x00000d56       0xb3 com1_debug.o
 
-.debug_info     0x00000000     0x63a8
+.debug_info     0x00000000     0x64f3
  *(.debug_info)
  .debug_info    0x00000000       0xc5 aeb.o
  .debug_info    0x000000c5      0x5c2 arp.o
@@ -810,27 +813,27 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a
  .debug_info    0x00000ee0      0x41e ip.o
  .debug_info    0x000012fe      0x21d udp.o
  .debug_info    0x0000151b        0x0 tftp.o
- .debug_info    0x0000151b      0x2ea serial.o
- .debug_info    0x00001805       0xb5 clock.o
- .debug_info    0x000018ba      0x2ca timer.o
- .debug_info    0x00001b84      0x28b doublyLinkedList.o
- .debug_info    0x00001e0f      0x191 queue.o
- .debug_info    0x00001fa0      0x102 rtc.o
- .debug_info    0x000020a2      0x60f com0.o
- .debug_info    0x000026b1     0x1487 enc28j60.o
- .debug_info    0x00003b38      0x530 nic.o
- .debug_info    0x00004068        0x0 bootloader.o
- .debug_info    0x00004068      0x1bf serialbridge.o
- .debug_info    0x00004227        0x0 watchdog.o
- .debug_info    0x00004227       0xc3 netlib.o
- .debug_info    0x000042ea     0x116d commands.o
- .debug_info    0x00005457      0x243 parser.o
- .debug_info    0x0000569a      0x207 rcfg.o
- .debug_info    0x000058a1      0x6ca config.o
- .debug_info    0x00005f6b      0x43d com1_debug.o
+ .debug_info    0x0000151b      0x316 serial.o
+ .debug_info    0x00001831       0xb5 clock.o
+ .debug_info    0x000018e6      0x2ca timer.o
+ .debug_info    0x00001bb0      0x28b doublyLinkedList.o
+ .debug_info    0x00001e3b      0x191 queue.o
+ .debug_info    0x00001fcc      0x102 rtc.o
+ .debug_info    0x000020ce      0x632 com0.o
+ .debug_info    0x00002700     0x1487 enc28j60.o
+ .debug_info    0x00003b87      0x530 nic.o
+ .debug_info    0x000040b7        0x0 bootloader.o
+ .debug_info    0x000040b7      0x1bf serialbridge.o
+ .debug_info    0x00004276        0x0 watchdog.o
+ .debug_info    0x00004276       0xc3 netlib.o
+ .debug_info    0x00004339     0x12a6 commands.o
+ .debug_info    0x000055df      0x243 parser.o
+ .debug_info    0x00005822      0x207 rcfg.o
+ .debug_info    0x00005a29      0x6ca config.o
+ .debug_info    0x000060f3      0x400 com1_debug.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000     0x1e0f
+.debug_abbrev   0x00000000     0x1e1a
  *(.debug_abbrev)
  .debug_abbrev  0x00000000       0x6d aeb.o
  .debug_abbrev  0x0000006d      0x1f1 arp.o
@@ -852,41 +855,41 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a
  .debug_abbrev  0x000013cc       0xe6 serialbridge.o
  .debug_abbrev  0x000014b2        0x1 watchdog.o
  .debug_abbrev  0x000014b3       0x84 netlib.o
- .debug_abbrev  0x00001537      0x279 commands.o
- .debug_abbrev  0x000017b0      0x133 parser.o
- .debug_abbrev  0x000018e3      0x112 rcfg.o
- .debug_abbrev  0x000019f5      0x241 config.o
- .debug_abbrev  0x00001c36      0x1d9 com1_debug.o
+ .debug_abbrev  0x00001537      0x286 commands.o
+ .debug_abbrev  0x000017bd      0x133 parser.o
+ .debug_abbrev  0x000018f0      0x112 rcfg.o
+ .debug_abbrev  0x00001a02      0x241 config.o
+ .debug_abbrev  0x00001c43      0x1d7 com1_debug.o
 
-.debug_line     0x00000000     0x5c90
+.debug_line     0x00000000     0x5dc0
  *(.debug_line)
  .debug_line    0x00000000      0x11a aeb.o
  .debug_line    0x0000011a      0x5c4 arp.o
- .debug_line    0x000006de      0x42e rtp.o
- .debug_line    0x00000b0c      0x31b ethernet.o
- .debug_line    0x00000e27      0x37c ip.o
- .debug_line    0x000011a3      0x1db udp.o
- .debug_line    0x0000137e       0x24 tftp.o
- .debug_line    0x000013a2      0x23c serial.o
- .debug_line    0x000015de       0xe2 clock.o
- .debug_line    0x000016c0      0x32e timer.o
- .debug_line    0x000019ee      0x2c7 doublyLinkedList.o
- .debug_line    0x00001cb5      0x180 queue.o
- .debug_line    0x00001e35      0x152 rtc.o
- .debug_line    0x00001f87      0x5d6 com0.o
- .debug_line    0x0000255d     0x11d0 enc28j60.o
- .debug_line    0x0000372d      0x571 nic.o
- .debug_line    0x00003c9e       0x24 bootloader.o
- .debug_line    0x00003cc2      0x1bd serialbridge.o
- .debug_line    0x00003e7f       0x24 watchdog.o
- .debug_line    0x00003ea3       0xf6 netlib.o
- .debug_line    0x00003f99     0x10a3 commands.o
- .debug_line    0x0000503c      0x2b9 parser.o
- .debug_line    0x000052f5      0x251 rcfg.o
- .debug_line    0x00005546      0x3f6 config.o
- .debug_line    0x0000593c      0x354 com1_debug.o
+ .debug_line    0x000006de      0x431 rtp.o
+ .debug_line    0x00000b0f      0x31b ethernet.o
+ .debug_line    0x00000e2a      0x37c ip.o
+ .debug_line    0x000011a6      0x1db udp.o
+ .debug_line    0x00001381       0x24 tftp.o
+ .debug_line    0x000013a5      0x25c serial.o
+ .debug_line    0x00001601       0xe2 clock.o
+ .debug_line    0x000016e3      0x32e timer.o
+ .debug_line    0x00001a11      0x2c7 doublyLinkedList.o
+ .debug_line    0x00001cd8      0x180 queue.o
+ .debug_line    0x00001e58      0x152 rtc.o
+ .debug_line    0x00001faa      0x5e6 com0.o
+ .debug_line    0x00002590     0x11d0 enc28j60.o
+ .debug_line    0x00003760      0x571 nic.o
+ .debug_line    0x00003cd1       0x24 bootloader.o
+ .debug_line    0x00003cf5      0x1bd serialbridge.o
+ .debug_line    0x00003eb2       0x24 watchdog.o
+ .debug_line    0x00003ed6       0xf6 netlib.o
+ .debug_line    0x00003fcc     0x11c5 commands.o
+ .debug_line    0x00005191      0x2b9 parser.o
+ .debug_line    0x0000544a      0x251 rcfg.o
+ .debug_line    0x0000569b      0x3f6 config.o
+ .debug_line    0x00005a91      0x32f com1_debug.o
 
-.debug_frame    0x00000000      0xb10
+.debug_frame    0x00000000      0xb30
  *(.debug_frame)
  .debug_frame   0x00000000       0x20 aeb.o
  .debug_frame   0x00000020       0x90 arp.o
@@ -905,87 +908,87 @@ LOAD c:/winavr-20081205/bin/../lib/gcc/avr/4.3.2/avr51\libgcc.a
  .debug_frame   0x00000670       0xc0 nic.o
  .debug_frame   0x00000730       0x40 serialbridge.o
  .debug_frame   0x00000770       0x20 netlib.o
- .debug_frame   0x00000790      0x210 commands.o
- .debug_frame   0x000009a0       0x40 parser.o
- .debug_frame   0x000009e0       0x20 rcfg.o
- .debug_frame   0x00000a00       0x80 config.o
- .debug_frame   0x00000a80       0x90 com1_debug.o
+ .debug_frame   0x00000790      0x230 commands.o
+ .debug_frame   0x000009c0       0x40 parser.o
+ .debug_frame   0x00000a00       0x20 rcfg.o
+ .debug_frame   0x00000a20       0x80 config.o
+ .debug_frame   0x00000aa0       0x90 com1_debug.o
 
-.debug_str      0x00000000     0x1277
+.debug_str      0x00000000     0x130a
  *(.debug_str)
- .debug_str     0x00000000       0xb3 aeb.o
-                                 0xec (size before relaxing)
- .debug_str     0x000000b3      0x1aa arp.o
+ .debug_str     0x00000000       0xbe aeb.o
+                                 0xf7 (size before relaxing)
+ .debug_str     0x000000be      0x1f0 arp.o
                                 0x26c (size before relaxing)
- .debug_str     0x0000025d       0xeb rtp.o
-                                0x24d (size before relaxing)
- .debug_str     0x00000348       0xfc ethernet.o
-                                0x273 (size before relaxing)
- .debug_str     0x00000444      0x111 ip.o
-                                0x297 (size before relaxing)
- .debug_str     0x00000555       0x65 udp.o
-                                0x1ca (size before relaxing)
- .debug_str     0x000005ba       0xe6 serial.o
-                                0x1c3 (size before relaxing)
- .debug_str     0x000006a0       0x52 clock.o
+ .debug_str     0x000002ae       0xeb rtp.o
+                                0x258 (size before relaxing)
+ .debug_str     0x00000399       0xfc ethernet.o
+                                0x27e (size before relaxing)
+ .debug_str     0x00000495      0x111 ip.o
+                                0x2a2 (size before relaxing)
+ .debug_str     0x000005a6       0x65 udp.o
+                                0x1d5 (size before relaxing)
+ .debug_str     0x0000060b       0xf3 serial.o
+                                0x1db (size before relaxing)
+ .debug_str     0x000006fe       0x52 clock.o
                                 0x11d (size before relaxing)
- .debug_str     0x000006f2       0xe3 timer.o
-                                0x1bb (size before relaxing)
- .debug_str     0x000007d5       0x91 doublyLinkedList.o
+ .debug_str     0x00000750       0xe3 timer.o
+                                0x1c6 (size before relaxing)
+ .debug_str     0x00000833       0x91 doublyLinkedList.o
                                 0x135 (size before relaxing)
- .debug_str     0x00000866       0x81 queue.o
+ .debug_str     0x000008c4       0x81 queue.o
                                 0x14c (size before relaxing)
- .debug_str     0x000008e7       0x60 rtc.o
-                                0x134 (size before relaxing)
- .debug_str     0x00000947      0x159 com0.o
-                                0x33f (size before relaxing)
- .debug_str     0x00000aa0      0x1a1 enc28j60.o
+ .debug_str     0x00000945       0x60 rtc.o
+                                0x13f (size before relaxing)
+ .debug_str     0x000009a5      0x159 com0.o
+                                0x35e (size before relaxing)
+ .debug_str     0x00000afe      0x1a1 enc28j60.o
                                 0x283 (size before relaxing)
- .debug_str     0x00000c41      0x10c nic.o
-                                0x289 (size before relaxing)
- .debug_str     0x00000d4d       0x53 serialbridge.o
-                                0x1a4 (size before relaxing)
- .debug_str     0x00000da0       0x37 netlib.o
+ .debug_str     0x00000c9f      0x10c nic.o
+                                0x294 (size before relaxing)
+ .debug_str     0x00000dab       0x53 serialbridge.o
+                                0x1af (size before relaxing)
+ .debug_str     0x00000dfe       0x37 netlib.o
                                 0x10b (size before relaxing)
- .debug_str     0x00000dd7      0x257 commands.o
-                                0x3e0 (size before relaxing)
- .debug_str     0x0000102e       0x54 parser.o
+ .debug_str     0x00000e35      0x287 commands.o
+                                0x42b (size before relaxing)
+ .debug_str     0x000010bc       0x54 parser.o
                                 0x135 (size before relaxing)
- .debug_str     0x00001082       0x4a rcfg.o
-                                0x19b (size before relaxing)
- .debug_str     0x000010cc      0x128 config.o
+ .debug_str     0x00001110       0x4a rcfg.o
+                                0x1a6 (size before relaxing)
+ .debug_str     0x0000115a      0x128 config.o
                                 0x283 (size before relaxing)
- .debug_str     0x000011f4       0x83 com1_debug.o
-                                0x1c7 (size before relaxing)
+ .debug_str     0x00001282       0x88 com1_debug.o
+                                0x1d7 (size before relaxing)
 
-.debug_loc      0x00000000     0x4259
+.debug_loc      0x00000000     0x439b
  *(.debug_loc)
  .debug_loc     0x00000000      0x560 arp.o
  .debug_loc     0x00000560      0x44e rtp.o
  .debug_loc     0x000009ae      0x1d0 ethernet.o
  .debug_loc     0x00000b7e      0x265 ip.o
  .debug_loc     0x00000de3      0x100 udp.o
- .debug_loc     0x00000ee3      0x175 serial.o
- .debug_loc     0x00001058      0x189 timer.o
- .debug_loc     0x000011e1      0x300 doublyLinkedList.o
- .debug_loc     0x000014e1       0xf0 queue.o
- .debug_loc     0x000015d1      0x260 com0.o
- .debug_loc     0x00001831      0xd00 enc28j60.o
- .debug_loc     0x00002531      0x369 nic.o
- .debug_loc     0x0000289a       0x56 serialbridge.o
- .debug_loc     0x000028f0       0x6c netlib.o
- .debug_loc     0x0000295c      0xfe3 commands.o
- .debug_loc     0x0000393f      0x3ae parser.o
- .debug_loc     0x00003ced       0xff rcfg.o
- .debug_loc     0x00003dec      0x383 config.o
- .debug_loc     0x0000416f       0xea com1_debug.o
+ .debug_loc     0x00000ee3      0x1c6 serial.o
+ .debug_loc     0x000010a9      0x189 timer.o
+ .debug_loc     0x00001232      0x300 doublyLinkedList.o
+ .debug_loc     0x00001532       0xf0 queue.o
+ .debug_loc     0x00001622      0x27e com0.o
+ .debug_loc     0x000018a0      0xd00 enc28j60.o
+ .debug_loc     0x000025a0      0x369 nic.o
+ .debug_loc     0x00002909       0x56 serialbridge.o
+ .debug_loc     0x0000295f       0x6c netlib.o
+ .debug_loc     0x000029cb     0x10b6 commands.o
+ .debug_loc     0x00003a81      0x3ae parser.o
+ .debug_loc     0x00003e2f       0xff rcfg.o
+ .debug_loc     0x00003f2e      0x383 config.o
+ .debug_loc     0x000042b1       0xea com1_debug.o
 
 .debug_macinfo
  *(.debug_macinfo)
 OUTPUT(aeb.elf elf32-avr)
 LOAD linker stubs
 
-.debug_ranges   0x00000000      0x890
+.debug_ranges   0x00000000      0x8c0
  .debug_ranges  0x00000000       0x80 arp.o
  .debug_ranges  0x00000080       0x48 rtp.o
  .debug_ranges  0x000000c8       0x30 ethernet.o
@@ -994,8 +997,8 @@ LOAD linker stubs
  .debug_ranges  0x000001b0       0x30 com0.o
  .debug_ranges  0x000001e0      0x210 enc28j60.o
  .debug_ranges  0x000003f0       0x38 nic.o
- .debug_ranges  0x00000428      0x2d0 commands.o
- .debug_ranges  0x000006f8       0xc0 parser.o
- .debug_ranges  0x000007b8       0x18 rcfg.o
- .debug_ranges  0x000007d0       0xa8 config.o
- .debug_ranges  0x00000878       0x18 com1_debug.o
+ .debug_ranges  0x00000428      0x300 commands.o
+ .debug_ranges  0x00000728       0xc0 parser.o
+ .debug_ranges  0x000007e8       0x18 rcfg.o
+ .debug_ranges  0x00000800       0xa8 config.o
+ .debug_ranges  0x000008a8       0x18 com1_debug.o
