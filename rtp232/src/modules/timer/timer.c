@@ -84,7 +84,7 @@ void DebugTimerList()
 // If the list is empty, we can do a shortcut...
 	if (timerList.firstNode == NULL)
 	{
-		putString("\r\nTimer-Liste leer!!");
+		putString_com1("\r\nTimer-Liste leer!!");
 		return;
 	}
 
@@ -95,8 +95,8 @@ void DebugTimerList()
 		char *x1=malloc(16);
 		itoa(clockGetTimeStamp(),x1,10);
 
-		putString("\r\nclockGetTimeStamp:");
-		putString(x1);
+		putString_com1("\r\nclockGetTimeStamp:");
+		putString_com1(x1);
  
 		while (node != NULL)
 		{	    
@@ -104,17 +104,17 @@ void DebugTimerList()
 
 			
 			itoa(((struct timerElement_t*)node)->timebomb,x1,10);
-			putString("\r\nTB:");
-			putString(x1);
+			putString_com1("\r\nTB:");
+			putString_com1(x1);
 			node = node->next;
 			
 		}
 
 		if (((struct timerElement_t*)(timerList.firstNode))->timebomb > clockGetTimeStamp())
-			putString("\r\ntimebomp groesser noch net erreicht:");
+			putString_com1("\r\ntimebomp groesser noch net erreicht:");
 		else
 		{
-			putString("\r\ntimebomp kleiner AUSSloesen:");
+			putString_com1("\r\ntimebomp kleiner AUSSloesen:");
 			onTimer();
 		}
 
@@ -126,8 +126,8 @@ void DebugTimerList()
 		itoa(anzahlTimer,x2,10);
 		
 
-		putString("\r\nAnzahlTimer:");
-		putString(x2);
+		putString_com1("\r\nAnzahlTimer:");
+		putString_com1(x2);
 
 	}
 
@@ -156,7 +156,7 @@ void onTimer()
   if (((struct timerElement_t*)(timerList.firstNode))->timebomb > clockGetTimeStamp())
     return;
 
-//	putString("\r\nAUSGELOESSSST:");
+//	putString_com1("\r\nAUSGELOESSSST:");
   
   
   // we need to remove the obsolete timer entry...
