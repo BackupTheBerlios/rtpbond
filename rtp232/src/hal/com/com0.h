@@ -26,7 +26,7 @@
   #define COM0_MAX_TX_BUF 120
 
   //void com0Initialize(uint16_t baud, uint8_t settings);
-  void com0Initialize(uint16_t prescaler, uint8_t parity, uint8_t stop_bits, uint8_t data_bits);
+  void com0Initialize(uint16_t prescaler, uint8_t parity, uint8_t stop_bits, uint8_t data_bits,uint8_t SendBufferSizeLimit);
   void com0SendBytes(char* buffer, uint8_t length);
   void com0RecvBytes(char** buffer, uint8_t* length);
 

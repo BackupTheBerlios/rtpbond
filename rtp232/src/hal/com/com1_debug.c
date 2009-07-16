@@ -159,9 +159,7 @@ ISR(USART1_RX_vect)
 		com1_recv.recvCount[0] = '\0';
 
 		ExecuteCommand(com1_recv.recvBuffer,com1_recv.recvCount-com1_recv.recvBuffer);
-	
-	
-		putString("nix\r\n");
+
 
 		com1_recv.recvCount = com1_recv.recvBuffer;
 
@@ -175,13 +173,13 @@ void ExecuteCommand(char* command,uint8_t len)
 {
 	if(strcmp(command,"hallo")==0)
 	{
-		putString("Befehl erfolgreich dekodiert");
+		putString_com1("Befehl erfolgreich dekodiert");
 		debug=0;
 		DebugTimerList();
 	}
 	else if(strcmp(command,"nicht")==0)
 	{
-		putString("Befehl2 erfolgreich dekodiert");
+		putString_com1("Befehl2 erfolgreich dekodiert");
 		debug=1;
 	}
 
@@ -207,7 +205,7 @@ void ExecuteCommand(char* command,uint8_t len)
 // IN  	 	: char *buffer, Zeichenkette mit NUll abgeschlossen
 // OUT 	 	: ...
 //----------------------------------------------------------------------
-void putString(char *buffer)
+void putString_com1(char *buffer)
 {
 int i=0;
 	for (i=0; buffer[i] !=0;i++) putChar (buffer[i]);
