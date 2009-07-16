@@ -79,7 +79,11 @@ uint8_t onIPv4Request(struct nicRequestHandle_t* handle, ipAddress_t* destIP, ui
 
   // we use lightweight arp, this means we do not wait for arp responses.
   // if it's a miss, we drop the packet...  
+
   struct macAddress_t mac;
+
+
+  
   
   // check if destination address is within the subnet...
   // ... in case it is not, we have to send the packet to the gateway ...
@@ -91,10 +95,13 @@ uint8_t onIPv4Request(struct nicRequestHandle_t* handle, ipAddress_t* destIP, ui
     nicFreeRequest(handle);
     return 1;    
   }
-  
+
   // we passed the lookup, so it is save to assemble the IP header... 
   struct netIPv4Header_t* header
     = (struct netIPv4Header_t*) nicAddPacketHeader(handle,sizeof(struct netIPv4Header_t));
+
+  //putString_com1("Fkt : onIPv4Request 2\r\n");
+  
   
     // generate the IP Header...
   header->version        = ((0x4 << 4) & 0xF0 )| ( sizeof(struct netIPv4Header_t) >> 2 );
