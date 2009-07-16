@@ -10,6 +10,9 @@
 void onUdpRequest(struct nicRequestHandle_t* handle,
     struct netAddress_t* dest, portAddress_t* srcPort)
 {
+
+
+
   // ...generate the UDP Header...
   struct soUdpHeader_t* header 
      = (struct soUdpHeader_t*)nicAddPacketHeader(handle,sizeof(struct soUdpHeader_t));
@@ -18,6 +21,8 @@ void onUdpRequest(struct nicRequestHandle_t* handle,
   header->destPort = htons(dest->port);
   header->checksum = 0x00;
   header->length   = htons(nicGetPacketSize(handle));
+
+
   
   onIPv4Request(handle,&(dest->ip),0x11);
   return;
