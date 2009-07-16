@@ -341,7 +341,10 @@ void * recvRtp(void* deviceAttr)
 			
 			// write into FIFO
 			if (cdpHeader.length > 0 && rtpHeader.type == atoi(devConf.payloadType))	// incoming data
-				write(inFifo, buffer, cdpHeader.length);
+			    //try writing until we succeed
+                while(write(inFifo, buffer, cdpHeader.length) < 0)
+                    usleep(20);
+
             //update the statistics
             devicestats[devConf.deviceNr].TLastPkg = clock();
             if(cdpHeader.length != 0)
@@ -453,14 +456,11 @@ void * sendRtp(void* deviceAttr)
 	
 	while(1)
 	{		
-		// read data from FIFO
-		err = read(outFifo, buffer, PL_SIZE);
-	/*	if (err < 0)
-		{
-			printf("rtpbondd: error: cannot read from %s\n", outFifoName);
-			exit(1);
-		}
-	*/	
+		//try to read data from FIFO until we succeed
+		while(read(outFifo, buffer, PL_SIZE) < 0)
+            usleep(20);
+
+	
 		// send package when we got real data or send empty package after timeout Tmax
 		if ((err > 0) || difftime(clock(), tLastSent)/CLOCKS_PER_SEC >= devConf.TMax/1000.0)
 		{		
@@ -815,10 +815,12 @@ void printStatus(char* configFile, int runningDevices, clock_t actualClock) {
 }
 
 
-void sendStatusRequest(/*int localSocketOut, struct sockaddr_un* outAddress, unsigned int* outAddressLength*/) {
+void sendStatusRequest() {
 	int localSocketOut; // socket to communicate with other rtpbondd process (kind of IPC)
 	struct sockaddr_un outAddress;
 	unsigned int outAddressLength;
+
+    chdir("/tmp");
 
 	char cmd[256+8];	// command from other rtpbondd process
 
@@ -843,6 +845,8 @@ void sendStatusRequest(/*int localSocketOut, struct sockaddr_un* outAddress, uns
         printf("%d\n", errno);
         exit(1);
     }
+
+    chdir(cwd);
 }
 
 
@@ -852,6 +856,8 @@ void getStatusResponse(int* localSocketIn, struct sockaddr_un* inAddress, unsign
     int runningDevices = 0, i;
     clock_t actualClock = 0;
     char configFile[256];
+
+    chdir("/tmp");
 
     //create the socket, from which we get the status
     if ((*localSocketIn = socket(AF_LOCAL, SOCK_DGRAM, 0)) == -1)
@@ -864,29 +870,32 @@ void getStatusResponse(int* localSocketIn, struct sockaddr_un* inAddress, unsign
     strlcpy(inAddress->sun_path, "ttynet.ou", 11);
     unlink(inAddress->sun_path);
     *inAddressLength = strlen(inAddress->sun_path) + sizeof(inAddress->sun_family) + 1;	
-    bind(*localSocketIn, /*(struct sockaddr*)&*/inAddress, *inAddressLength);
+    bind(*localSocketIn, (struct sockaddr*) inAddress, *inAddressLength);
     
     //receive config
     //receive the clock value
-    recvfrom(*localSocketIn, &actualClock, sizeof(clock_t), 0, /*(struct sockaddr *) &*/inAddress, inAddressLength);
+    recvfrom(*localSocketIn, &actualClock, sizeof(clock_t), 0, (struct sockaddr *) inAddress, inAddressLength);
     //receive the name of the configfile
-    recvfrom(*localSocketIn, configFile, 256, 0, /*(struct sockaddr *) &*/inAddress, inAddressLength);
+    recvfrom(*localSocketIn, configFile, 256, 0, (struct sockaddr *) inAddress, inAddressLength);
     //receive the number of devices first
-    recvfrom(*localSocketIn, &runningDevices, sizeof(int), 0, /*(struct sockaddr *) &*/inAddress, inAddressLength);
+    recvfrom(*localSocketIn, &runningDevices, sizeof(int), 0, (struct sockaddr *) inAddress, inAddressLength);
 
     //receive the status of every device and save it in the arrays
     for(i=0; i< runningDevices; i++) {
-        recvfrom(*localSocketIn, recvDevice, sizeof(devices[i]), 0, /*(struct sockaddr *) &*/inAddress, inAddressLength);
-        recvfrom(*localSocketIn, recvStats, sizeof(devices[i]), 0, /*(struct sockaddr *) &*/inAddress, inAddressLength);
+        recvfrom(*localSocketIn, recvDevice, sizeof(devices[i]), 0, (struct sockaddr *) inAddress, inAddressLength);
+        recvfrom(*localSocketIn, recvStats, sizeof(devices[i]), 0, (struct sockaddr *) inAddress, inAddressLength);
         devices[i] = recvDevice[0];
         devicestats[i] = recvStats[0];
     }
     //print the statusmessages
     printStatus(configFile, runningDevices, actualClock);
+
+    chdir(cwd);
 }
 
 
 void sendRestartRequest(char* devicename) {
+    chdir("/tmp");
 	int localSocketOut; // socket to communicate with other rtpbondd process (kind of IPC)
 	struct sockaddr_un outAddress;
 	unsigned int outAddressLength;
@@ -913,6 +922,7 @@ void sendRestartRequest(char* devicename) {
         printf("rtpbondd: error: restart request failed\n");
         exit(1);
     }
+    chdir(cwd);
 }
 
 
@@ -921,6 +931,8 @@ void sendStatusResponse(int runningDevices, char* configFile) {
 	struct sockaddr_un outAddress;
 	unsigned int outAddressLength;
     clock_t actualClock;
+    //change to /tmp
+    chdir("/tmp");
 
     //the socket where we write the config to
     if ((localSocketOut = socket(AF_UNIX, SOCK_DGRAM, 0)) == -1)
@@ -949,6 +961,7 @@ void sendStatusResponse(int runningDevices, char* configFile) {
         //send devicestats
         err = sendto(localSocketOut, (struct devStats *) &devicestats[i], sizeof(devicestats[i]), 0, (struct sockaddr *) &outAddress, outAddressLength);
     }
+    chdir(cwd);
 }
 
 
@@ -1009,8 +1022,8 @@ int main(int argc, char *argv[]) {
         //read the configfile and start the devices
         runningDevices = readConf(argv[1]);
         startDevices(runningDevices);
-        //change back to cwd
-        chdir(cwd);
+        //change to /tmp for creating the local sockets
+        chdir("/tmp");
 	    
         //create local sockets for communication with other rtpbondd process that calls status
         //the socket from where we read the command from other processes
