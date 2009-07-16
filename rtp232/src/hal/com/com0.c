@@ -193,7 +193,6 @@ extern struct StructCommandBuffer CommandBuffer;
       return;
   
 
-   putString_com1("rot");
     com0RotateRecvBuffer();
     
     return;
