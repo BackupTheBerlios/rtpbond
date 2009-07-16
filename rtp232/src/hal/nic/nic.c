@@ -83,7 +83,7 @@ void nicWaitForSend()
     _delay_ms(10);    
   }
 
-  putString("Waitedlong enough");
+  putString_com1("Waitedlong enough");
   
   // ...we waited long enough, continue anyway
   return;
