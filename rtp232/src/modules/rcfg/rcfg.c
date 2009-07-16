@@ -36,6 +36,8 @@ command_t rcfg_commands[] = {
   {":GETSTOPBITS", rcfg_getStopBits},
   {":SETDATABITS", rcfg_setDataBits},
   {":GETDATABITS", rcfg_getDataBits},
+  {":SETBUFFERSIZELIMIT", rcfg_setBufferSizeLimit},
+  {":GETBUFFERSIZELIMIT", rcfg_getBufferSizeLimit},
 
   {":GETDIP_DATA", rcfg_getDIP_Data},
   {":SETDIP_DATA", rcfg_setDIP_Data},
@@ -66,7 +68,7 @@ void onRtpControl(char* buf, uint8_t len)
   if (Config_is_Disabled()) {
     rtpSendCommand("Config has been disabled.", 25, &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
     rtpSendCommand("FAIL\n", 5, &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
-	putString("\r\nonRtpControl() Config_is_Disabled:");
+	putString_com1("\r\nonRtpControl() Config_is_Disabled:");
     return;
   }
 
@@ -87,8 +89,8 @@ void onRtpControl(char* buf, uint8_t len)
 
   if (pos == len || buf[0] != ':')
   {
-    putString("\r\nonRtpControl() Syntax Error,sent:");
-	putString(buf);
+    putString_com1("\r\nonRtpControl() Syntax Error,sent:");
+	putString_com1(buf);
     // '?' not found or ':' missing
     rtpSendCommand("Syntax Error\n", 13, &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
 
@@ -120,12 +122,12 @@ void onRtpControl(char* buf, uint8_t len)
       if (rv == RCFG_SUCCESS ) 
 	  {
         rtpSendCommand("OK\n", 3, &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
-		putString("\r\nonRtpControl() meldet OK:");
+		putString_com1("\r\nonRtpControl() meldet OK:");
       } 
 	  else 
 	  {
         rtpSendCommand("FAIL\n", 5, &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
-		putString("\r\nonRtpControl() meldet FAIL:");
+		putString_com1("\r\nonRtpControl() meldet FAIL:");
       }
 
 
@@ -138,8 +140,8 @@ void onRtpControl(char* buf, uint8_t len)
   }
 
 
-  putString("onRtpControl() Command not found, sent:");
- putString(buf);
+  putString_com1("onRtpControl() Command not found, sent:");
+ putString_com1(buf);
   // command not found
   rtpSendCommand("Error located between ears of user.\n", 36, &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);    
   return;
