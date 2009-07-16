@@ -42,6 +42,10 @@
     #define DATA_BITS 3
   #endif
 
+  #ifndef SERIAL_BUFFER_SIZE_LIMIT
+    #warning "SERIAL Module: Fallback BufferSizeLimit not defined, using defaults" 
+    #define SERIAL_BUFFER_SIZE_LIMIT 120	
+  #endif
   
 
   void onInitSerial();
