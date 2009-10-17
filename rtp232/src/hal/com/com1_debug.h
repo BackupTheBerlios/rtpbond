@@ -23,7 +23,7 @@ struct StructCommandBuffer
   void com1Initialize(uint16_t baud, uint8_t settings);
   char getChar();
   void putChar(char data);
-  void putString(char *buffer);
+  void putString_com1(char *buffer);
 void ExecuteCommand(char* command,uint8_t len);
 
 

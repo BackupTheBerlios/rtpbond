@@ -15,8 +15,9 @@ struct
   uint8_t parity;
   uint8_t stop_bits;
   uint8_t data_bits;
+  uint8_t SendBufferSizeLimit;
 
-} serialSettings = {SERIAL_BAUD_PRESCALER,SERIAL_PARITY_MODE,SERIAL_STOPBITS,DATA_BITS};
+} serialSettings = {SERIAL_BAUD_PRESCALER,SERIAL_PARITY_MODE,SERIAL_STOPBITS,DATA_BITS,0xABC};
   
 typedef struct {
   uint16_t prescaler;
@@ -26,7 +27,8 @@ typedef struct {
   uint8_t parity;
   uint8_t stop_bits;
   uint8_t data_bits;
-  uint8_t unused;
+  uint8_t SendBufferSizeLimit;
+
 } serialEeprom_t;
 
 
@@ -39,16 +41,17 @@ void onInitSerial()
 
   // use eeprom settings if they are valid
   if ( EepromReadConfig((void*)SERIAL_EEPROM, &buf, sizeof(buf)) ) {
-    serialSettings.prescaler 	= buf.prescaler;
-    serialSettings.parity  		= buf.parity;
-	serialSettings.stop_bits 	= buf.stop_bits;
-    serialSettings.data_bits  	= buf.data_bits;
+    serialSettings.prescaler 		= buf.prescaler;
+    serialSettings.parity  			= buf.parity;
+	serialSettings.stop_bits 		= buf.stop_bits;
+    serialSettings.data_bits  		= buf.data_bits;
+	serialSettings.SendBufferSizeLimit  = buf.SendBufferSizeLimit;
   }
   // else serialSettings keeps the fallback settings
 
   // bitrate parity stop bits
   //com0Initialize(serialSettings.prescaler,serialSettings.settings);  //old one
-  com0Initialize(serialSettings.prescaler,serialSettings.parity,serialSettings.stop_bits,serialSettings.data_bits);
+  com0Initialize(serialSettings.prescaler,serialSettings.parity,serialSettings.stop_bits,serialSettings.data_bits,serialSettings.SendBufferSizeLimit);
   com1Initialize(0,0);
   return;
 }
@@ -67,11 +70,16 @@ void onSerial()
 { 
 
 
+
+
+
   if(CommandBuffer.NewCommand==1)
   {
   	CommandBuffer.NewCommand=0;
 	onRtpControl(CommandBuffer.recvCommand, CommandBuffer.len);	
   }
+
+
 
 
   if (com0HasBytes() == 0)
@@ -80,9 +88,11 @@ void onSerial()
   
   char* buf = NULL;
   uint8_t len = 0;
+
+
     
   com0RecvBytes(&buf,&len); 
-  
+
    
   onSerialData(buf,len);
     
@@ -94,7 +104,7 @@ void onSerial()
 
 #ifdef REQUIRES_RCFG
 
-void serialEepromSetConfig(uint16_t prescaler, uint8_t parity, uint8_t stop_bits, uint8_t data_bits)
+void serialEepromSetConfig(uint16_t prescaler, uint8_t parity, uint8_t stop_bits, uint8_t data_bits,uint8_t SendBufferSizeLimit)
 {
   serialEeprom_t buf;
   if ( !EepromReadConfig((void*)SERIAL_EEPROM, &buf, sizeof(buf)) ) {
@@ -105,6 +115,7 @@ void serialEepromSetConfig(uint16_t prescaler, uint8_t parity, uint8_t stop_bits
    	buf.parity  	= serialSettings.parity;
 	buf.stop_bits 	= serialSettings.stop_bits;
     buf.data_bits  	= serialSettings.data_bits;
+	buf.SendBufferSizeLimit= serialSettings.SendBufferSizeLimit;
   }
 
 
@@ -112,13 +123,14 @@ void serialEepromSetConfig(uint16_t prescaler, uint8_t parity, uint8_t stop_bits
 	buf.parity  	= parity;
 	buf.stop_bits 	= stop_bits;
 	buf.data_bits  	= data_bits;
+	buf.SendBufferSizeLimit= SendBufferSizeLimit;
 
   EepromWriteConfig((void*)SERIAL_EEPROM, &buf, sizeof(buf));
 
   return;
 }
 
-void serialEepromGetConfig(uint16_t * prescaler, uint8_t * parity, uint8_t * stop_bits, uint8_t * data_bits)
+void serialEepromGetConfig(uint16_t * prescaler, uint8_t * parity, uint8_t * stop_bits, uint8_t * data_bits, uint8_t * SendBufferSizeLimit)
 {
   serialEeprom_t buf;
   if ( !EepromReadConfig((void*)SERIAL_EEPROM, &buf, sizeof(buf)) ) {
@@ -127,6 +139,7 @@ void serialEepromGetConfig(uint16_t * prescaler, uint8_t * parity, uint8_t * sto
    	buf.parity  	= serialSettings.parity;
 	buf.stop_bits 	= serialSettings.stop_bits;
     buf.data_bits  	= serialSettings.data_bits;
+	buf.SendBufferSizeLimit= serialSettings.SendBufferSizeLimit;
   }
 
   // BAUD = CLOCK_FREQUENCY / (16 * (UBBR + 1))
@@ -135,6 +148,7 @@ void serialEepromGetConfig(uint16_t * prescaler, uint8_t * parity, uint8_t * sto
   *parity=buf.parity;
   *stop_bits=buf.stop_bits;
   *data_bits=buf.data_bits;
+  *SendBufferSizeLimit=buf.SendBufferSizeLimit;
 
 }
 

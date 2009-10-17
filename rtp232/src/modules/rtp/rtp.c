@@ -57,6 +57,8 @@
 	{ 
   
   
+
+
   
     // create a new Packet, ...
     struct nicRequestHandle_t* handle = nicNewRequest();
@@ -69,12 +71,15 @@
 	    ((struct cdpHeader_t*)buf)->timestamp = 0;
     
 	    buf = buf+sizeof(struct cdpHeader_t);
+
     
 	    while(len--)
 	    {
 	      buf[len] = data[len];
 	    }
     
+
+
     onRtpRequest(handle,0x4D,destNetAddr,srcPort);
 	}
 
@@ -164,7 +169,10 @@
   {
     struct soRtpHeader_t* header 
        = (struct soRtpHeader_t*)nicAddPacketHeader(handle,sizeof(struct soRtpHeader_t));
-    
+
+
+
+   
     header->version = 0x80;
     header->type = type;     
     header->timestamp = clockGetShortTimeStamp();
@@ -172,8 +180,12 @@
     header->timestamp = htonl(header->timestamp);
     header->ssrc = 0x00;
     header->sequence = htons(rtpSequence);
+
+
     
     rtpSequence++;
+
+
     
     onUdpRequest(handle,destNetAddr,srcPort);  
     

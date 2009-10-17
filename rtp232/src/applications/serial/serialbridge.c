@@ -30,8 +30,11 @@
 
 	//rtpSendCommand("egal\n", 6, &Config.IPv4.remoteAdrData, &Config.IPv4.localSrcPort);  
 
+
+  
+
     rtpSendCDPData(buf, len, &Config.IPv4.remoteAdrData, &Config.IPv4.localSrcPort);  
-	//putString("\r\nSP");
+	//putString_com1("\r\nSP");
 
     return 0;
   }

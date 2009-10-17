@@ -123,7 +123,7 @@ sei();
     onEthernet();
 
 	if(debug>=1)
-	 putString("running");
+	 putString_com1("running");
 
 
 		

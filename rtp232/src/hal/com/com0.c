@@ -47,6 +47,8 @@ extern struct StructCommandBuffer CommandBuffer;
   
     volatile char sendBuffer[COM0_MAX_TX_BUF];
     volatile char* sendCount;
+
+	volatile uint8_t SendBufferSizeLimit;
   
     struct queue_t recvFiFo;   
     struct queue_t sendFiFo;
@@ -128,7 +130,7 @@ extern struct StructCommandBuffer CommandBuffer;
     }//if(queu is full)
 	else
 	{
-		putString("achtung zu vile daten");
+		putString_com1("achtung zu vile daten");
 	}
       
       // ... finally don't forget to reset our helper to the base address
@@ -187,9 +189,10 @@ extern struct StructCommandBuffer CommandBuffer;
     hUsart0.recvCount++;
     
     // ... and check, if we need to rotate the buffer
-    if (hUsart0.recvCount < (hUsart0.recvBuffer+COM0_MAX_RX_BUF))
+    if (hUsart0.recvCount < (hUsart0.recvBuffer+hUsart0.SendBufferSizeLimit))
       return;
   
+
     com0RotateRecvBuffer();
     
     return;
@@ -240,7 +243,7 @@ extern struct StructCommandBuffer CommandBuffer;
 	
   }
   
-  void com0Initialize(uint16_t prescaler, uint8_t parity, uint8_t stop_bits, uint8_t data_bits)
+  void com0Initialize(uint16_t prescaler, uint8_t parity, uint8_t stop_bits, uint8_t data_bits,uint8_t SendBufferSizeLimit)
   {
     
 	//init USART0 ( for data)
@@ -282,6 +285,8 @@ extern struct StructCommandBuffer CommandBuffer;
     hUsart0.sendFiFo.last  = NULL;
     hUsart0.sendFiFo.elements = 5;
     hUsart0.sendCount  = hUsart0.sendBuffer+COM0_MAX_TX_BUF;
+
+	hUsart0.SendBufferSizeLimit=SendBufferSizeLimit;
     
     hUsart0.timeout = timerAddTimeout(COM0_TIMEOUT,onCom0Timeout);
     
@@ -385,6 +390,7 @@ int i=0;
   // that your free it!;
   void com0RecvBytes(char** buffer, uint8_t* len)
   {
+	
 
 
     struct queueElement_t* node

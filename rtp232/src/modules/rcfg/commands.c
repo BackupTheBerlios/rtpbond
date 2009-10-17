@@ -24,8 +24,8 @@ extern void ipEepromGetConfig(ipAddress_t * ip, ipAddress_t * nm, ipAddress_t * 
 extern void configEepromSetConfig(ipAddress_t dIpData, portAddress_t dPortData, ipAddress_t dIpConfig, portAddress_t dPortConfig, portAddress_t sPort);
 extern void configEepromGetConfig(ipAddress_t * dIpData, portAddress_t * dPortData, ipAddress_t * dIpConfig, portAddress_t * dPortConfig, portAddress_t * sPort);
 
-extern void serialEepromSetConfig(uint16_t prescaler, uint8_t parity, uint8_t stop_bits, uint8_t data_bits);
-extern void serialEepromGetConfig(uint16_t * prescaler, uint8_t * parity, uint8_t * stop_bits, uint8_t * data_bits);
+extern void serialEepromSetConfig(uint16_t prescaler, uint8_t parity, uint8_t stop_bits, uint8_t data_bits,uint8_t BufferSizeLimit);
+extern void serialEepromGetConfig(uint16_t * prescaler, uint8_t * parity, uint8_t * stop_bits, uint8_t * data_bits, uint8_t * BufferSizeLimit);
 
 static uint8_t isDisabled = 0;
 
@@ -79,13 +79,13 @@ uint8_t rcfg_getConfig(char * buf)
 
 	rtpSendCommand(sendbuf, stringLength(sendbuf), &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
 
-	putString("\r\nConfig-Overview: ");
-	putString("\r\nAb Adresse 0x100: ");
+	putString_com1("\r\nConfig-Overview: ");
+	putString_com1("\r\nAb Adresse 0x100: ");
 
 
 
-	putString("(IP,Netmask,GW) ");
-	putString(sendbuf);
+	putString_com1("(IP,Netmask,GW) ");
+	putString_com1(sendbuf);
 
 
 	//Address 200 MAC_EEPROM
@@ -107,9 +107,9 @@ uint8_t rcfg_getConfig(char * buf)
 	}
 	*(--bufpos) = '\0';
 
-	putString("\r\nAb Adresse 0x200: ");
-	putString("(MAC-Address) ");
-	putString(sendbuf);
+	putString_com1("\r\nAb Adresse 0x200: ");
+	putString_com1("(MAC-Address) ");
+	putString_com1(sendbuf);
 
 
 
@@ -120,57 +120,63 @@ uint8_t rcfg_getConfig(char * buf)
 	uint8_t parity=0;
 	uint8_t stop_bits=0;
 	uint8_t data_bits=0;
+	uint8_t BufferSizeLimit=0;
 
-	serialEepromGetConfig(&prescaler,&parity,&stop_bits,&data_bits);
+	serialEepromGetConfig(&prescaler,&parity,&stop_bits,&data_bits,&BufferSizeLimit);
 	stop_bits+=1;
 	data_bits+=5;
 
-	putString("\r\nAb Adresse 0x300: ");
+	putString_com1("\r\nAb Adresse 0x300: ");
 
 
-	putString("(Prescaler,Parity,StopBits,DataBits)  ");
+	putString_com1("(Prescaler,Parity,StopBits,DataBits,BufferSizeLimit)\r\n");
 
 	char buffer[10];
 
 	ultoa(prescaler,buffer,10);
-	putString(buffer);
+	putString_com1(buffer);
 
-	putString("  ");
+	putString_com1("  ");
 
 	ultoa(parity,buffer,10);
-	putString(buffer);
+	putString_com1(buffer);
 
-	putString("  ");
+	putString_com1("  ");
 
 	ultoa(stop_bits,buffer,10);
-	putString(buffer);
+	putString_com1(buffer);
 
-	putString("  ");
+	putString_com1("  ");
 
 	ultoa(data_bits,buffer,10);
-	putString(buffer);
+	putString_com1(buffer);
 
-	putString("\r\nPrescaler belongs to this baudrate: ");
+	putString_com1("  ");
+
+	ultoa(BufferSizeLimit,buffer,10);
+	putString_com1(buffer);
+
+	putString_com1("\r\nPrescaler belongs to this baudrate: ");
 
 
 	uint32_t baud=F_CPU  / (16 * (prescaler + 1));
 	ultoa(baud, buffer, 10);
-	putString(buffer);
+	putString_com1(buffer);
 
-	putString("\r\nParity Value means: ");
+	putString_com1("\r\nParity Value means: ");
 	switch (parity)
 	{
 		case 0:
-			putString("Parity Disabled: ");
+			putString_com1("Parity Disabled: ");
 		break;
 		case 1:
-			putString("Parity Reserved: ");
+			putString_com1("Parity Reserved: ");
 		break;
 		case 2:
-			putString("Parity Enabled, Even Parity: ");
+			putString_com1("Parity Enabled, Even Parity: ");
 		break;
 		case 3:
-			putString("Parity Enabled, Odd Parity: ");
+			putString_com1("Parity Enabled, Odd Parity: ");
 		break;
 	}
 
@@ -193,29 +199,29 @@ uint8_t rcfg_getConfig(char * buf)
 
 
 
-	putString("\r\nAb Adresse 0x400: ");
-	putString("(IP_d,port_d,IP_c,port_c,sPort) ");
+	putString_com1("\r\nAb Adresse 0x400: ");
+	putString_com1("(IP_d,port_d,IP_c,port_c,sPort) ");
 
-	putString("\r\n");
+	putString_com1("\r\n");
 	ip2str(sendbuf, dip_data);
-	putString(sendbuf);
-	putString(" ");
+	putString_com1(sendbuf);
+	putString_com1(" ");
 
 	ultoa(dport_data,sendbuf, 10);
-	putString(sendbuf);
-	putString(" ");
+	putString_com1(sendbuf);
+	putString_com1(" ");
 
 	ip2str(sendbuf, dip_config);
-	putString(sendbuf);
-	putString(" ");
+	putString_com1(sendbuf);
+	putString_com1(" ");
 
 	ultoa(dport_config,sendbuf,10);
-	putString(sendbuf);
-	putString(" ");
+	putString_com1(sendbuf);
+	putString_com1(" ");
 
 	ultoa(sPort,sendbuf, 10);
-	putString(sendbuf);
-	putString("\r\n");
+	putString_com1(sendbuf);
+	putString_com1("\r\n");
 
 
 
@@ -262,8 +268,8 @@ uint8_t rcfg_getMAC(char * buf)
 
   rtpSendCommand(sendbuf, stringLength(sendbuf), &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
 
-  putString("\r\nMAC-Address: ");
-  putString(sendbuf);
+  putString_com1("\r\nMAC-Address: ");
+  putString_com1(sendbuf);
 
 
   return RCFG_SUCCESS;
@@ -321,8 +327,8 @@ uint8_t rcfg_getIP(char * buf)
 
   rtpSendCommand(sendbuf, stringLength(sendbuf), &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
 
-  putString("\r\nIP-Address: ");
-  putString(sendbuf);
+  putString_com1("\r\nIP-Address: ");
+  putString_com1(sendbuf);
 
 
   return RCFG_SUCCESS;
@@ -339,8 +345,8 @@ uint8_t rcfg_getNM(char * buf)
   rtpSendCommand(sendbuf, stringLength(sendbuf), &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
 
 
-  putString("\r\nNetwork-Mask: ");
-  putString(sendbuf);
+  putString_com1("\r\nNetwork-Mask: ");
+  putString_com1(sendbuf);
 
 
   return RCFG_SUCCESS;
@@ -361,8 +367,8 @@ uint8_t rcfg_getGW(char * buf)
 
   rtpSendCommand(sendbuf, stringLength(sendbuf), &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
 
-  putString("\r\nGateway: ");
-  putString(sendbuf);
+  putString_com1("\r\nGateway: ");
+  putString_com1(sendbuf);
 
 
   return RCFG_SUCCESS;
@@ -383,8 +389,8 @@ uint8_t rcfg_getNet(char * buf)
 
   rtpSendCommand(sendbuf, stringLength(sendbuf), &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
 
-  putString("\r\nNIC-Overview: ");
-  putString(sendbuf);
+  putString_com1("\r\nNIC-Overview: ");
+  putString_com1(sendbuf);
 
 
   return RCFG_SUCCESS;
@@ -399,8 +405,8 @@ uint8_t rcfg_getDIP_Data(char *buf) {
 
   rtpSendCommand(sendbuf, stringLength(sendbuf), &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
 
-  putString("\r\nDestination IP for Data-Channel: ");
-  putString(sendbuf);
+  putString_com1("\r\nDestination IP for Data-Channel: ");
+  putString_com1(sendbuf);
 
 
   return RCFG_SUCCESS;
@@ -423,8 +429,8 @@ uint8_t rcfg_getDPORT_Data(char *buf) {
 
   rtpSendCommand(sendbuf, stringLength(sendbuf), &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
 
-  putString("\r\nDestination Port for Data-Channel: ");
-  putString(sendbuf);
+  putString_com1("\r\nDestination Port for Data-Channel: ");
+  putString_com1(sendbuf);
 
 
   return RCFG_SUCCESS;
@@ -447,8 +453,8 @@ uint8_t rcfg_getDIP_Config(char *buf) {
 
   rtpSendCommand(sendbuf, stringLength(sendbuf), &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
 
-  putString("\r\nDestination IP for Config-Channel: ");
-  putString(sendbuf);
+  putString_com1("\r\nDestination IP for Config-Channel: ");
+  putString_com1(sendbuf);
 
 
   return RCFG_SUCCESS;
@@ -471,8 +477,8 @@ uint8_t rcfg_getDPORT_Config(char *buf) {
 
   rtpSendCommand(sendbuf, stringLength(sendbuf), &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
   
-  putString("\r\nDestination Port for Config-Channel: ");
-  putString(sendbuf);
+  putString_com1("\r\nDestination Port for Config-Channel: ");
+  putString_com1(sendbuf);
 
 
   return RCFG_SUCCESS;
@@ -492,18 +498,20 @@ uint8_t rcfg_setBaud(char * buf)
 	uint8_t parity=0;
 	uint8_t stop_bits=0;
 	uint8_t data_bits=0;
+	uint8_t BufferSizeLimit=0;
 
-	serialEepromGetConfig(&prescaler,&parity,&stop_bits,&data_bits);
+	serialEepromGetConfig(&prescaler,&parity,&stop_bits,&data_bits,&BufferSizeLimit);
 	uint32_t baud = rcfg_parseUInt(&buf);
+
 	prescaler=F_CPU / (16 * baud) -1;
-	serialEepromSetConfig( prescaler,parity,stop_bits,data_bits );
+	serialEepromSetConfig( prescaler,parity,stop_bits,data_bits,BufferSizeLimit );
 	return RCFG_SUCCESS;
 }
 
 uint8_t rcfg_getBaud(char * buf)
 {
   uint16_t prescaler;
-  serialEepromGetConfig(&prescaler,NULL,NULL,NULL);
+  serialEepromGetConfig(&prescaler,NULL,NULL,NULL,NULL);
 
   char sendbuf[10] = {0}; // clear buffer;
 
@@ -517,8 +525,8 @@ uint8_t rcfg_getBaud(char * buf)
 
   rtpSendCommand(sendbuf, stringLength(sendbuf), &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
 
-  putString("\r\nBaudrate for Data: ");
-  putString(sendbuf);
+  putString_com1("\r\nBaudrate for Data: ");
+  putString_com1(sendbuf);
 
 
   return RCFG_SUCCESS;
@@ -530,13 +538,14 @@ uint8_t rcfg_setParity(char * buf)
 	uint8_t parity=0;
 	uint8_t stop_bits=0;
 	uint8_t data_bits=0;
+	uint8_t BufferSizeLimit=0;
 
-	serialEepromGetConfig(&prescaler,&parity,&stop_bits,&data_bits);
+	serialEepromGetConfig(&prescaler,&parity,&stop_bits,&data_bits,&BufferSizeLimit);
 	parity = rcfg_parseUInt(&buf);
 
 	if(parity<=3)
 	{
-		serialEepromSetConfig( prescaler,parity,stop_bits,data_bits );
+		serialEepromSetConfig( prescaler,parity,stop_bits,data_bits,BufferSizeLimit );
 		return RCFG_SUCCESS;
 	}
 	else
@@ -549,27 +558,27 @@ uint8_t rcfg_getParity(char * buf)
 
 	char sendbuf[10] = {0}; // clear buffer;
 
-	serialEepromGetConfig(NULL,&parity,NULL,NULL);
+	serialEepromGetConfig(NULL,&parity,NULL,NULL,NULL);
 	ultoa(parity, sendbuf, 10);
 
 	rtpSendCommand(sendbuf, stringLength(sendbuf), &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
 
-	putString("\r\n");
-	putString(sendbuf);
+	putString_com1("\r\n");
+	putString_com1(sendbuf);
 
 	switch (parity)
 	{
 		case 0:
-			putString("\r\nParity Disabled: ");
+			putString_com1("\r\nParity Disabled: ");
 		break;
 		case 1:
-			putString("\r\nParity Reserved: ");
+			putString_com1("\r\nParity Reserved: ");
 		break;
 		case 2:
-			putString("\r\nParity Enabled, Even Parity: ");
+			putString_com1("\r\nParity Enabled, Even Parity: ");
 		break;
 		case 3:
-			putString("\r\nParity Enabled, Odd Parity: ");
+			putString_com1("\r\nParity Enabled, Odd Parity: ");
 		break;
 	}
 	
@@ -582,14 +591,15 @@ uint8_t rcfg_setStopBits(char * buf)
 	uint8_t parity=0;
 	uint8_t stop_bits=0;
 	uint8_t data_bits=0;
+	uint8_t BufferSizeLimit=0;
 
-	serialEepromGetConfig(&prescaler,&parity,&stop_bits,&data_bits);
+	serialEepromGetConfig(&prescaler,&parity,&stop_bits,&data_bits,&BufferSizeLimit);
 	stop_bits = rcfg_parseUInt(&buf);
 
 	if((stop_bits==1)||(stop_bits==2))
 	{
 		stop_bits-=1;
-		serialEepromSetConfig( prescaler,parity,stop_bits,data_bits );
+		serialEepromSetConfig( prescaler,parity,stop_bits,data_bits,BufferSizeLimit );
 		return RCFG_SUCCESS;
 	}
 	else
@@ -604,13 +614,13 @@ uint8_t rcfg_getStopBits(char * buf)
 
 	char sendbuf[10] = {0}; // clear buffer;
 
-	serialEepromGetConfig(NULL,NULL,&stop_bits,NULL);
+	serialEepromGetConfig(NULL,NULL,&stop_bits,NULL,NULL);
 	ultoa(stop_bits+1, sendbuf, 10);
 
 	rtpSendCommand(sendbuf, stringLength(sendbuf), &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
 
-	putString("\r\nStopBits: ");
-	putString(sendbuf);
+	putString_com1("\r\nStopBits: ");
+	putString_com1(sendbuf);
 
   return RCFG_SUCCESS;
 }
@@ -620,13 +630,14 @@ uint8_t rcfg_setDataBits(char * buf)
 	uint8_t parity=0;
 	uint8_t stop_bits=0;
 	uint8_t data_bits=0;
+	uint8_t BufferSizeLimit=0;
 
-	serialEepromGetConfig(&prescaler,&parity,&stop_bits,&data_bits);
+	serialEepromGetConfig(&prescaler,&parity,&stop_bits,&data_bits,&BufferSizeLimit);
 	data_bits = rcfg_parseUInt(&buf);
 	if((5<=data_bits)&&(data_bits<=8))
 	{
 		data_bits-=5;
-		serialEepromSetConfig( prescaler,parity,stop_bits,data_bits );
+		serialEepromSetConfig( prescaler,parity,stop_bits,data_bits,BufferSizeLimit );
 		return RCFG_SUCCESS;
 	}
 	else
@@ -640,15 +651,56 @@ uint8_t rcfg_getDataBits(char * buf)
 	uint8_t data_bits=0;
 	char sendbuf[10] = {0}; // clear buffer;
 
-	serialEepromGetConfig(NULL,NULL,NULL,&data_bits);
+	serialEepromGetConfig(NULL,NULL,NULL,&data_bits,NULL);
 	data_bits+=5;
 	ultoa(data_bits, sendbuf, 10);
 	
 
 	rtpSendCommand(sendbuf, stringLength(sendbuf), &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
 
-	putString("\r\nDataBits: ");
-	putString(sendbuf);
+	putString_com1("\r\nDataBits: ");
+	putString_com1(sendbuf);
+
+  return RCFG_SUCCESS;
+}
+
+
+
+uint8_t rcfg_setBufferSizeLimit(char * buf)
+{
+	uint16_t prescaler=0;
+	uint8_t parity=0;
+	uint8_t stop_bits=0;
+	uint8_t data_bits=0;
+	uint8_t BufferSizeLimit=0;
+
+	serialEepromGetConfig(&prescaler,&parity,&stop_bits,&data_bits,&BufferSizeLimit);
+	BufferSizeLimit = rcfg_parseUInt(&buf);
+	if((1<=BufferSizeLimit)&&(BufferSizeLimit<=150))
+	{
+		serialEepromSetConfig( prescaler,parity,stop_bits,data_bits,BufferSizeLimit );
+		return RCFG_SUCCESS;
+	}
+	else
+		return RCFG_FAIL;
+
+  	
+}
+uint8_t rcfg_getBufferSizeLimit(char * buf)
+{
+
+	uint8_t BufferSizeLimit=0;
+	char sendbuf[10] = {0}; // clear buffer;
+
+	serialEepromGetConfig(NULL,NULL,NULL,NULL,&BufferSizeLimit);
+
+	ultoa(BufferSizeLimit, sendbuf, 10);
+	
+
+	rtpSendCommand(sendbuf, stringLength(sendbuf), &Config.IPv4.remoteAdrConfig, &Config.IPv4.localSrcPort);
+
+	putString_com1("\r\nBufferSizeLimit: ");
+	putString_com1(sendbuf);
 
   return RCFG_SUCCESS;
 }

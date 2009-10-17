@@ -38,6 +38,8 @@ uint8_t rcfg_setStopBits(char * buf);
 uint8_t rcfg_getStopBits(char * buf);
 uint8_t rcfg_setDataBits(char * buf);
 uint8_t rcfg_getDataBits(char * buf);
+uint8_t rcfg_setBufferSizeLimit(char * buf);
+uint8_t rcfg_getBufferSizeLimit(char * buf);
 
 uint8_t rcfg_Reboot(char * buf);
 uint8_t rcfg_Disable(char * buf);

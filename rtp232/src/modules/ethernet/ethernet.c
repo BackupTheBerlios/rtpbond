@@ -76,7 +76,7 @@ uint8_t onEthernetRequest(struct nicRequestHandle_t* handle, uint16_t type,
 void onEthernetResponse(struct nicResponseHandle_t* handle)
 {
 
-// putString("Ether-Empfangen");
+// putString_com1("Ether-Empfangen");
 
 
   // drop tiny packets...
@@ -91,7 +91,7 @@ void onEthernetResponse(struct nicResponseHandle_t* handle)
     case ETHERTYPE_IP4: 
       onIPv4Response(handle,&(header.source));
 
-//	  putString("IP-Empfangen");
+//	  putString_com1("IP-Empfangen");
 
       break;
     case ETHERTYPE_ARP:
