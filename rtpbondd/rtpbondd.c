@@ -457,7 +457,7 @@ void * sendRtp(void* deviceAttr)
 	while(1)
 	{		
 		//try to read data from FIFO until we succeed
-		while(read(outFifo, buffer, PL_SIZE) < 0)
+		while(read(outFifo, buffer, PL_SIZE) <= 0)
             usleep(20);
 
 	
@@ -983,7 +983,7 @@ int main(int argc, char *argv[]) {
     clock_t actualClock = 0;
 	
     //check the number of given commandlinearguments
-	if (argc > 3 && argc < 8) {
+	if (argc > 3 && argc < 8 || argc == 1) {
 		printf("%s", help);
 		return -1;
 	}
