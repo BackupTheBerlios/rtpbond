@@ -325,6 +325,125 @@ $ make dnp
 \end{verbatim}
 %\end{lstlisting}
 
+\subsection{Usage}
+\subsubsection{Starting the program}
+
+There are two possibilities to start the program. To just start the program and configure one device directly just use the following call:
+
+\begin{verbatim}
+$ rtpbondd deviceName destIp4Addr destPort listenPort (0 for any) baudRate[bytes/s] TMax[ms]
+\end{verbatim}
+
+There is also the possibility to configure some devices in a configfile, which will all be started by rtpbondd then. To do this, just append the name of the configfile to the programcall:
+
+\begin{verbatim}
+$ rtpbondd configfile
+\end{verbatim}
+
+\subsubsection{Sample configfile}
+
+The structure of the configfile can be easily seen in the following example. The identation is just for better readabiliy and does not have to be used!
+
+
+\begin{verbatim}
+#this is a comment. it begins with # and has to be on its own line
+deviceName              "FIFO1"
+path                "/home/user/"
+destIp4Addr         "129.69.176.127"
+destPort            "1234"
+listenPort          "43211"
+baudRate[bytes/s]   "1000"
+TMax[ms]            "1000"
+payloadType         "37"
+
+deviceName              "FIFO2"
+path                "."
+destIp4Addr         "129.69.176.129"
+destPort            "34567"
+listenPort          "56789"
+baudRate[bytes/s]   "1500"
+TMax[ms]            "2000"
+payloadType         "77"
+\end{verbatim}
+
+
+\subsubsection{Sending/receiving data}
+
+The program creates two FIFOs in the current working directory for every configured device: deviceName.payloadType.in und deviceName.payloadType.out
+Received data can be read from deviceName.payloadType.in, e.g. with cat:
+
+\begin{verbatim}
+$ cat deviceName.payloadType.in
+\end{verbatim}
+
+Data can be sent by writing it into deviceName.payloadType.out, e.g. with echo:
+
+\begin{verbatim}
+$ echo "Hello World" > deviceName.payloadType.out"
+\end{verbatim}
+
+Received data can be read from deviceName.payloadType.in by other programs as well. And other programs can of course send data by writing into deviceName.payloadType.out.
+
+\subsubsection{Getting the status}
+
+The deviceconfiguration and connectionstats of a running rtpbondd process can be retrieved by entering
+
+\begin{verbatim}
+$ rtpbondd status
+\end{verbatim}
+
+The output looks similar to this:
+
+\begin{verbatim}
+Configfile loaded: rtpbondd.conf                         
+2 device(s) running:                                    
+FIFO1:                                                  
+path: /home/user/                               
+destIp4Addr: 129.69.176.127     destPort: 1234  
+listenPort: 43211                               
+baudRate: 1000  TMax: 1000                      
+payloadType: 37                                 
+Packets sent: 11 (0 data/11 alive)      Packets received: 0 (0 data/0 alive)    status: inactive
+Avg payload sent: 0.00 byte      Avg payload received: 0.00 byte                                
+Packets lost: 0                                                                                 
+FIFO2:                                                                                                  
+path: .                                                                                         
+destIp4Addr: 129.69.176.129     destPort: 34567                                                 
+listenPort: 56789                                                                               
+baudRate: 1500  TMax: 2000                                                                      
+payloadType: 77                                                                                 
+Packets sent: 5 (0 data/5 alive)        Packets received: 0 (0 data/0 alive)    status: inactive
+Avg payload sent: 0.00 byte      Avg payload received: 0.00 byte                                
+Packets lost: 0             
+\end{verbatim}
+
+\subsubsection{Restarting a device}
+
+A running device can be restarted by editing the appropriate configfile and calling:
+
+\begin{verbatim}
+$ rtpbondd restart deviceName
+\end{verbatim}
+
+The deviceName must not be changed of course!
+
+
+\subsubsection{Troubleshooting}
+
+If the following error occurs while starting the program
+
+\begin{verbatim}
+rtpbondd: error: bind(socketRecv) failed. ERRNO: 98
+\end{verbatim}
+
+then there is another rtpbondd process running on the system, using the same port. You have to end that one first, for example with killall:
+
+\begin{verbatim}
+$ killall rtpbondd
+\end{verbatim}
+
+
+
 
 \section{\texttt{rtpconf} Script}
 
