@@ -4,7 +4,7 @@
 
 %----------------------------------------------------------
 %
-\documentclass{book}%
+\documentclass[a4paper]{book}%
 %
 %----------------------------------------------------------
 % This is a sample document for the standard LaTeX Book Class
@@ -45,8 +45,12 @@
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{pdfpages} 
-\usepackage{here}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{verbatim}
+%\usepackage{here}
 \usepackage{booktabs}
+\setlength{\parindent}{0pt}
 
 %----------------------------------------------------------
 \newtheorem{theorem}{Theorem}
@@ -111,43 +115,61 @@ document. You may also delete these preliminary chapters.
 
 
 
-\section{Netzwerk}
-\subsection{ISO Schichtenmodell}
+
+%\section{Netzwerk}
+%\subsection{ISO Schichtenmodell}
+\section{Network}
+\subsection{ISO layer model}
 
 
+%Als Basis für viele heutige Kommunikationsprotokolle wird das OSI-Schichtenmodell verwendet. Sinn dieses Protokolls ist es ein komplettes Kommunikationsprotokoll in einzelne Schichten zu unterteilen. Diese Schichten kommunizieren jeweils nur mit ihren direkten Nachbarschichten, \ref{fig:OSI-Schichtenkommunikation} soll dies verdeutlichen. Dabei geht die Abstrahierung von der untersten Schicht, der Bitübertragungsschicht (engl.: physical Layer), bis zur siebten Schicht der Anwendungsschicht (engl.: Application-Layer).
+%In der Bitübertragungsschicht werden die grundlegenden physikalischen Spezifikationen der Übertragung wie zum Beispiel Strom-, Spannungswerte, Pinbelegung oder auch Abschlusswiderstände festgelegt. Repeater, die in einem Netzwerk eingesetzt werden arbeiten immer auf dieser untersten Schicht.
+%Im Gegensatz dazu wird in der Anwendungsschicht direkt mit den Netzwerkressourcen gearbeitet und Daten können direkt an den Empfänger gesendet werden ohne das Kenntnis über Pinbelgung, Stromwerte oder andere physikalische Begebenheiten benötigt werden. Um dies  zu erreichen wird von der untersten Schicht bis zur Anwendungsschicht zwischen jeder Schicht abstrahiert, so kümmert sich die zweite Schicht, die sogenannte Sicherungsschicht (engl.: Data Link Layer) um die fehlerfreie Verbindung zwischen zwei benachbarten Netzwerkelementen. Schicht drei, welche Netzwerkschicht (engl.: Network-Layer) genannt wird, muss sich nicht mehr mit den Details der Datenübertragung befassen. Die Netzwerkschicht kann davon ausgehen, dass die Pakete sicher ankommen und befasst sich daher nur noch mit der Verwaltung der Pakete und dem Auffinden des effektivsten Weges für ein Paket durch das Netzwerk (Routing). Alle Router in einem Netzwerk arbeiten daher auf dieser dritten Schicht.
 
-Als Basis für viele heutige Kommunikationsprotokolle wird das OSI-Schichtenmodell verwendet. Sinn dieses Protokolls ist es ein komplettes Kommunikationsprotokoll in einzelne Schichten zu unterteilen. Diese Schichten kommunizieren jeweils nur mit ihren direkten Nachbarschichten, \ref{fig:OSI-Schichtenkommunikation} soll dies verdeutlichen. Dabei geht die Abstrahierung von der untersten Schicht, der Bitübertragungsschicht (engl.: physical Layer), bis zur siebten Schicht der Anwendungsschicht (engl.: Application-Layer).
-In der Bitübertragungsschicht werden die grundlegenden physikalischen Spezifikationen der Übertragung wie zum Beispiel Strom-, Spannungswerte, Pinbelegung oder auch Abschlusswiderstände festgelegt. Repeater, die in einem Netzwerk eingesetzt werden arbeiten immer auf dieser untersten Schicht.
-Im Gegensatz dazu wird in der Anwendungsschicht direkt mit den Netzwerkressourcen gearbeitet und Daten können direkt an den Empfänger gesendet werden ohne das Kenntnis über Pinbelgung, Stromwerte oder andere physikalische Begebenheiten benötigt werden. Um dies  zu erreichen wird von der untersten Schicht bis zur Anwendungsschicht zwischen jeder Schicht abstrahiert, so kümmert sich die zweite Schicht, die sogenannte Sicherungsschicht (engl.: Data Link Layer) um die fehlerfreie Verbindung zwischen zwei benachbarten Netzwerkelementen. Schicht drei, welche Netzwerkschicht (engl.: Network-Layer) genannt wird, muss sich nicht mehr mit den Details der Datenübertragung befassen. Die Netzwerkschicht kann davon ausgehen, dass die Pakete sicher ankommen und befasst sich daher nur noch mit der Verwaltung der Pakete und dem Auffinden des effektivsten Weges für ein Paket durch das Netzwerk (Routing). Alle Router in einem Netzwerk arbeiten daher auf dieser dritten Schicht.
+Many modern protocols used for communication are based on the OSI layer model. This model divides a complete protocol into several seperate layers which only communicate with their directly adjacent layers, as shown in \ref{fig:OSI-Schichtenkommunikation}. We abstract from the bottom layer, the so called physical layer, upto the seventh layer, called application layer.\\
+In the physical layer the basic specifications of the transmission are described, e.g. current, voltage, pin usage or termination impedances. Repeaters that are used in a network always operate in this lowest layer.\\
+In contrast, in the application layer one can directly access network ressources and send data to the receiver without any knowledge of pin usage, voltage and other physical properties. To achieve this, we abstract from the bottom layer upto the application through several intermediate layer. Layer 2, the so called data link layer ensures errorless conections between to neighbours in the network. Layer 3, the network layer does not have to cope with the details of data transmission anymore. The network layer can rely on the fact, that all the packets arrive at the other side and so it can focus on routing. Therefore, all routers in the network operate in this network layer.
 
 
-
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics[width=1.0\textwidth]{figures/schichtkommunikation.eps}
+%	\caption[Kommunikation zwischen OSI-Schichten]{Kommunikation zwischen OSI-Schichten}
+%	\label{fig:OSI-Schichtenkommunikation}
+%\end{figure}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=1.0\textwidth]{figures/schichtkommunikation.eps}
-	\caption[Kommunikation zwischen OSI-Schichten]{Kommunikation zwischen OSI-Schichten}
+	\caption[Communication between the OSI layers]{Kommunikation zwischen OSI-Schichten}
 	\label{fig:OSI-Schichtenkommunikation}
 \end{figure}
 
 
-\subsection{Die Schichten des OSI-Modells im Überblick}
+%\subsection{Die Schichten des OSI-Modells im Überblick}
+\subsection{Overview of the OSI layers}
 
-\subsubsection{Schicht 1: Bitübertragungsschicht (Physical Layer)}
-Verbindungsschicht zur physikalischen Ebene. Verantwortung für Übertragung einzelner Bits.
+\subsubsection{Layer 1: Physical Layer}
+%Verbindungsschicht zur physikalischen Ebene. Verantwortung für Übertragung einzelner Bits.
+Connection layer to the physical properties. Responsible for the transmission of single bits.
 
-\subsubsection{Schicht 2: Sicherungsschicht (Data link Layer)} 
-Die Sicherungsschicht sorgt für eine zuverlässige und funktionierende Verbindung zwischen Endgerät und Übertragungsmedium. Zur Vermeidung von Übertragungsfehlern und Datenverlust enthält diese Schicht Funktionen zur Fehlererkennung, Fehlerbehebung und Datenflusskontrolle.
-Auf dieser Schicht findet auch die physikalische Adressierung von Datenpaketen statt.
+\subsubsection{Layer 2: Data Link Layer} 
+%Die Sicherungsschicht sorgt für eine zuverlässige und funktionierende Verbindung zwischen Endgerät und Übertragungsmedium. Zur Vermeidung von Übertragungsfehlern und Datenverlust enthält diese Schicht Funktionen zur Fehlererkennung, Fehlerbehebung und Datenflusskontrolle.
+%Auf dieser Schicht findet auch die physikalische Adressierung von Datenpaketen statt.
+The Data Link Layer establishes an errorless and reliable connection between endpoint and transmissionchannel. To avoid errors and data loss, this layer provides functions for error detection and error correction.\\
+This layer also adresses the data packets physically.
 
-\subsubsection{Schicht 3: Netzwerkschicht (Network Layer)}
-Die Vermittlungsschicht steuert die zeitliche und logische getrennte Kommunikation zwischen den Endgeräten, unabhängig vom Übertragungsmedium und -topologie. Auf dieser Schicht erfolgt erstmals die logische Adressierung der Endgeräte. Die Adressierung ist eng mit dem Routing (Wegfindung vom Sender zum Empfänger) verbunden.
+\subsubsection{Layer 3: Network Layer}
+%Die Vermittlungsschicht steuert die zeitliche und logische getrennte Kommunikation zwischen den Endgeräten, unabhängig vom Übertragungsmedium und -topologie. Auf dieser Schicht erfolgt erstmals die logische Adressierung der Endgeräte. Die Adressierung ist eng mit dem Routing (Wegfindung vom Sender zum Empfänger) verbunden.
+The Network Layer controls the communication between endpoints, independent from communication channels and topology. On this layer the endpoints are adressed logically. This adressation is strongly connected with the routing process (finding a way from sender to receiver).
 
-\subsubsection{Schicht 4: Transportschicht (Transport Layer)}
-Die Transportschicht ist das Bindeglied zwischen den transportorientierten und anwendungsorientierten Schichten. Hier werden die Datenpakete einer Anwendung zugeordnet.
+\subsubsection{Layer 4: Transport Layer}
+%Die Transportschicht ist das Bindeglied zwischen den transportorientierten und anwendungsorientierten Schichten. Hier werden die Datenpakete einer Anwendung zugeordnet.
+The Transport Layer is the connection between the transportcentered and applicationcentered layers. In this layer, data packets are assigned to applications.
 
-\subsubsection{Schicht 5: Sitzungsschicht (Session Layer)}
-Auf dieser Schicht wird der Verbindungsaufbau festgelegt und falls es bei der Übertragung zu Fehlern kommt werden diese hier abgefangen und 
-ausgewertet.
+\subsubsection{Layer 5: Session Layer}
+%Auf dieser Schicht wird der Verbindungsaufbau festgelegt und falls es bei der Übertragung zu Fehlern kommt werden diese hier abgefangen und 
+%ausgewertet.
+%TODO: Hier weitermachen
 
 \subsubsection{Schicht 6: Darstellungsschicht (Presentation Layer)}
 Auf dieser Ebene werden Dateneingabe und -ausgabe überwacht und Übertragungskonventionen festgelegt oder auch Bildschirmdarstellungen angepasst.
@@ -239,7 +261,71 @@ Der Zugriff auf das Ethernet-Kabel wird vom Media Access Control (MAC) geregelt.
 
 
 \chapter{Linux Reference Application}
-\section{\texttt{rtpbond} Binary}
+\section{\texttt{rtpbondd} Binary}
+\subsection{Overview}
+
+The \emph{rtpbondd} binary is a small daemon-like tool for Linux that permits users to transfer messages in our RTP/CDP packet format through the network. \emph{rtpbondd} reads the data to send from FIFOs and writes received data to other FIFOs from which they can be read and processed by the user or by other tools. The rtpbondd tool runs in the background and generates the required additional headers 
+
+\subsection{Installation}
+
+The \emph{rtpbondd} sourcecode is accompanied by the following Makefile which does all the work needed to generate a binary.
+
+%\lstset{language=make}
+%\lstset{caption=The Makefile}
+%\lstset{captionpos=b}
+%\begin{lstlisting}
+\begin{verbatim}
+# Makefile for rtpbondd.c
+EXEC_RTPBONDD = rtpbondd
+EXEC_RTPBONDD_BF = rtpbondd_bf
+OBJS_RTPBONDD = rtpbondd.o
+OBJS_RTPBONDD_BF = rtpbondd_bf.o
+SRC_RTPBONDD = rtpbondd.c
+
+#The configuration for the Linuxhost
+LDFLAGS = -lpthread -o $@ -lm
+INCLDIR = /usr/include
+
+#The configuration for the DNP
+CC_BF = /home/mike/opt/uClinux/bfin-uclinux/bin/bfin-uclinux-gcc
+CFLAGS_BF = -Wl,-elf2flt
+INCLDIR_BF = /home/mike/opt/uClinux/bfin-uclinux/bfin-uclinux/runtime/usr/include/
+LIBDIR_BF = /home/mike/opt/uClinux/bfin-linux-uclibc/bfin-linux-uclibc/runtime/lib/
+LDFLAGS_BF = -pthread -o $@ -lm -L$(LIBDIR_BF)
+		
+all: $(EXEC_RTPBONDD) 
+
+
+$(EXEC_RTPBONDD): $(OBJS_RTPBONDD)
+	$(CC) -I$(INCLDIR) $(LDFLAGS) $(OBJS_RTPBONDD) -lm -lc
+
+$(OBJS_RTPBONDD):
+	$(CC) -c -I$(INCLDIR) $(SRC_RTPBONDD)
+	
+dnp: $(EXEC_RTPBONDD_BF)
+
+$(EXEC_RTPBONDD_BF): $(OBJS_RTPBONDD_BF)
+	$(CC_BF) -I$(INCLDIR_BF) $(LDFLAGS_BF) $(CFLAGS_BF) $(OBJS_RTPBONDD_BF) -lm
+
+$(OBJS_RTPBONDD_BF):
+	$(CC_BF) -c -o $@ -I$(INCLDIR_BF) $(CFLAGS_BF) $(SRC_RTPBONDD)
+
+clean:
+	-rm -f $(EXEC_RTPBONDD) $(EXEC_RTPBONDD_BF) *.elf *.gdb *.o
+\end{verbatim}
+
+To compile the binary for a normal Linux PC you can use the standard target and just type:
+\begin{verbatim}
+$ make
+\end{verbatim}
+
+The Makefile also contains a buildtarget for the DNP/5370 board which can be called by:
+\begin{verbatim}
+$ make dnp
+\end{verbatim}
+%\end{lstlisting}
+
+
 \section{\texttt{rtpconf} Script}
 
 \section{Example}
@@ -271,21 +357,21 @@ Wie im Programmablaufplan \ref{fig:onmain} zu sehen ist, wird die Funktion OnSer
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.0\textwidth]{figures/schrittweiserAufbauEinesPaketes.eps}
+	\includegraphics[width=1.0\textwidth]{figures/schrittweiseraufbaueinespaketes.eps}
 	\caption[Aufbau eines kompletten CDP-Paketes]{Aufbau eines kompletten CDP-Paketes}
 	\label{fig:aufbauPaket}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.2\textwidth]{figures/onMain.eps}
+	\includegraphics[width=0.2\textwidth]{figures/onmain.eps}
 	\caption[Main-Funktion]{Main-Funktion}
 	\label{fig:onmain}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{figures/onTimer.eps}
+	\includegraphics[width=0.8\textwidth]{figures/ontimer.eps}
 	\caption[onTimer()]{onTimer()}
 	\label{fig:ontimer}
 \end{figure}
@@ -293,14 +379,14 @@ Wie im Programmablaufplan \ref{fig:onmain} zu sehen ist, wird die Funktion OnSer
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.2\textwidth]{figures/onSerial.eps}
+	\includegraphics[width=0.2\textwidth]{figures/onserial.eps}
 	\caption[onSerial()]{onSerial()}
 	\label{fig:aonserial}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.3\textwidth]{figures/rotateRecvBuffer.eps}
+	\includegraphics[width=0.3\textwidth]{figures/rotaterecvbuffer.eps}
 	\caption[Rotate Reciver Buffer]{Rotate Reciver Buffer}
 	\label{fig:rotaterecvbuffer}
 \end{figure}
@@ -331,14 +417,14 @@ Um ein Messgerät zu steuern müssen Daten am Netzwerkinterface entgegen genommen 
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{figures/EthernetTo232-dia-01.eps}
+	\includegraphics[width=0.8\textwidth]{figures/ethernetto232-dia-01.eps}
 	\caption[Empfang eines Ethernet-Paketes]{Empfang eines Ethernet-Paketes}
 	\label{fig:ethernettors232 part1}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{figures/EthernetTo232-dia-02.eps}
+	\includegraphics[width=0.8\textwidth]{figures/ethernetto232-dia-02.eps}
 	\caption[Empfang eines Ethernet-Paketes]{Empfang eines Ethernet-Paketes}
 	\label{fig:ethernettors232 part2}
 \end{figure}
@@ -354,7 +440,7 @@ Mit dieser Technik können keine hochpräzisen Timer realisert werden, da ein abla
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{figures/SpeicherStrukturTimer.eps}
+	\includegraphics[width=0.8\textwidth]{figures/speicherstrukturtimer.eps}
 	\caption[Speicher Struktur der Timer-Liste]{Speicher Struktur der Timer-Liste}
 	\label{fig:speicherstruktur}
 \end{figure}
@@ -466,7 +552,7 @@ Was ein EEPROM ist und welche Werte hier vom Messadapter noch gespeichert werden
 \vspace{1 cm}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.0\textwidth]{figures/setBaud.eps}
+	\includegraphics[width=1.0\textwidth]{figures/setbaud.eps}
 	\caption{Beispiel: Setzen eines Wertes (Baudrate) im EEPROM}
 	\label{fig:setBaud}
 \end{figure}
@@ -488,7 +574,7 @@ Ab der Adresse 0x100 liegen Daten die mit der Konfiguration des Netzwerkcontroll
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\textwidth]{figures/Eeprom-belegung.eps}
+	\includegraphics[width=0.8\textwidth]{figures/eeprom-belegung.eps}
 	\caption[Eeprom Belegung]{Eeprom Belegung}
 	\label{fig:eeprom}
 \end{figure}
@@ -541,7 +627,7 @@ Bei dem Messadapter wurde als Datenquelle das Netzwerk genommen. Das bedeutet, d
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=1.0\textwidth]{figures/Flashmemory.eps}
+	\includegraphics[width=1.0\textwidth]{figures/flashmemory.eps}
 	\caption[Beispiel Aufbau des Flash-Memory anhand des ATMega128]{Beispiel Aufbau des Flash-Memory anhand des ATMega128}
 	\label{fig:flash}
 \end{figure}

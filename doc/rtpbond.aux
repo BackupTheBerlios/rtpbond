@@ -5,40 +5,108 @@
 \@writefile{toc}{\contentsline {chapter}{\numberline {1}Protocol and Topology Considerations}{1}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces Gesamtaufbau}}{1}}
-\newlabel{fig:gesamtaufbau}{{1.1}{1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.2}{\ignorespaces Linux2linux}}{2}}
-\newlabel{fig:linux2linux}{{1.2}{2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1.3}{\ignorespaces l2r}}{2}}
-\newlabel{fig:linux2rs323}{{1.3}{2}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {2}Linux Reference Application}{3}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.1}Netzwerk}{1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.1}ISO Schichtenmodell}{1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.2}Die Schichten des OSI-Modells im \"Uberblick}{2}}
+\@writefile{toc}{\contentsline {subsubsection}{Schicht 1: Bit\"ubertragungsschicht (Physical Layer)}{2}}
+\@writefile{toc}{\contentsline {subsubsection}{Schicht 2: Sicherungsschicht (Data link Layer)}{2}}
+\@writefile{toc}{\contentsline {subsubsection}{Schicht 3: Netzwerkschicht (Network Layer)}{2}}
+\@writefile{toc}{\contentsline {subsubsection}{Schicht 4: Transportschicht (Transport Layer)}{2}}
+\@writefile{toc}{\contentsline {subsubsection}{Schicht 5: Sitzungsschicht (Session Layer)}{2}}
+\@writefile{toc}{\contentsline {subsubsection}{Schicht 6: Darstellungsschicht (Presentation Layer)}{2}}
+\@writefile{toc}{\contentsline {subsubsection}{Schicht 7: Anwendungsschicht (Application Layer)}{2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.3}Realisierung des OSI-Modells}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.4}CDP}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.5}RTP}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.6}UDP}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.7}IP}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.8}Ethernet}{4}}
+\@writefile{lot}{\contentsline {table}{\numberline {1.1}{\ignorespaces 4Bit/5Bit Umwandlung Manchseter-Codierung}}{5}}
+\newlabel{tab:umwandlung}{{1.1}{5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces Kommunikation zwischen OSI-Schichten}}{7}}
+\newlabel{fig:OSI-Schichtenkommunikation}{{1.1}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1.2}{\ignorespaces Beispiel Manchester-Codierung}}{8}}
+\newlabel{fig:manu}{{1.2}{8}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {2}Linux Reference Application}{9}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {2.1}\texttt  {rtpbondd} Binary}{3}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.2}\texttt  {rtpconf} Script}{3}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.3}Example}{3}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}Microcontroller Reference Implementation}{5}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}\texttt  {rtpbond} Binary}{9}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}\texttt  {rtpconf} Script}{9}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Example}{9}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Microcontroller Reference Implementation}{11}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Tools and Amendmends}{7}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Hardware}{11}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Software}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Sende- und Empfangsprozess der seriellen Br\"ucke}{11}}
+\@writefile{toc}{\contentsline {subsubsection}{COM-Schnittstelle RS-232}{11}}
+\@writefile{toc}{\contentsline {subsubsection}{ttyS0(RS232) to Ethernet}{12}}
+\@writefile{toc}{\contentsline {subsubsection}{Ethernet to ttyS0(RS232)}{14}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Timer und Echtzeitverhalten}{15}}
+\@writefile{toc}{\contentsline {subsubsection}{Realisierung beim Messadapter}{15}}
+\@writefile{toc}{\contentsline {subsubsection}{Echtzeitverhalten}{17}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Konfiguration und Debugging}{18}}
+\@writefile{toc}{\contentsline {subsubsection}{Konfiguration}{18}}
+\newlabel{chapter:konfig}{{3.3}{18}}
+\@writefile{toc}{\contentsline {subsubsection}{EEPROM}{18}}
+\newlabel{chp:eeprom}{{3.3}{18}}
+\@writefile{toc}{\contentsline {subsubsection}{Debugging \"uber COM-Schnittstelle (ttyS1)}{19}}
+\@writefile{toc}{\contentsline {subsubsection}{Bootloader}{20}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Aufbau eines kompletten CDP-Paketes}}{22}}
+\newlabel{fig:aufbauPaket}{{3.1}{22}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Main-Funktion}}{23}}
+\newlabel{fig:onmain}{{3.2}{23}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces onTimer()}}{23}}
+\newlabel{fig:ontimer}{{3.3}{23}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces onSerial()}}{24}}
+\newlabel{fig:aonserial}{{3.4}{24}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Rotate Reciver Buffer}}{24}}
+\newlabel{fig:rotaterecvbuffer}{{3.5}{24}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces Aufbau eines CDP-Paketes im Speicher}}{25}}
+\newlabel{fig:speicherabbild}{{3.6}{25}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.7}{\ignorespaces Empfang eines Ethernet-Paketes}}{26}}
+\newlabel{fig:ethernettors232 part1}{{3.7}{26}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.8}{\ignorespaces Empfang eines Ethernet-Paketes}}{27}}
+\newlabel{fig:ethernettors232 part2}{{3.8}{27}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.9}{\ignorespaces Speicher Struktur der Timer-Liste}}{28}}
+\newlabel{fig:speicherstruktur}{{3.9}{28}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.10}{\ignorespaces Sendeverhalten des Messadapters}}{28}}
+\newlabel{fig:sendedia}{{3.10}{28}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Kommando-\"Ubersicht}}{28}}
+\newlabel{tab:kommandos}{{3.1}{28}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces Parity}}{29}}
+\newlabel{parity}{{3.2}{29}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.11}{\ignorespaces Gesamtkonfiguration}}{29}}
+\newlabel{fig:getconfig}{{3.11}{29}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.12}{\ignorespaces Beispiel: Setzen eines Wertes (Baudrate) im EEPROM}}{29}}
+\newlabel{fig:setBaud}{{3.12}{29}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.13}{\ignorespaces Eeprom Belegung}}{30}}
+\newlabel{fig:eeprom}{{3.13}{30}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.14}{\ignorespaces Debug-Ausgabe vom Sendeprozess}}{31}}
+\newlabel{fig:debug-ausgabe}{{3.14}{31}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.15}{\ignorespaces Debug-Aufrufe}}{31}}
+\newlabel{fig:debug-code}{{3.15}{31}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.16}{\ignorespaces Beispiel Aufbau des Flash-Memory anhand des ATMega128}}{32}}
+\newlabel{fig:flash}{{3.16}{32}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Tools and Amendmends}{33}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}The Most Important Features of this Document}{9}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}The Most Important Features of this Document}{35}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}Section}{9}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}Subsection}{9}}
-\@writefile{toc}{\contentsline {subsubsection}{Subsubsection}{9}}
-\@writefile{toc}{\contentsline {paragraph}{Subsubsubsection}{9}}
-\@writefile{toc}{\contentsline {subparagraph}{Subsubsubsubsection}{9}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.2}Typesetting Commands}{9}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}Section}{35}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}Subsection}{35}}
+\@writefile{toc}{\contentsline {subsubsection}{Subsubsection}{35}}
+\@writefile{toc}{\contentsline {paragraph}{Subsubsubsection}{35}}
+\@writefile{toc}{\contentsline {subparagraph}{Subsubsubsubsection}{35}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}Typesetting Commands}{35}}
 \citation{KarelRektorys}
-\@writefile{toc}{\contentsline {section}{\numberline {5.3}Mathematics and Text}{11}}
-\newlabel{eqn10}{{5.1}{11}}
-\newlabel{eqn20}{{5.2}{11}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.4}Lists Environments}{11}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.5}Theorem-Like Environments}{12}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {A}The First Appendix}{13}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.3}Mathematics and Text}{37}}
+\newlabel{eqn10}{{5.1}{37}}
+\newlabel{eqn20}{{5.2}{37}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.4}Lists Environments}{37}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.5}Theorem-Like Environments}{38}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}The First Appendix}{39}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \citation{KarelRektorys}
@@ -46,13 +114,13 @@
 \citation{Bertoti97}
 \citation{Szeidl2001}
 \citation{Carlson67}
-\@writefile{toc}{\contentsline {chapter}{\numberline {B}The Second Appendix}{15}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {B}The Second Appendix}{41}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \bibcite{KarelRektorys}{1}
 \bibcite{Bertoti97}{2}
 \bibcite{Szeidl2001}{3}
 \bibcite{Carlson67}{4}
-\@writefile{toc}{\contentsline {chapter}{Afterword}{19}}
+\@writefile{toc}{\contentsline {chapter}{Afterword}{45}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
