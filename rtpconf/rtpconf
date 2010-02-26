@@ -2,21 +2,28 @@
 #
 # rtpconf
 #
-SCRIPT_VERSION="v0.7.1 (2009/07/12) >> Highly Unstable! <<"
-TTY_NET_DIR="."
-TTY_NET_NAME="rtpbondd_sim"
+## Author: Juergen Schmidt <swarley@users.berlios.de>
+## Description:
+##   This script is an interactive helper tool to control and maintain a setup
+##   of the RTP/CDP Toolkit project 'rtpbond'.
+##   rtpconf is part of the rtpbond project.
+##
+SCRIPT_VERSION="v0.9.9 (2009/11/25)"
+TTY_NET_DIR="../rtpbondd"
+TTY_NET_NAME="rtpbondd"
 
-#-------------------------------------------
+#===========================================
 #Declarations
-#-------------------------------------------
-declare -a TTYNET_STATUS
-declare -a TTYNET_DEVICES
+#===========================================
+#declare -a TTYNET_STATUS  #obsolete
+#declare -a TTYNET_DEVICES  #obsolete
 declare -a USER_INPUT_ARRAY
 
 #BEGIN: presets
 GLOBAL_DEBUG_MODE=0
 CONFIG_PAYLOAD_TYPE=37
 CONFIG_FILE="rtpconf.conf"
+#END: presets
 
 #BEGIN: initial values to ensure deterministic behaviour, don't change!!
 FLAG_INTERACTIVE_MODE=0
@@ -24,124 +31,540 @@ PROMPT=""
 DEVICE=""
 #END: initial values to ensure deterministic behaviour, don't change!!
 
-#-------------------------------------------
+
+#===========================================
 #Functions
-#-------------------------------------------
+#===========================================
+
+#
+# basic csv structure functions
+#
+## Inline documentation of used CSV Structures:
+## ============================================
+##
+## Local status csv (/tmp/rtpconf/rtpconf.csv.local):
+## --------------------------------------------------
+##
+## Field number | Description
+## -------------+-------------------
+##       1      |  FIFO-Name
+##       2      |  FIFO-Path
+##       3      |  IP Adress
+##       4      |  Destination Port
+##       5      |  Listen Port
+##       6      |  Baudrate
+##       7      |  TMax
+##       8      |  Payload Type
+##       9      |  Activity State
+##
+## NOTE: Activity State of CVS Field is not necessarilly the current state.
+##       For an activity check you better get either a new status output of rtpbondd and
+##       filter your needed section or you perform a new call of 'getTtyNetStatus' 
+##
+## Remote status csv (/tmp/rtpconf/rtpconf.csv.remote):
+## ----------------------------------------------------
+##
+## Field number | Description
+## -------------+-------------------
+##       1      |  FIFO-Name
+##       2      |  MAC Adress
+##       3      |  IP Adress
+##       4      |  Network Mask
+##       5      |  Gateway
+##       6      |  Baudrate
+##       7      |  Destination IP for data channel
+##       8      |  Destination Port for data channel
+##       9      |  Destination IP for config channel
+##      10      |  Destination Port for config channel
+
+##
+
+#read a value field of csv files
+## parameter: device location field-number
+## location may be 'remote' or 'local'
+getProperty(){
+  local device=$1
+  local location=$2
+  local field=$3
+
+  if [ -z "$device" ]
+  then
+    echo "ERROR: no device given in getProperty() Line $LINENO" >&2
+    return 1
+  fi
+
+  if [ -z "$field" ]
+  then
+    echo "ERROR: no field given in getProperty() Line $LINENO" >&2
+    return 1
+  fi
+
+  if [ "$location" != "local" -a "$location" != "remote" ]
+  then
+    echo "ERROR: unknown 2nd parameter '$location' in getProperty() Line $LINENO" >&2
+    return 1
+  elif [ -z "$location" ]
+  then
+    echo "ERROR: no location given in getProperty() Line $LINENO" >&2
+  fi
+
+  cat /tmp/rtpconf/rtpconf.csv.${location} | awk -v field=$field -v device=$device 'BEGIN{ FS=";" } $1 ~ device { print $(field) }'
+  return 0
+}
+
+#WRITE a value field of csv files
+## parameter: device location field-number new-value
+## location may be 'remote' or 'local'
+setProperty(){
+  local device=$1
+  local location=$2
+  local field=$3
+  local newvalue=$4
+
+  if [ -z "$device" ]
+  then
+    echo "ERROR: no device given in setProperty() Line $LINENO" >&2
+    return 1
+  fi
+
+  if [ -z "$field" ]
+  then
+    echo "ERROR: no field given in setProperty() Line $LINENO" >&2
+    return 1
+  fi
+
+  if [ "$location" != "local" -a "$location" != "remote" ]
+  then
+    echo "ERROR: unknown 2nd parameter '$location' in setProperty() Line $LINENO" >&2
+    return 1
+  elif [ -z "$location" ]
+  then
+    echo "ERROR: no location given in setProperty() Line $LINENO" >&2
+    return 1
+  fi
+
+  if [ -z "$newvalue" ]
+  then
+    echo "ERROR: no new value given in setProperty() [device=$device, location=$location, field=$field] Line $LINENO" >&2
+    return 1
+  fi
+
+  if [ -e "/tmp/rtpconf/rtpconf.csv.${location}" ]
+  then
+    cp /tmp/rtpconf/rtpconf.csv.${location} /tmp/rtpconf/rtpconf.csv.${location}.old
+    cat /tmp/rtpconf/rtpconf.csv.${location}.old | awk -v field=$field -v device=$device -v newvalue=$newvalue '
+    BEGIN{ FS=";" } 
+    $1 !~ device { print $0 } 
+    $1 ~ device { 
+      for (i=1; i < NF; i++) { 
+        if ( i == field ) printf newvalue ";";
+        else printf $(i) ";"
+      }
+      printf "\n"
+    }' > /tmp/rtpconf/rtpconf.csv.${location}
+    if [ -z "$(cat /tmp/rtpconf/rtpconf.csv.${location})" ]
+    then
+      echo "ERROR: empty csv-output for '/tmp/rtpconf/rtpconf.csv.${location}' in setProperty() Line $LINENO" >&2
+      return 1
+    fi
+    rm /tmp/rtpconf/rtpconf.csv.${location}.old
+  else
+    echo "ERROR: '/tmp/rtpconf/rtpconf.csv.${location}' not found in setProperty() Line $LINENO" >&2
+    return 1
+  fi
+  return 0
+}
+
+# verify whehter device exists in CSV
+isEntry(){
+  local device=$1
+  local location=$2
+  local state=1
+  
+  if [ -z "$device" ]
+  then
+    echo "ERROR: no device given in isEntry() Line $LINENO" >&2
+    return 1
+  fi
+
+  if [ "$location" != "local" -a "$location" != "remote" ]
+  then
+    echo "ERROR: unknown 2nd parameter '$location' in isEntry() Line $LINENO" >&2
+    return 1
+  elif [ -z "$location" ]
+  then
+    echo "ERROR: no location given in isEntry() Line $LINENO" >&2
+    return 1
+  fi
+
+  state=$(cat /tmp/rtpconf/rtpconf.csv.${location} | awk -v device=$device 'BEGIN{ FS=";"; state=1 } $1 ~ device { state=0 } END{ printf state }')
+#  echo $state
+  return $state
+}
+
+#Create a new entry in csv files
+## parameter: device location
+## location may be 'remote' or 'local'
+createCsvEntry(){
+  local device=$1
+  local location=$2
+
+  if [ -z "$device" ]
+  then
+    echo "ERROR: no device given in createCsvEntry() Line $LINENO" >&2
+    return 1
+  fi
+
+  if [ "$location" != "local" -a "$location" != "remote" ]
+  then
+    echo "ERROR: unknown 2nd parameter '$location' in createCsvEntry() Line $LINENO" >&2
+    return 1
+  elif [ -z "$location" ]
+  then
+    echo "ERROR: no location given in createCsvEntry() Line $LINENO" >&2
+    return 1
+  fi
+
+  if [ -e "/tmp/rtpconf/rtpconf.csv.${location}" ]
+  then
+    #check if already entry for this device exists
+    if [ "$(cat /tmp/rtpconf/rtpconf.csv.${location} | awk -v device=$device 'BEGIN{ FS=";" } $1 == device { print $0 }')" ]
+    then
+      [ "$GLOBAL_DEBUG_MODE" == "1" ] && echo "WARNING: csv data entry for '$device' already exists! createCsvEntry() in Line $LINENO" >&2
+      return 1
+    else
+      if [ "$location" == "local" ]
+      then
+        #csv for local data (rtpbondd) => 9 fields
+        #append to existing data!
+        echo "$device;;;;;;;;;" >> /tmp/rtpconf/rtpconf.csv.${location}
+      else
+        #csv for remote data (rtp232 device) => 10 fields
+        #append to existing data!
+        echo "$device;;;;;;;;;;" >> /tmp/rtpconf/rtpconf.csv.${location}
+      fi
+    fi
+  else
+    if [ "$location" == "local" ]
+    then
+      #csv for local data (rtpbondd) => 9 fields
+      echo "$device;;;;;;;;;" > /tmp/rtpconf/rtpconf.csv.${location}
+    else
+      #csv for remote data (rtp232 device) => 10 fields
+      echo "$device;;;;;;;;;;" > /tmp/rtpconf/rtpconf.csv.${location}
+    fi
+  fi
+  return 0
+}
+
+
+
+#wrapper function due to compatibility reasons
+typeOf(){
+  local device=$1
+  getProperty $device local 8
+  return 0
+}
+
+#wrapper function due to compatibility reasons
+pathOf(){
+  local device=$1
+  getProperty $device local 2
+  return 0
+}
+
+allDevices(){
+  cat /tmp/rtpconf/rtpconf.csv.local | awk 'BEGIN{ FS=";"; ORS=" " } { print $1 }'
+  return 0
+}
+
+allConfigDevices(){
+  cat /tmp/rtpconf/rtpconf.csv.local | awk -v ptype=$CONFIG_PAYLOAD_TYPE 'BEGIN{ FS=";"; ORS=" " } $8 ~ ptype { print $1 }'
+  return 0
+}
+
+#
+# other functions
+#
 exitHooks() {
   #temp-file remove or device setting etc
-  [ -e "/tmp/rtpconf.tmp" ] && rm /tmp/rtpconf.tmp
-  [ -e "/tmp/rtpconf.status.tmp" ] && rm /tmp/rtpconf.status.tmp
-  [ -e "/tmp/rtpconf.locconf.tmp" ] && rm /tmp/rtpconf.locconf.tmp
+  [ -d "/tmp/rtpconf" ] && rm -R /tmp/rtpconf
 }
 
 print_usage() {
   echo "rtpconf $SCRIPT_VERSION"
   echo "Usage: $0 [command] [command-parameter/device]"
   echo "If no command is committed, rtpconf will start in 'interactive mode'. All following commands can be used either in interactive mode or as a single command"
-  echo "* errors     prints all error states (exit codes of script) with a short explanation"
-  echo "* help       print this"
-  echo "* quit       quits the interactive mode (alias: exit)"
-  echo "* restart    restarts remote device (aliases: reset, reboot) ACHTUNG: BISHER NUR RESTART VON TTY_NET-THREAD"    
-  echo "* status     prints status output - if remote status available even this"
-  echo "* verison    print current version of this script"
+  echo "* help        print this"
+  echo "* quit        quits the interactive mode (alias: exit)"
+  echo "* status      prints status output - if remote status available even this"
+  echo "* version     print current version of this script"
   echo ""
   echo "Remote commands:"
-  echo "* open       opens a device for easy use"
-  echo "* close      close current opened device"
-  echo "* send       transmit text to device. first open a device or use syntax 'send FIFONAME TEXT'"
+  echo "* open        opens a device for easy use"
+  echo "* close       close current opened device"
+  echo "* send        transmit text to device. first open a device or use syntax 'send FIFONAME TEXT'"
+  echo "* configure   starts a configuration routine to set up a remote device"
+  echo "* restart     restarts remote device (aliases: reset, reboot) ACHTUNG: BISHER NUR RESTART VON TTY_NET-THREAD"    
+  echo "* dump        dump configuration for rtpbondd (based on internal device states)"
+  echo "* configtype  print/set payload-type for configuration channels"
+#  echo "* group       group a pair of devices to define correlation between them"
 }
 
+# verify IP4 adress
 checkIP() {
   local IP=$1
   declare -a IPArray
-  IPArray=( $(echo $IP | awk 'BEGIN{ RS="." } { print $0 }') )
-  if [ ${#IPArray[@]} -ne 4 ]
-  then
-    echo "  ERROR: Invalid ip address! IP4 address is required!"
-    return 1
-  fi
-  local counter=0
-  for each in ${IPArray[@]}
-  do
-    ((counter++))
-    if [ $each -gt 255 -o $each -lt 0 ]
-    then
-      echo "  ERROR: Invalid address range. Each tuple must be in range of 1 to 255."
-      unset IPArray
-      return 1
-    fi
-    [ $counter -eq 4 -a $each -eq 0 ] && echo "  ERROR: Broadcast addresses are not allowed!" && return 1
-  done
-  unset IPArray
-  return 0
+
+  echo $IP | awk '
+    BEGIN{ FS="." }
+    {
+      if ( NF > 4 ) {
+        print "ERROR: Too many 8bit-tuple";
+        exit 1
+      }
+      for (i=1; i <= NF; i++) {
+        if ( $(i) < 0 || $(i) > 255 ) {
+          print "ERROR: 8bit-tuple #" i " not in valid range";
+          exit 1
+        }
+        if ( i == 4 && $(i) == 0 ) {
+          print "ERROR: Broadcast adresses are not allowed!";
+          exit 1
+        }
+      }
+      
+      exit 0;
+    }
+  ' >&2 && return 0 || return 1
 }
 
-configureDevice() { #dev!! ueberarbeite/erneuere function!!! + funzt nicht, vermutl. probleme mit array/verschiebt sich was
+# verify integrity of internal data of local and remote devices
+checkIntegrity() {
   local device=$1
-  local array_pointer=0
+  
+  if [ -z "$device" ]
+  then
+    echo "ERROR: no device given in checkIntegrity() Line $LINENO" >&2
+    return 1
+  fi
+  
+  if isEntry $device local && isEntry $device remote
+  then
+    ERRORS=0
+    # check ip
+    if [ "$(getProperty $device local 3)" != "$(getProperty $device remote 3)" ]
+    then
+      ERRORS=1
+      echo "WARNING: IP address of local settings ('$(getProperty $device local 3)') does not match remote settings ('$(getProperty $device remote 3)') !" >&2
+    fi
+    
+    # check baud
+    if [ "$(($(getProperty $device local 6) * 8))" != "$(getProperty $device remote 6)" ]
+    then
+      ERRORS=1
+      echo "WARNING: Baudrate of local settings ('$(($(getProperty $device local 6) * 8))') does not match remote settings ('$(getProperty $device remote 6)') !" >&2
+      echo "         NOTE: local baudrate measured in [bytes/s] whereas remote baudrate is measured in [bit/s]" >&2
+      echo "               For i.e. 9600 bit/s channel speed: Enter for local setup '1200' and for remote setup '9600' (1200 * 8 = 9600)" >&2
+    fi
+    
+    # check port
+    
+    
+    if [ "$ERRORS" == "0" ]
+    then
+      return 0
+    else
+      echo "         This will propably cause malfunctions and instability in your setup!" >&2
+      echo "         Do NOT reboot your device until you fixed this mismatch!" >&2
+      return 1
+    fi
+  else
+    [ "$GLOBAL_DEBUG_MODE" == "1" ] && echo "device '$device' has not both local and remote states. Integrity check is not possible!"
+    return 0
+  fi
+  
+}
 
-  #find device array index
-  local counter=0
-  for each in ${TTYNET_DEVICES[@]}
+# routine to configure a remote device
+# (MOST IMPORTANT FEATURE)
+configureDevice() {
+  local device=$1
+  local remote_config=0
+
+  #Update internal states
+  echo -n "Updating internal states.." >&2
+  getTtyNetStatus && getRemoteStatus $device && echo "Done." >&2 || echo "Failed!" >&2
+
+  #verify given device
+#  local counter=0
+  for each in $(allDevices)
   do
     if [ $device == $each ]
     then
+      local check=1
       break
     fi
-    ((counter++))
+#    ((counter++))
   done
+  [ -z "$check" ] && echo "ERROR: Given device '$device' is unknown" >&2 && return  >&2 && return 1
   
-  let "array_pointer = 3 + ( 8 * $counter )"
-  local VALID_VALUE=1
-  
-  echo "Configuring device '$device'..."
+  #activity check, if 'active' give warning
+  if [ "$(getProperty $device local 9)" == "active" ]
+  then
+    echo "WARNING: Device is active! You might break a working connection. Continue configuration?"
+    read -p"(y/N) >" confirmation
+    if [ -z "$confirmation" -o "${confirmation:0:1}" != "y" -a "${confirmation:0:1}" != "Y" -a "${confirmation:0:1}" != "j" -a "${confirmation:0:1}" != "J" ]
+    then
+      echo "Configuration aborted!"
+      return 1
+    fi
+  fi
 
+  echo "Configuring device '$device'..."
+  echo ""  
+  
+  # Beginning: LOCAL CONFIG (NOTE: only rtpbondd values!)
+  echo "Local settings (for rtpbondd):"
+
+  # IP address
+  local VALID_VALUE=1
   while [ $VALID_VALUE -ne 0 ]
   do
-    echo -n "  Set IP (${TTYNET_STATUS[$array_pointer]}) >"
-    read -e newIP
-    [ -z "$newIP" ] && newIP=${TTYNET_STATUS[$array_pointer]}
-    checkIP $newIP
+    echo -n "  IP of device ($(getProperty $device local 3)) >"
+    read -e newlocalIP
+    [ -z "$newlocalIP" ] && newlocalIP=$(getProperty $device local 3)
+    checkIP $newlocalIP
     VALID_VALUE=$?
   done
-  ((array_pointer++))
   
-  echo -n "  Set destination port (${TTYNET_STATUS[$array_pointer]}) >"
-  read -e newDestPort
-  [ -z "$newDestPort" ] && newDestPort=${TTYNET_STATUS[$array_pointer]}
-  ((array_pointer++))
-  echo -n "  Set listen port (${TTYNET_STATUS[$array_pointer]}) >"
+  # Dest_Port
+  echo -n "  Destination port ($(getProperty $device local 4)) >"
+  read -e newlocalDestPort
+  [ -z "$newlocalDestPort" ] && newlocalDestPort=$(getProperty $device local 4)
+
+  # Listen_Port
+  echo -n "  Listen port ($(getProperty $device local 5)) >"
   read -e newListenPort
-  [ -z "$newListenPort" ] && newListenPort=${TTYNET_STATUS[$array_pointer]}
-  ((array_pointer++))
-  echo -n "  Set baudrate (${TTYNET_STATUS[$array_pointer]}) >"
-  read -e newBaud
-  [ -z "$newBaud" ] && newBaud=${TTYNET_STATUS[$array_pointer]}
-  ((array_pointer++))
-  echo -n "  Set TMax [local data limiter] (${TTYNET_STATUS[$array_pointer]}) >"
+  [ -z "$newListenPort" ] && newListenPort=$(getProperty $device local 5)
+
+  # Baudrate
+  echo -n "  Baudrate [byte/s] ($(getProperty $device local 6)) >"
+  read -e newlocalBaud
+  [ -z "$newlocalBaud" ] && newlocalBaud=$(getProperty $device local 6)
+
+  # TMax timeout
+  echo -n "  TMax [msec.] ($(getProperty $device local 7)) >"
   read -e newTMax
-  [ -z "$newTMax" ] && newTMax=${TTYNET_STATUS[$array_pointer]}
-  ((array_pointer++))
+  [ -z "$newTMax" ] && newTMax=$(getProperty $device local 7)
 
-  #importend for following transmission  
-  local restorePayload=${TTYNET_STATUS[$array_pointer]}
-  echo -n "  Set payload type of channel (${TTYNET_STATUS[$array_pointer]}) >"
+  # Payload type
+  echo -n "  Payload type of channel ($(getProperty $device local 8)) >"
   read -e newPayload
-  [ -z "$newPayload" ] && newPayload=${TTYNET_STATUS[$array_pointer]}
-  ((array_pointer++))
+  [ -z "$newPayload" ] && newPayload=$(getProperty $device local 8)
 
+  #
+  # Check if config channel select. If yes then go on with remote settings
+  #
+  if [ "$(getProperty $device local 8)" == "$CONFIG_PAYLOAD_TYPE" ]
+  then
+    echo ""
+    echo "This device is a configuration channel device."
+    echo -n "Do you want configure remote settings through this device? (Y/n) >"
+    read confirmation
+    
+    # Beginning: REMOTE CONFIG
+    if [ -z "$confirmation" -o "${confirmation:0:1}" != "n" -a "${confirmation:0:1}" != "N" ]
+    then
+      remote_config=1
+      echo ""
+      echo "Remote Settings of '$device':"
+      
+      # MAC address
+      echo -n "  MAC address ($(getProperty $device remote 2)) >"
+      read -e newremoteMAC
+      [ -z "$newremoteMAC" ] && newremoteMAC=$(getProperty $device remote 2)
+      
+      # IP address
+      local VALID_VALUE=1
+      while [ $VALID_VALUE -ne 0 ]
+      do
+        echo -n "  IP of device ($(getProperty $device remote 3)) >"
+        read -e newremoteIP
+        [ -z "$newremoteIP" ] && newremoteIP=$(getProperty $device remote 3)
+        checkIP $newremoteIP
+        VALID_VALUE=$?
+      done
+      
+      # Network mask
+      echo -n "  Network mask ($(getProperty $device remote 4)) >"
+      read -e newremoteNetMask
+      [ -z "$newremoteNetMask" ] && newremoteNetMask=$(getProperty $device remote 4)
+      
+      # Gateway Ip
+      echo -n "  Gateway IP ($(getProperty $device remote 5)) >"
+      read -e newremoteGw
+      [ -z "$newremoteGw" ] && newremoteGw=$(getProperty $device remote 5)
+      
+      # Baudrate
+      echo -n "  Baudrate of remote device [baud] ($(getProperty $device remote 6)) >"
+      read -e newremoteBaud
+      [ -z "$newremoteBaud" ] && newremoteBaud=$(getProperty $device remote 6)
+      
+      # Dest. IP_data
+      echo -n "  Destination IP [data channel] ($(getProperty $device remote 7)) >"
+      read -e newremoteDestIPData
+      [ -z "$newremoteDestIPData" ] && newremoteDestIPData=$(getProperty $device remote 7)
+      
+      # Dest. Port_data
+      echo -n "  Destination Port [data channel] ($(getProperty $device remote 8)) >"
+      read -e newremoteDestPortData
+      [ -z "$newremoteDestPortData" ] && newremoteDestPortData=$(getProperty $device remote 8)
+      
+      # Dest. IP_config
+      echo -n "  Destination IP [config channel] ($(getProperty $device remote 9)) >"
+      read -e newremoteDestIPConf
+      [ -z "$newremoteDestIPConf" ] && newremoteDestIPConf=$(getProperty $device remote 9)
+      
+      # Dest. Port_config
+      echo -n "  Destination port [config channel] ($(getProperty $device remote 10)) >"
+      read -e newremoteDestPortConf
+      [ -z "$newremoteDestPortConf" ] && newremoteDestPortConf=$(getProperty $device remote 10)
+    fi
+  fi
+  
+  #
+  # verification of entered values by user
+  #
   echo -e "\nYour entered setup:"
-  echo "  IP address:        $newIP"
-  echo "  Destination port:  $newDestPort"
+  echo "Local setup:"
+  echo "  IP address:        $newlocalIP"
+  echo "  Destination port:  $newlocalDestPort"
   echo "  Listen port:       $newListenPort"
-  echo "  Baudrate:          $newBaud"
+  echo "  Baudrate:          $newlocalBaud"
   echo "  TMax:              $newTMax"
   echo "  Payload type:      $newPayload"
-  echo -n "Do you want to use this setup for device '$device'? (y/N) >"
+  if [ "$remote_config" == "1" ]
+  then
+    echo ""
+    echo "Local setup:"
+    echo "  MAC address:       $newremoteMAC"
+    echo "  IP address:        $newremoteIP"
+    echo "  Network mask:      $newremoteNetMask"
+    echo "  Gateway IP:        $newremoteGw"
+    echo "  Baudrate:          $newremoteBaud"
+    echo "  Dest_IP_Data:      $newremoteDestIPData"
+    echo "  Dest_Port_Data:    $newremoteDestPortData"
+    echo "  Dest_IP_Config:    $newremoteDestIPConf"
+    echo "  Dest_Port_Config:  $newremoteDestPortConf"
+  fi
+  
+  echo -ne "\nDo you want to use this setup for device '$device'? (y/N) >"
   read confirmation
   if [ -z "$confirmation" -o "${confirmation:0:1}" != "y" -a "${confirmation:0:1}" != "Y" -a "${confirmation:0:1}" != "j" -a "${confirmation:0:1}" != "J" ]
   then
     echo "Configuration aborted!"
+    return 1
   else
     #clear input-fifo
     while read -t1 fifoIn
@@ -149,44 +572,387 @@ configureDevice() { #dev!! ueberarbeite/erneuere function!!! + funzt nicht, verm
       [ -z $fifoIn ] && break || echo $fifoIn
     done
 
-    echo "Writing setup to remote device..."
+    echo "Writing changed values to local setup..."
+    VALUE_LOCAL_MARKER=0
+    # Write local IP adress
+    [ "$newlocalIP" != "$(getProperty $device local 3)" ] && {
+      echo -n "  Writing local IP adress..."    
+      setProperty $device local 3 $newlocalIP && echo "OK" || { echo "Failed!"; ERROR_HELPER=1; }
+      VALUE_LOCAL_MARKER=1
+    }
+    
+    # Write local dest. port
+    [ "$newlocalDestPort" != "$(getProperty $device local 4)" ] && {
+      echo -n "  Writing local destination port..."    
+      setProperty $device local 4 $newlocalDestPort && echo "OK" || { echo "Failed!"; ERROR_HELPER=1; }
+      VALUE_LOCAL_MARKER=1
+    }
 
-#dev!!!!
-#falsche commands!!
-    echo -n "  writing IP adress..."    
-    echo ":setip $newIP?" > $device.$restorePayload.out
-    read -t5 fifoIn < $device.$restorePayload.in
-    [ "$fifoIn" == "${newIP}OK" ] && echo "OK" || echo "Failed ('$fifoin')"
+    # Write local listen port
+    [ "$newListenPort" != "$(getProperty $device local 5)" ] && {
+      echo -n "  Writing local listen port..."    
+      setProperty $device local 5 $newListenPort && echo "OK" || { echo "Failed!"; ERROR_HELPER=1; }
+      VALUE_LOCAL_MARKER=1
+    }
+    
+    # Write local baudrate
+    [ "$newlocalBaud" != "$(getProperty $device local 6)" ] && {
+      echo -n "  Writing local baudrate..."    
+      setProperty $device local 6 $newlocalBaud && echo "OK" || { echo "Failed!"; ERROR_HELPER=1; }
+      VALUE_LOCAL_MARKER=1
+    }
+    
+    # Write local TMax
+    [ "$newTMax" != "$(getProperty $device local 7)" ] && {
+      echo -n "  Writing local TMax timeout..."    
+      setProperty $device local 7 $newTMax && echo "OK" || { echo "Failed!"; ERROR_HELPER=1; }
+      VALUE_LOCAL_MARKER=1
+    }
 
-    echo -n "  writing destination port..."    
-    echo ":setip? $newDestPort" > $device.$restorePayload.out
-    read -t5 fifoIn < $device.$restorePayload.in
-    [ "$fifoIn" == "${newDestPort}OK" ] && echo "OK" || echo "Failed"
+    # Write local playload type
+    [ "$newPayload" != "$(getProperty $device local 8)" ] && {
+      echo -n "  Writing local payload type..."    
+      setProperty $device local 8 $newPayload && echo "OK" || { echo "Failed!"; ERROR_HELPER=1; }
+      VALUE_LOCAL_MARKER=1
+    }
 
-    echo -n "  writing listen port..."    
-    echo ":setip? $newListenPort" > $device.$restorePayload.out
-    read -t5 fifoIn < $device.$restorePayload.in
-    [ "$fifoIn" == "${newListenPort}OK" ] && echo "OK" || echo "Failed"
+    [ $VALUE_LOCAL_MARKER -eq 0 ] && echo "  Nothing to change"
 
-    echo -n "  writing baudrate..."    
-    echo ":setbaud $newBaud?" > $device.$restorePayload.out
-    read -t5 fifoIn < $device.$restorePayload.in
-    [ "$fifoIn" == "${newBaud}OK" ] && echo "OK" || echo "Failed"
+    if [ "$remote_config" == "1" ]
+    then
+      echo "Writing changed values to remote device..."
+      VALUE_MARKER=0
+      
+      # Write MAC address
+      [ "$newremoteMAC" != "$(getProperty $device remote 2)" ] && {
+        echo -n "  Writing MAC address..."    
+        fifoIn=$(transmitTo $device ":setmac $newremoteMAC?")
+        [ "$fifoIn" == "OK" ] && echo "OK" || { echo "Failed!"; ERROR_HELPER=1; }
+        VALUE_MARKER=1
+      }
 
-    echo -n "  writing TMax..."    
-    echo ":setip? $newTMax" > $device.$restorePayload.out
-    read -t5 fifoIn < $device.$restorePayload.in
-    [ "$fifoIn" == "${newTMax}OK" ] && echo "OK" || echo "Failed"
+      # Write IP address
+      [ "$newremoteIP" != "$(getProperty $device remote 3)" ] && {
+        echo -n "  Writing IP adress..."    
+        fifoIn=$(transmitTo $device ":setip $newremoteIP?")
+        [ "$fifoIn" == "OK" ] && echo "OK" || { echo "Failed!"; ERROR_HELPER=1; }
+        VALUE_MARKER=1
+      }
+      
+      # Write Network mask
+      [ "$newremoteNetMask" != "$(getProperty $device remote 4)" ] && {
+        echo -n "  Writing network mask..."    
+        fifoIn=$(transmitTo $device ":setnw $newremoteNetMask?")
+        [ "$fifoIn" == "OK" ] && echo "OK" || { echo "Failed!"; ERROR_HELPER=1; }
+        VALUE_MARKER=1
+      }
 
-    echo -n "  writing payload type..."    
-    echo ":setip? $newPayload" > $device.$restorePayload.out
-    read -t5 fifoIn < $device.$restorePayload.in
-    [ "$fifoIn" == "${newPayload}OK" ] && echo "OK" || echo "Failed"
+      # Write Gateway address
+      [ "$newremoteGw" != "$(getProperty $device remote 5)" ] && {
+        echo -n "  Writing gateway address..."    
+        fifoIn=$(transmitTo $device ":setgw $newremoteGw?")
+        [ "$fifoIn" == "OK" ] && echo "OK" || { echo "Failed!"; ERROR_HELPER=1; }
+        VALUE_MARKER=1
+      }
 
-    echo "Ok, if no error occured, you can reboot our device"
+      # Write baudrate
+      [ "$newremoteBaud" != "$(getProperty $device remote 6)" ] && {
+        echo -n "  Writing remote baudrate..."    
+        fifoIn=$(transmitTo $device ":setbaud $newremoteBaud?")
+        [ "$fifoIn" == "OK" ] && echo "OK" || { echo "Failed!"; ERROR_HELPER=1; }
+        VALUE_MARKER=1
+      }
+
+      # Write Dest. IP_Data
+      [ "$newremoteDestIPData" != "$(getProperty $device remote 7)" ] && {
+        echo -n "  Writing remote destination ip for (data channel)..."    
+        fifoIn=$(transmitTo $device ":setdip_data $newremoteDestIPData?")
+        [ "$fifoIn" == "OK" ] && echo "OK" || { echo "Failed!"; ERROR_HELPER=1; }
+        VALUE_MARKER=1
+      }
+
+      # Write Dest. Port_Data
+      [ "$newremoteDestPortData" != "$(getProperty $device remote 8)" ] && {
+        echo -n "  Writing remote destination port (data channel)..."    
+        fifoIn=$(transmitTo $device ":setdport_data $newremoteDestPortData?")
+        [ "$fifoIn" == "OK" ] && echo "OK" || { echo "Failed!"; ERROR_HELPER=1; }
+        VALUE_MARKER=1
+      }
+
+      # Write Dest. IP_Config
+      [ "$newremoteDestIPConf" != "$(getProperty $device remote 9)" ] && {
+        echo -n "  Writing remote destination ip (config channel)..."    
+        fifoIn=$(transmitTo $device ":setdip_config $newremoteDestIPConf?")
+        [ "$fifoIn" == "OK" ] && echo "OK" || { echo "Failed!"; ERROR_HELPER=1; }
+        VALUE_MARKER=1
+      }
+
+      # Write Dest. Port_Config
+      [ "$newremoteDestPortConf" != "$(getProperty $device remote 10)" ] && {
+        echo -n "  Writing destination port (config channel)..."    
+        fifoIn=$(transmitTo $device ":setdport_config $newremoteDestPortConf?")
+        [ "$fifoIn" == "OK" ] && echo "OK" || { echo "Failed!"; ERROR_HELPER=1; }
+        VALUE_MARKER=1
+      }
+      
+      [ $VALUE_MARKER -eq 0 ] && echo "  Nothing to change"
+      
+      #update internal states
+      getRemoteStatus $device
+    fi
+          
+    if [ -z "$ERROR_HELPER" ]
+    then
+      
+      #checkIntegrity of device
+      if ! checkIntegrity $device
+      then
+        echo "Configuration aborted! System in instable state!"
+        return 1
+      fi
+      
+      if [ "$VALUE_LOCAL_MARKER" = "1" ]
+      then
+        echo -e "\nDo you want rtpconf to auto-configurate rtpbondd config-file based on new settings?"
+        read -p"(Y/n) >" confirmation
+        if [ -z "$confirmation" -o "${confirmation:0:1}" != "n" -a "${confirmation:0:1}" != "N" ]
+        then
+          echo "Generating rtpbondd.conf output..."
+          dumpConfig | tee /tmp/rtpconf/rtpbondd.conf.tmp
+
+          echo "Generating backup..."
+          # create backup copy of original conf-file
+          cp $TTY_NET_DIR/$(cat /tmp/rtpconf/rtpconf.locconf.tmp) $TTY_NET_DIR/$(cat /tmp/rtpconf/rtpconf.locconf.tmp).bckp-$(date +%Y.%m.%d_%H.%M.%S)
+
+          echo "Writing config to rtpbondd..."
+          # move new configuration to rtpbondd
+          mv /tmp/rtpconf/rtpbondd.conf.tmp $TTY_NET_DIR/$(cat /tmp/rtpconf/rtpconf.locconf.tmp)
+        fi      
+      fi
+      
+      echo "Configuration completed, you can reboot your device '$device'"
+      return 0
+      
+    else
+      echo "Some errors occured! Check 'status' and try 'configure' again"
+      return 1
+    fi
   fi
 }
 
+#dump config for rtpbondd (based on interal config state)
+dumpConfig(){
+  for each in $(allDevices)
+  do
+    echo -e "deviceName           \"$each\""
+    echo -e "   path              \"$(getProperty $each local 2)\""
+    echo -e "   destIp4Addr       \"$(getProperty $each local 3)\""
+    echo -e "   destPort          \"$(getProperty $each local 4)\""
+    echo -e "   listenPort        \"$(getProperty $each local 5)\""
+    echo -e "   baudRate[bytes/s] \"$(getProperty $each local 6)\""
+    echo -e "   TMax[ms]          \"$(getProperty $each local 7)\""
+    echo -e "   payloadType       \"$(getProperty $each local 8)\""
+    echo ""
+  done
+}
+
+# helper function to transmit one command and receive one reply. optional 
+# parameter toggles behaviour of trimming unwanted characters in reply
+# (default behaviour: don't trim)
+transmitTo() { #parameter: device text-to-transmit [1|yes|trim]
+  if [ -z "$1" ]
+  then
+    echo "ERROR: no device given in transmitTo() Line $LINENO" >&2 
+    return 1
+  fi
+
+  if [ -z "$2" ]
+  then
+    echo "ERROR: no message given in transmitTo() Line $LINENO" >&2
+    return 1
+  fi
+
+  if [ "$3" == "1" -o "$3" == "yes" -o "$3" == "trim" ]
+  then
+    local trim=1
+  else
+    [ "$3" ] && echo "ERROR: unknown 3rd parameter '$3' in transmitTo() Line $LINENO" >&2
+  fi
+
+  local device=$1
+  local devtype=$(typeOf $device)
+  local devpath=$TTY_NET_DIR/$(pathOf $device)
+  local message=$2
+  local input
+  
+  if [ ! -e "$devpath/$device.$devtype.out" ]
+  then
+    echo "ERROR: fifo '$devpath/$device.$devtype.out' not found; in transmitTo() Line $LINENO" >&2
+    echo "=> skipping transmission!" >&2
+  elif [ ! -e "$devpath/$device.$devtype.in" ]
+  then
+    echo "ERROR: fifo '$devpath/$device.$devtype.in' not found; in transmitTo() Line $LINENO" >&2
+    echo "=> skipping transmission!" >&2
+  else
+    #transmit
+    echo "$message" > $devpath/$device.$devtype.out
+    read -t1 input < $devpath/$device.$devtype.in
+    if [ "$trim" == "1" ]
+    then
+      echo $input | awk '{ len=length($0); if ( substr($0,len-1,len) == "OK" ) print substr($0,1,len-2); else print $0 }'
+    else
+      echo $input
+    fi
+  fi
+}
+
+# helper funciton to print 'remote status' in status output
+printRemoteStatus(){
+  #erreichbarkeitstest
+  local reply
+  local locdev=$1
+  reply=$(transmitTo $locdev ':getip?' 1)
+
+  echo -ne "\n\tAvailability check: "
+
+  if [ "$reply" ]
+  then
+    echo "Positive"
+
+    getRemoteStatus $locdev
+    echo -e "\n\tRemote Status:"
+    echo -e "\t  Mac-Address: $(getProperty $locdev remote 2)"
+    echo -e "\t  IP: $(getProperty $locdev remote 3)"
+    echo -e "\t  Netmask: $(getProperty $locdev remote 4)"
+    echo -e "\t  Gateway: $(getProperty $locdev remote 5)"
+    echo -e "\t  Data_Dest_IP: $(getProperty $locdev remote 7)"
+    echo -e "\t  Data_Dest_Port: $(getProperty $locdev remote 8)"
+    echo -e "\t  Config_Dest_IP: $(getProperty $locdev remote 9)"
+    echo -e "\t  Config_Dest_Port: $(getProperty $locdev remote 10)"
+    echo -e "\t  Baudrate: $(getProperty $locdev remote 6)"
+  else
+    echo "Negative"
+  fi
+}
+
+getRemoteStatus() { #Parameter: Device; Returns: Array-like List of Settings 
+  [ -z "$1" ] && echo "ERROR: No device given in getRemoteStatus() Line $LINENO" >&2 && exitHooks && exit 1
+  
+  local device=$1
+  local devtype="$(typeOf $device)"
+  local input
+  local output
+
+  if [ "$devtype" != $CONFIG_PAYLOAD_TYPE ]
+  then
+    echo "ERROR: Device '$device' in getRemoteStatus() Line $LINENO is NOT a Control-Device!" >&2
+    return 1
+  fi
+  
+  #create remote csv entry
+  createCsvEntry $device remote
+  
+  #getnet (ip,mask,gw)
+  input=$(transmitTo $device ":getnet?" 1)
+  output=( $input )
+  #set csv
+  setProperty $device remote 3 ${output[0]} #ip
+  setProperty $device remote 4 ${output[1]} #netmask
+  setProperty $device remote 5 ${output[2]} #gateway
+
+  #getmac
+  setProperty $device remote 2 $(transmitTo $device ":getmac?" 1)
+
+  #getdip_data (ziel-ip daten)
+  setProperty $device remote 7 $(transmitTo $device ":getdip_data?" 1)
+  
+  #getdport_data (ziel-port daten)
+  setProperty $device remote 8 $(transmitTo $device ":getdport_data?" 1)
+
+  #getdip_config
+  setProperty $device remote 9 $(transmitTo $device ":getdip_config?" 1)
+
+  #getdport_config
+  setProperty $device remote 10 $(transmitTo $device ":getdport_config?" 1)
+  
+  #getbaud
+  setProperty $device remote 6 $(transmitTo $device ":getbaud?" 1)
+}
+
+getTtyNetStatus() {
+  #get raw status output
+  (
+  cd $TTY_NET_DIR
+  ./$TTY_NET_NAME status > /tmp/rtpconf/rtpconf.tmp
+  )
+
+  #process raw status output to csv file
+  cat /tmp/rtpconf/rtpconf.tmp | awk '
+    BEGIN{ IFS="[\t :]+"; ORS=";"; OFS=";" }
+    NR == 1 && /Configfile loaded:/ {
+      printf $3 "\n" > "/tmp/rtpconf/rtpconf.locconf.tmp"
+    }
+    /^[^\t ]+:[\t ]*$/ {
+      print substr($1,1,length($1)-1)
+    }
+    /path/{
+      print $2
+    }
+    /destIp4Addr/ {
+      print $2,$4
+    }
+    /listenPort/ {
+      print $2
+    }
+    /baudRate/ {
+      print $2,$4
+    }
+    /payloadType/ {
+      print $2
+    }
+    /status/ {
+      print $14
+    }
+    NR > 3 && ( NR - 2 ) % 9 == 0 {
+      printf "\n"
+    }
+  ' > /tmp/rtpconf/rtpconf.csv.local
+
+  if [ "$GLOBAL_DEBUG_MODE" == "1" ]
+  then
+    echo "Config Devs: " $(allConfigDevices)
+    echo "All Devs: " $(allDevices)
+    echo "CSV.local:"
+    cat /tmp/rtpconf/rtpconf.csv.local
+  fi
+#
+
+  rm /tmp/rtpconf/rtpconf.tmp
+}
+
+analyseConfigFile() {
+  local file=$1
+
+  while read line
+  do
+    case $( echo $line | awk '{ print $1 }') in
+      ^#)
+        continue
+      ;;
+      use)
+        echo "  Found option: use"
+        [ "$(echo $line | awk '{ print $2 }')" == "no" ] && return 0 || continue
+      ;;
+      debugmode)
+        echo "  Found option: debugmode"
+        GLOBAL_DEBUG_MODE=$(echo $line | awk '{ print $2 }')
+      ;;
+    esac
+  done < $file
+  return 0
+}
+
+# function to process user interaction
 doOperation() {
   local ERROR_STATE=0
 
@@ -202,6 +968,12 @@ doOperation() {
   [ "$1" ] && local value=$1 && shift
 
   case $operation in
+    \#*|"")
+      :
+    ;;
+    dump)
+      dumpConfig
+    ;;
     configtype)
       if [ "$parameter" ]
       then
@@ -217,7 +989,7 @@ doOperation() {
       then
         #exists device??
         local FLAG_VALID=0
-        for each in ${TTYNET_DEVICES[@]}
+        for each in $(allDevices)
         do
           if [ $parameter == $each ]
           then
@@ -230,7 +1002,7 @@ doOperation() {
         then
           #is device a config device?
           local FLAG_CONFIG_VALID=0
-          for each in ${TTYNET_CONFIG_DEVICES[@]}
+          for each in $(allConfigDevices)
           do
             if [ $parameter == $each ]
             then
@@ -245,7 +1017,7 @@ doOperation() {
             PROMPT="$parameter"
           else
             echo "ATTENTION: Device '$parameter' exists but is not a config channel!"
-            echo "           All chances of configuration will affect only local rtp232d"
+            echo "           Any change of configuration will affect only local rtpbondd"
             echo "           Moreover be aware of using 'send' in this context unless you REALLY know what you are doing!!"
             PROMPT="$parameter"
           fi
@@ -257,7 +1029,7 @@ doOperation() {
 #        echo "ERROR: No remote device specified!"
         local PS3BACKUP=$PS3
         PS3="Select one device > "
-        select one in ${TTYNET_DEVICES[@]}
+        select one in $(allDevices)
         do
           if [ -z "$one" ]
           then
@@ -266,6 +1038,8 @@ doOperation() {
             echo "No device associated with number '$REPLY'. Type '0' to abort command"
             continue
           else
+            #dev!!
+            #check dev-type and print the warning 'ATTENTION: Device exists but is not a config channel...' where required
             PROMPT=$one && break
           fi
         done
@@ -291,6 +1065,8 @@ doOperation() {
         #dev!! wenn config channel=> remote status fehlt noch
         echo "Status of '$parameter'"
         $TTY_NET_DIR/$TTY_NET_NAME status | awk -v device="^$parameter" '$0 ~ device { a=NR } a && NR <= a + 8 { print $0 }'
+        
+        printRemoteStatus $parameter
       elif [ "$PROMPT" ]
       then
         echo "Status of '$PROMPT'"
@@ -301,20 +1077,20 @@ doOperation() {
       else
         #kompletter statusbericht - unterteilen in einzelne devices
         #dev!!! konflikt mit getTtyNetStatus!! (neue csv struktur!)
-        $TTY_NET_DIR/$TTY_NET_NAME status > /tmp/rtpconf.status.tmp
-        num_lines=$(cat /tmp/rtpconf.status.tmp | wc -l)
+        $TTY_NET_DIR/$TTY_NET_NAME status > /tmp/rtpconf/rtpconf.status.tmp
+        num_lines=$(cat /tmp/rtpconf/rtpconf.status.tmp | wc -l)
         let "num_lines = ($num_lines - 2) / 9"
         counter=0
-        while [ $counter -le $num_lines ]
+        while [ $counter -lt $num_lines ]
         do
-          cat /tmp/rtpconf.status.tmp | awk -v start_at=$counter 'NR >= 3 + start_at * 9 && NR < 12 + start_at * 9 { print $0 }' > /tmp/rtpconf.dev${counter}.tmp
+          cat /tmp/rtpconf/rtpconf.status.tmp | awk -v start_at=$counter 'NR >= 3 + start_at * 9 && NR < 12 + start_at * 9 { print $0 }' > /tmp/rtpconf/rtpconf.dev${counter}.tmp
           ((counter++))
         done
         mycounter=0
-        while [ $mycounter -le $num_lines ]
+        while [ $mycounter -lt $num_lines ]
         do
-          cat /tmp/rtpconf.dev${mycounter}.tmp
-          curdevice=$(cat /tmp/rtpconf.dev${mycounter}.tmp | awk 'BEGIN{ FS=":" } NR==1{ print $1; exit }')
+          cat /tmp/rtpconf/rtpconf.dev${mycounter}.tmp
+          curdevice=$(cat /tmp/rtpconf/rtpconf.dev${mycounter}.tmp | awk 'BEGIN{ FS=":" } NR==1{ print $1; exit }')
           if [ "$(typeOf $curdevice)" == $CONFIG_PAYLOAD_TYPE ]
           then
             printRemoteStatus $curdevice
@@ -325,11 +1101,11 @@ doOperation() {
           fi
           ((mycounter++))
         done
-#        cat /tmp/rtpconf.status.tmp | awk 'BEGIN{ FS="[:\t ]" } /payloadType/{ print $4 }'
+#        cat /tmp/rtpconf/rtpconf.status.tmp | awk 'BEGIN{ FS="[:\t ]" } /payloadType/{ print $4 }'
       fi
     ;;
 
-    configure)
+    config|configure)
       local device
       if [ -z "$parameter" -a -z "$PROMPT" ]
       then
@@ -339,7 +1115,6 @@ doOperation() {
       then
         configureDevice $PROMPT
       else
-        #devicetest
         configureDevice $parameter
       fi
     ;;
@@ -350,14 +1125,31 @@ doOperation() {
       then
         echo "ERROR: No remote device specified!"
         ERROR_STATE=10
+        break
       elif [ "$PROMPT" ]
       then
-        echo t"Restarting rtpbondd device '$PROMPT' ..."
-        $TTY_NET_DIR/$TTY_NET_NAME restart $PROMPT
+        device=$PROMPT
       else
-        #devicetest
-        echo "Restarting rtpbondd device '$parameter' ..."
-        $TTY_NET_DIR/$TTY_NET_NAME restart $parameter
+        device=$parameter
+      fi
+
+      echo -n "You are about to reboot device '$device'. Are you sure? (y/N) >"
+      read confirmation
+      if [ -z "$confirmation" -o "${confirmation:0:1}" != "y" -a "${confirmation:0:1}" != "Y" -a "${confirmation:0:1}" != "j" -a "${confirmation:0:1}" != "J" ]
+      then
+        echo "Rebooting aborted."
+      else
+        if [ "$(typeOf $device)" == "$CONFIG_PAYLOAD_TYPE" ]
+        then
+          echo -n "Requesting a device reboot..."
+#          [ "$(transmitTo $device ":reboot?")" == "OK" ] && echo "OK" || echo "Failed"  #"
+        fi
+
+        echo "Restarting rtpbondd device '$device' ..."
+        $TTY_NET_DIR/$TTY_NET_NAME restart $device
+
+        getTtyNetStatus
+
       fi
     ;;
 
@@ -398,23 +1190,27 @@ doOperation() {
       getTtyNetStatus
     ;;
 
+    group)
+      echo "removed feature due to stability reasons"
+    ;;
+
     vars)
-      echo "Config-devs: " ${TTYNET_CONFIG_DEVICES[@]}
-      echo "All devs: " ${TTYNET_DEVICES[@]}
+      echo "Config-devs: " $(allConfigDevices)
+      echo "All devs: " $(allDevices)
     ;;
 
     version)
       echo "rtpconf $SCRIPT_VERSION"
     ;;
-    errors)
-      echo "jaja, kommt noch alles"
-    ;;
+#    errors)
+#      echo "jaja, kommt noch alles"
+#    ;;
     help)
       print_usage
     ;;
     q|exit|quit)
-      exitHooks
-      exit 0
+      #break infinite loop in main program block!
+      break
     ;;
     *)
       echo "Unknown command!"
@@ -424,299 +1220,12 @@ doOperation() {
 return $ERROR_STATE
 }
 
-typeOf(){
-  local device=$1
-  
-  local counter=0
-  for each in ${TTYNET_DEVICES[@]}
-  do
-    [ "$device" == "$each" ] && break
-    ((counter++))
-  done
-  local pointer=0
-  let "pointer = 8 + ( 8 * $counter )"
-  echo ${TTYNET_STATUS[$pointer]}
-  return 0
-}
-
-pathOf(){
-  local device=$1
-  
-  local counter=0
-  for each in ${TTYNET_DEVICES[@]}
-  do
-    [ "$device" == "$each" ] && break
-    ((counter++))
-  done
-  local pointer=0
-  let "pointer = 2 + ( 8 * $counter )"
-  echo ${TTYNET_STATUS[$pointer]}
-  return 0
-}
-
-transmitTo() { #parameter: device text-to-transmit
-  if [ -z "$1" ]
-  then
-    echo "ERROR: no device given in transmitTo() Line $LINENO" >&2 
-    return 1
-  fi
-
-  if [ -z "$2" ]
-  then
-    echo "ERROR: no message given in transmitTo() Line $LINENO" >&2
-    return 1
-  fi
-
-  local device=$1
-  local devtype=$(typeOf $device)
-  local devpath=$TTY_NET_DIR/$(pathOf $device)
-  local message=$2
-  local input
-  local output
-
-  echo "$message" > $devpath/$device.$devtype.out
-  read -t1 input < $devpath/$device.$devtype.in
-  echo $input
-}
-
-printRemoteStatus(){
-  #erreichbarkeitstest
-  local reply
-  local locdev=$1
-  reply=$(transmitTo $locdev ':getip?')
-  if [ "$reply" ]
-  then
-    reply=${reply:0:((${#reply} - 2))}
-    
-  fi  
-  echo -ne "\n\tAvailability check: "
-
-  if [ "$reply" ]
-  then
-    echo "Positive"
-
-    declare -a REMOTE_STATUS
-    REMOTE_STATUS=( $(getRemoteStatus $locdev) )
-    echo -e "\n\tRemote Status:"
-    counter=0
-    echo -e "\t  IP: ${REMOTE_STATUS[$counter]}"
-    ((counter++))
-    echo -e "\t  Netmask: ${REMOTE_STATUS[$counter]}"
-    ((counter++))
-    echo -e "\t  Gateway: ${REMOTE_STATUS[$counter]}"
-    ((counter++))
-    echo -e "\t  Mac-Address: ${REMOTE_STATUS[$counter]}"
-    ((counter++))
-    echo -e "\t  Data_Dest_IP: ${REMOTE_STATUS[$counter]}"
-    ((counter++))
-    echo -e "\t  Data_Dest_Port: ${REMOTE_STATUS[$counter]}"
-    ((counter++))
-    echo -e "\t  Config_Dest_IP: ${REMOTE_STATUS[$counter]}"
-    ((counter++))
-    echo -e "\t  Config_Dest_Port: ${REMOTE_STATUS[$counter]}"
-    ((counter++))
-    echo -e "\t  Baudrate: ${REMOTE_STATUS[$counter]}"
-    ((counter++))
-  else
-    echo "Negative"
-  fi
-}
-
-getRemoteStatus() { #Parameter: Device; Returns: Array-like List of Settings 
-  [ -z "$1" ] && echo "ERROR: No device given in getRemoteStatus() Line $LINENO" >&2 && exitHooks && exit 1
-  
-  local device=$1
-  local devtype="$(typeOf $device)"
-  local input
-
-  if [ "$devtype" != $CONFIG_PAYLOAD_TYPE ]
-  then
-    echo "ERROR: Device '$device' in getRemoteStatus() Line $LINENO is NOT a Control-Device!" >&2
-    return 1
-  fi
-  
-  #getnet (ip,mask,gw)
-  input=$(transmitTo $device ":getnet?") #transmission! nice!! :-)
-  input=${input:0:((${#input} - 2))}
-  output=( $input )
-
-  #getmac
-  input=$(transmitTo $device ":getmac?")
-  input=${input:0:((${#input} - 2))}
-  output=( ${output[@]} $input )
-
-  #getdip_data (ziel-ip daten)
-  input=$(transmitTo $device ":getdip_data?")
-  input=${input:0:((${#input} - 2))}
-  output=( ${output[@]} $input )
-  
-  #getdport_data (ziel-port daten)
-  input=$(transmitTo $device ":getdport_data?")
-  input=${input:0:((${#input} - 2))}
-  output=( ${output[@]} $input )
-
-  #getdip_config
-  input=$(transmitTo $device ":getdip_config?")
-  input=${input:0:((${#input} - 2))}
-  output=( ${output[@]} $input )
-
-  #getdport_config
-  input=$(transmitTo $device ":getdport_config?")
-  input=${input:0:((${#input} - 2))}
-  output=( ${output[@]} $input )
-
-  #getbaud
-  input=$(transmitTo $device ":getbaud?")
-  input=${input:0:((${#input} - 2))}
-  output=( ${output[@]} $input )
-
-  echo ${output[@]}
-}
-
-getTtyNetStatus() {
-  #get raw status output
-  (
-  cd $TTY_NET_DIR
-  ./$TTY_NET_NAME status > /tmp/rtpconf.tmp
-  )
-
-  #process raw status output to cvs file
-  cat /tmp/rtpconf.tmp | awk '
-    BEGIN{ IFS="[\t :]+"; ORS=";"; OFS=";" }
-    NR == 1 && /Configfile loaded:/ {
-      printf $3 "\n" > "/tmp/rtpconf.locconf.tmp"
-    }
-    /^[^\t ]+:[\t ]*$/ {
-      print substr($1,1,length($1)-1)
-    }
-    /path/{
-      print $2
-    }
-    /destIp4Addr/ {
-      print $2,$4
-    }
-    /listenPort/ {
-      print $2
-    }
-    /baudRate/ {
-      print $2,$4
-    }
-    /payloadType/ {
-      print $2
-    }
-    /status/ {
-      print $14
-    }
-    NR > 3 && ( NR - 2 ) % 9 == 0 {
-      printf "\n"
-    }
-  ' > /tmp/rtpconf.status.tmp
-
-  #following: keep it in code for compatibility reasons for now
-  #dev!!!
-  TTYNET_STATUS=( $(cat /tmp/rtpconf.tmp | awk '
-    BEGIN {
-      FS="[: \t]+"
-    }
-
-    #config file
-    /Configfile/ {
-      print $3
-    }
-
-    #pfad
-    /path/ {
-      print $3
-    }
-
-    #fifoname
-    NR % 9 == 3 { #Aktuelle Zeile mod 9 == 3
-      print $1
-    }
-
-    #ip + baud
-    /destIp4Addr/ || /baudRate/{ 
-      print $3 "\n" $5 
-    }
-
-    #port + payload
-    /listenPort/ || /payloadType/{
-      print $3
-    }
-  ') )
-
-  TTYNET_DEVICES=( $(cat /tmp/rtpconf.tmp | awk '
-    BEGIN {
-      FS="[: \t]+"
-    }
-
-    NR % 9 == 3 {
-      print $1
-    }
-  ') )
- 
-  TTYNET_CONFIG_DEVICES=( $(cat /tmp/rtpconf.tmp | awk -v payloadtype=$CONFIG_PAYLOAD_TYPE '
-    BEGIN {
-      FS="[: \t]+"
-      temp=""
-    }
-
-    NR % 9 == 3 {
-      temp=$1
-      deviceflag="active"
-    }
-    
-    deviceflag && deviceflag != "" && /payloadType/ {
-      if ( $3 == payloadtype ) { print temp; deviceflag="" }
-    }
-  ') )
-
-  for each in ${TTYNET_CONFIG_DEVICES[@]}
-  do
-    declare -a "REMOTESTATUS_$each"
-    eval "REMOTESTATUS_$each=( $(getRemoteStatus $each) )"
-    [ "$GLOBAL_DEBUG_MODE" == "1" ] && eval "echo \${each}: \${REMOTESTATUS_$each[@]}"
-  done
-
-  if [ "$GLOBAL_DEBUG_MODE" == "1" ]
-  then
-    echo "config devs: " ${TTYNET_CONFIG_DEVICES[@]}
-    echo "status: " ${TTYNET_STATUS[@]}
-    echo "all devs: " ${TTYNET_DEVICES[@]}
-  fi
-
-
-  rm /tmp/rtpconf.tmp
-}
-
-analyseConfigFile() {
-  local file=$1
-
-  while read line
-  do
-    case $( echo $line | awk '{ print $1 }') in
-      ^#)
-        continue
-      ;;
-      use)
-        echo "  Found option: use"
-        [ "$(echo $line | awk '{ print $2 }')" == "no" ] && return 0 || continue
-      ;;
-      debugmode)
-        echo "  Found option: debugmode"
-        GLOBAL_DEBUG_MODE=$(echo $line | awk '{ print $2 }')
-      ;;
-    esac
-  done < $file
-  return 0
-}
-
-#-------------------------------------------
+#===========================================
 #Init
-#-------------------------------------------
-trap "echo -e '\nShutting down rtpconf ...'; exitHooks; exit 1" TERM INT
+#===========================================
+trap "echo -e '\nCaught SIGNAL!\nShutting down rtpconf ...'; exitHooks; exit 1" TERM INT
 
-#analyse optional configfile ./rtpconf.conf
+#analyse optional configfile (default setting: ./rtpconf.conf)
 if [ -e "$CONFIG_FILE" ]
 then
   if [ -r "$CONFIG_FILE" ]
@@ -734,19 +1243,38 @@ fi
 [ -n $2 ] && USER_PARAM=$2
 if [ ! -x $TTY_NET_DIR/$TTY_NET_NAME ]
 then
-  ERROR_STATE=30
-  echo "ERROR #$ERROR_STATE: $TTY_NET_DIR/$TTY_NET_NAME is not executable"
-  exitHooks
-  exit $ERROR_STATE
+  
+  #dev!!
+  #manuell rtpbondd finden
+  whilecounter=0
+  input="$TTY_NET_DIR/$TTY_NET_NAME"
+  while [ ! -x $input ]
+  do
+    if [ $whilecounter -ge 3 ]
+    then
+      ERROR_STATE=30
+      echo "ERROR #$ERROR_STATE: $TTY_NET_DIR/$TTY_NET_NAME is not executable"
+      exitHooks
+      exit $ERROR_STATE
+    fi
+    ((whilecounter++))
+    echo "ERROR: rtpbondd not found in '$input' Please enter path to rtpbondd (you have 3 attempts):"
+    read -ep"${whilecounter}. attempt>" input
+  done
+  echo $whilecounter
+  [ $whilecounter -gt 0 ] && TTY_NET_NAME=$input
+  #manuell rptbondd finden
+  
 fi
 
-#exit 1
+[ ! -e "/tmp/rtpconf/" ] && mkdir /tmp/rtpconf/
 
 getTtyNetStatus
 
-#-------------------------------------------
+#===========================================
 # Main
-#-------------------------------------------
+#===========================================
+
 #Single Operation
 if [ $FLAG_INTERACTIVE_MODE -eq 0 ]
 then

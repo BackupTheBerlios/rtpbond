@@ -122,9 +122,9 @@ document. You may also delete these preliminary chapters.
 \subsection{ISO layer model}
 
 
-%Als Basis für viele heutige Kommunikationsprotokolle wird das OSI-Schichtenmodell verwendet. Sinn dieses Protokolls ist es ein komplettes Kommunikationsprotokoll in einzelne Schichten zu unterteilen. Diese Schichten kommunizieren jeweils nur mit ihren direkten Nachbarschichten, \ref{fig:OSI-Schichtenkommunikation} soll dies verdeutlichen. Dabei geht die Abstrahierung von der untersten Schicht, der Bitübertragungsschicht (engl.: physical Layer), bis zur siebten Schicht der Anwendungsschicht (engl.: Application-Layer).
-%In der Bitübertragungsschicht werden die grundlegenden physikalischen Spezifikationen der Übertragung wie zum Beispiel Strom-, Spannungswerte, Pinbelegung oder auch Abschlusswiderstände festgelegt. Repeater, die in einem Netzwerk eingesetzt werden arbeiten immer auf dieser untersten Schicht.
-%Im Gegensatz dazu wird in der Anwendungsschicht direkt mit den Netzwerkressourcen gearbeitet und Daten können direkt an den Empfänger gesendet werden ohne das Kenntnis über Pinbelgung, Stromwerte oder andere physikalische Begebenheiten benötigt werden. Um dies  zu erreichen wird von der untersten Schicht bis zur Anwendungsschicht zwischen jeder Schicht abstrahiert, so kümmert sich die zweite Schicht, die sogenannte Sicherungsschicht (engl.: Data Link Layer) um die fehlerfreie Verbindung zwischen zwei benachbarten Netzwerkelementen. Schicht drei, welche Netzwerkschicht (engl.: Network-Layer) genannt wird, muss sich nicht mehr mit den Details der Datenübertragung befassen. Die Netzwerkschicht kann davon ausgehen, dass die Pakete sicher ankommen und befasst sich daher nur noch mit der Verwaltung der Pakete und dem Auffinden des effektivsten Weges für ein Paket durch das Netzwerk (Routing). Alle Router in einem Netzwerk arbeiten daher auf dieser dritten Schicht.
+%Als Basis fr viele heutige Kommunikationsprotokolle wird das OSI-Schichtenmodell verwendet. Sinn dieses Protokolls ist es ein komplettes Kommunikationsprotokoll in einzelne Schichten zu unterteilen. Diese Schichten kommunizieren jeweils nur mit ihren direkten Nachbarschichten, \ref{fig:OSI-Schichtenkommunikation} soll dies verdeutlichen. Dabei geht die Abstrahierung von der untersten Schicht, der Bitbertragungsschicht (engl.: physical Layer), bis zur siebten Schicht der Anwendungsschicht (engl.: Application-Layer).
+%In der Bitbertragungsschicht werden die grundlegenden physikalischen Spezifikationen der bertragung wie zum Beispiel Strom-, Spannungswerte, Pinbelegung oder auch Abschlusswiderstnde festgelegt. Repeater, die in einem Netzwerk eingesetzt werden arbeiten immer auf dieser untersten Schicht.
+%Im Gegensatz dazu wird in der Anwendungsschicht direkt mit den Netzwerkressourcen gearbeitet und Daten knnen direkt an den Empfnger gesendet werden ohne das Kenntnis ber Pinbelgung, Stromwerte oder andere physikalische Begebenheiten bentigt werden. Um dies  zu erreichen wird von der untersten Schicht bis zur Anwendungsschicht zwischen jeder Schicht abstrahiert, so kmmert sich die zweite Schicht, die sogenannte Sicherungsschicht (engl.: Data Link Layer) um die fehlerfreie Verbindung zwischen zwei benachbarten Netzwerkelementen. Schicht drei, welche Netzwerkschicht (engl.: Network-Layer) genannt wird, muss sich nicht mehr mit den Details der Datenbertragung befassen. Die Netzwerkschicht kann davon ausgehen, dass die Pakete sicher ankommen und befasst sich daher nur noch mit der Verwaltung der Pakete und dem Auffinden des effektivsten Weges fr ein Paket durch das Netzwerk (Routing). Alle Router in einem Netzwerk arbeiten daher auf dieser dritten Schicht.
 
 Many modern protocols used for communication are based on the OSI layer model. This model divides a complete protocol into several seperate layers which only communicate with their directly adjacent layers, as shown in \ref{fig:OSI-Schichtenkommunikation}. We abstract from the bottom layer, the so called physical layer, upto the seventh layer, called application layer.\\
 In the physical layer the basic specifications of the transmission are described, e.g. current, voltage, pin usage or termination impedances. Repeaters that are used in a network always operate in this lowest layer.\\
@@ -145,21 +145,21 @@ In contrast, in the application layer one can directly access network ressources
 \end{figure}
 
 
-%\subsection{Die Schichten des OSI-Modells im Überblick}
+%\subsection{Die Schichten des OSI-Modells im berblick}
 \subsection{Overview of the OSI layers}
 
 \subsubsection{Layer 1: Physical Layer}
-%Verbindungsschicht zur physikalischen Ebene. Verantwortung für Übertragung einzelner Bits.
+%Verbindungsschicht zur physikalischen Ebene. Verantwortung fr bertragung einzelner Bits.
 Connection layer to the physical properties. Responsible for the transmission of single bits.
 
 \subsubsection{Layer 2: Data Link Layer} 
-%Die Sicherungsschicht sorgt für eine zuverlässige und funktionierende Verbindung zwischen Endgerät und Übertragungsmedium. Zur Vermeidung von Übertragungsfehlern und Datenverlust enthält diese Schicht Funktionen zur Fehlererkennung, Fehlerbehebung und Datenflusskontrolle.
+%Die Sicherungsschicht sorgt fr eine zuverlssige und funktionierende Verbindung zwischen Endgert und bertragungsmedium. Zur Vermeidung von bertragungsfehlern und Datenverlust enthlt diese Schicht Funktionen zur Fehlererkennung, Fehlerbehebung und Datenflusskontrolle.
 %Auf dieser Schicht findet auch die physikalische Adressierung von Datenpaketen statt.
 The Data Link Layer establishes an errorless and reliable connection between endpoint and transmissionchannel. To avoid errors and data loss, this layer provides functions for error detection and error correction.\\
 This layer also adresses the data packets physically.
 
 \subsubsection{Layer 3: Network Layer}
-%Die Vermittlungsschicht steuert die zeitliche und logische getrennte Kommunikation zwischen den Endgeräten, unabhängig vom Übertragungsmedium und -topologie. Auf dieser Schicht erfolgt erstmals die logische Adressierung der Endgeräte. Die Adressierung ist eng mit dem Routing (Wegfindung vom Sender zum Empfänger) verbunden.
+%Die Vermittlungsschicht steuert die zeitliche und logische getrennte Kommunikation zwischen den Endgerten, unabhngig vom bertragungsmedium und -topologie. Auf dieser Schicht erfolgt erstmals die logische Adressierung der Endgerte. Die Adressierung ist eng mit dem Routing (Wegfindung vom Sender zum Empfnger) verbunden.
 The Network Layer controls the communication between endpoints, independent from communication channels and topology. On this layer the endpoints are adressed logically. This adressation is strongly connected with the routing process (finding a way from sender to receiver).
 
 \subsubsection{Layer 4: Transport Layer}
@@ -167,15 +167,15 @@ The Network Layer controls the communication between endpoints, independent from
 The Transport Layer is the connection between the transportcentered and applicationcentered layers. In this layer, data packets are assigned to applications.
 
 \subsubsection{Layer 5: Session Layer}
-%Auf dieser Schicht wird der Verbindungsaufbau festgelegt und falls es bei der Übertragung zu Fehlern kommt werden diese hier abgefangen und 
+%Auf dieser Schicht wird der Verbindungsaufbau festgelegt und falls es bei der bertragung zu Fehlern kommt werden diese hier abgefangen und 
 %ausgewertet.
 %TODO: Hier weitermachen
 
 \subsubsection{Schicht 6: Darstellungsschicht (Presentation Layer)}
-Auf dieser Ebene werden Dateneingabe und -ausgabe überwacht und Übertragungskonventionen festgelegt oder auch Bildschirmdarstellungen angepasst.
+Auf dieser Ebene werden Dateneingabe und -ausgabe berwacht und bertragungskonventionen festgelegt oder auch Bildschirmdarstellungen angepasst.
 
 \subsubsection{Schicht 7: Anwendungsschicht (Application Layer)}
-Die Anwendungsschicht stellt Funktionen für die Anwendungen zur Verfügung. Auf dieser Schicht baut die Anwendung meist drauf auf und kann 
+Die Anwendungsschicht stellt Funktionen fr die Anwendungen zur Verfgung. Auf dieser Schicht baut die Anwendung meist drauf auf und kann 
 die Daten an die unteren Schichten weitergeben.
 
 \newpage
@@ -184,35 +184,35 @@ die Daten an die unteren Schichten weitergeben.
 
 
 Um die Realisierung des Netzwerkinterfaces zu vereinfachen wurden auch bei dem Messadapter die einzelnen Schichten des OSI-Modells realisert.
-Die Anwendungs- und Präsentaionsschicht werden mit einem eigens hierfür entwickelten Protokoll dem CDP (Control Data Protokoll) sowie dem Real-Time Transport Protocol (RTP) umgesetzt. Die Sitzungsschicht und Transportschicht werden vom User Datagram Protocol (UDP) realisert. Schicht drei, die Netzwerkschicht, wird vom IP-Protokoll umgesetzt und die beiden letzten Schichten werden vom Ethernet spezifiziert.
+Die Anwendungs- und Prsentaionsschicht werden mit einem eigens hierfr entwickelten Protokoll dem CDP (Control Data Protokoll) sowie dem Real-Time Transport Protocol (RTP) umgesetzt. Die Sitzungsschicht und Transportschicht werden vom User Datagram Protocol (UDP) realisert. Schicht drei, die Netzwerkschicht, wird vom IP-Protokoll umgesetzt und die beiden letzten Schichten werden vom Ethernet spezifiziert.
 
 
 
 
 \subsection{CDP}
-Das CDP ist sehr klein und einfach gehalten. Es beinhaltet einmal die Kontrolle der Länge der Nutzdaten, sowie einen Zeitstempel. Auch ist durch einen reservierten Speicherbereich die Möglichkeit der einfachen, abwärtskompatiblen Erweiterung möglich.
+Das CDP ist sehr klein und einfach gehalten. Es beinhaltet einmal die Kontrolle der Lnge der Nutzdaten, sowie einen Zeitstempel. Auch ist durch einen reservierten Speicherbereich die Mglichkeit der einfachen, abwrtskompatiblen Erweiterung mglich.
 
 \subsection{RTP}
-Real-Time Transport Protocol (RTP) wurde entwickelt, um Echtzeitdatenströme über ein Netzwerk zu transportieren. Es findet häufig Anwendung in der Telekommunikation und wird zum Beispiel von den in der IP-Technologie verwendeten Protokollen H.323 und SIP dazu verwendet, die Audio-/Videoströme eines Gespräches zu übertragen.
-Es biete unter anderem die Möglichkeit festzuhalten, zu welchem Zeitpunkt das Paket gehört oder auch durch einen Identifier mehrere Datenströme \"parallel\" zu übertragen. Dies wird auch bei dem Messadapter genutzt um zwischen Datenströmen und Konfigurationsbefehlen für den ENC28J60 zu unterscheiden.
+Real-Time Transport Protocol (RTP) wurde entwickelt, um Echtzeitdatenstrme ber ein Netzwerk zu transportieren. Es findet hufig Anwendung in der Telekommunikation und wird zum Beispiel von den in der IP-Technologie verwendeten Protokollen H.323 und SIP dazu verwendet, die Audio-/Videostrme eines Gesprches zu bertragen.
+Es biete unter anderem die Mglichkeit festzuhalten, zu welchem Zeitpunkt das Paket gehrt oder auch durch einen Identifier mehrere Datenstrme \"parallel\" zu bertragen. Dies wird auch bei dem Messadapter genutzt um zwischen Datenstrmen und Konfigurationsbefehlen fr den ENC28J60 zu unterscheiden.
 
 
 \subsection{UDP}
 
 Das User Datagram Protocol, auch kurz UDP genannt, ist ein Netzwerkprotokoll das auf der Netzwerkschicht arbeitet. Es ist im Vergleich zu dem sehr bekannten Transmission Control Protocol (TCP) nicht verbindungsorientiert, daher ist UDP verbindungslos.
-Bei einem verbindungsorientiertem Protokoll wird vor der eigentlichen Datenübertragung ein Drei-Wege-Handshake ausgeführt. Auch wird festgehalten welche Pakete eines Datenrahmens bereits erfolgreich empfangen wurden und welche noch nicht. Dies geschieht über ein Acknowledge-Pakete des Empfängers. Bei verbindungsorientierten Netzwerkprotokollen können also keine Daten verloren gehen, allerdings schafft diese Kontrolle darüber einen relativ großen Overhead, was zur Verringerung der Nutzdatenübertragungsgeschwindigkeit führt. Dies war auch 1977 der Grund warum UDP überhaupt entwickelt wurde. Es wurde ein Protokoll benötigt mit dem Sprache sehr schnell transportiert werden konnte. Bei dem Versenden von Sprache und Video und allgemein aller Echtzeitdaten steht die Geschwindigkeit im Vordergrund, dazu kommt noch das ein verloren gegangenes Paket zu späterer Zeit nicht mehr für die Verarbeitung verwendet werden kann da es für den Zeitpunkt dann als ungültig betrachtet werden muss. Daher ist das in Hinsicht Vollständigkeit etwas schlechtere Protokoll UDP, seinem verwandten TCP, bei Echtzeitdatenübertragung, vorzuziehen.
+Bei einem verbindungsorientiertem Protokoll wird vor der eigentlichen Datenbertragung ein Drei-Wege-Handshake ausgefhrt. Auch wird festgehalten welche Pakete eines Datenrahmens bereits erfolgreich empfangen wurden und welche noch nicht. Dies geschieht ber ein Acknowledge-Pakete des Empfngers. Bei verbindungsorientierten Netzwerkprotokollen knnen also keine Daten verloren gehen, allerdings schafft diese Kontrolle darber einen relativ groen Overhead, was zur Verringerung der Nutzdatenbertragungsgeschwindigkeit fhrt. Dies war auch 1977 der Grund warum UDP berhaupt entwickelt wurde. Es wurde ein Protokoll bentigt mit dem Sprache sehr schnell transportiert werden konnte. Bei dem Versenden von Sprache und Video und allgemein aller Echtzeitdaten steht die Geschwindigkeit im Vordergrund, dazu kommt noch das ein verloren gegangenes Paket zu spterer Zeit nicht mehr fr die Verarbeitung verwendet werden kann da es fr den Zeitpunkt dann als ungltig betrachtet werden muss. Daher ist das in Hinsicht Vollstndigkeit etwas schlechtere Protokoll UDP, seinem verwandten TCP, bei Echtzeitdatenbertragung, vorzuziehen.
 
 
 \subsection{IP}
-Das Internet Protocol(IP) ist auf der (Internetschicht) zuständig für den Transport von Daten über mehrere Adressenbereiche(Subnetze) hinweg. Dabei nimmt das Internetprotocol beim versenden Daten vom TCP oder UDP entgegen und prüft anhand der MTU (Maximum Transmission Unit) ob die Daten fragmentiert werden müssen, für diese dann entstehenden Datagramme, oder das entstehende Datagramm bei geringer Datenmenge, wird ein Leitweg zum Ziel bestimmt. Datagramme werden von Gateways von Netz zu Netz weitergeleitet, bis sie ihr Ziel erreicht haben oder der TTL-Zähler der an jeder Netzwerkstation decrementiert wird den Wert Null erreicht, was das sofortige fallen lassen des Paketes zur Folge hat. Das IP stellt einen Adressierungsmechanismus zur Verfügung, welcher die Wegwahl zwischen Netzwerken ermöglicht. Dieser benötigt die im Header abgelegten Informationen der Quell- und Zieladresse. Mit diesen 
+Das Internet Protocol(IP) ist auf der (Internetschicht) zustndig fr den Transport von Daten ber mehrere Adressenbereiche(Subnetze) hinweg. Dabei nimmt das Internetprotocol beim versenden Daten vom TCP oder UDP entgegen und prft anhand der MTU (Maximum Transmission Unit) ob die Daten fragmentiert werden mssen, fr diese dann entstehenden Datagramme, oder das entstehende Datagramm bei geringer Datenmenge, wird ein Leitweg zum Ziel bestimmt. Datagramme werden von Gateways von Netz zu Netz weitergeleitet, bis sie ihr Ziel erreicht haben oder der TTL-Zhler der an jeder Netzwerkstation decrementiert wird den Wert Null erreicht, was das sofortige fallen lassen des Paketes zur Folge hat. Das IP stellt einen Adressierungsmechanismus zur Verfgung, welcher die Wegwahl zwischen Netzwerken ermglicht. Dieser bentigt die im Header abgelegten Informationen der Quell- und Zieladresse. Mit diesen 
 
 \subsection{Ethernet}
 
-Ethernet arbeitet auf den zwei untersten Schichten OSI-Referenzmodells und deckt damit die Bitübertragungsschicht sowie die Sicherungsschicht ab. Ethernet ist also die Verbindung zur physikalischen Ebene und den oberen immer abstrakter werdenden Schichten.
-Der erste Standard des Ethernets wurde erstmals auf der 10 Base 5-Implementierung des IEEE festgeschrieben. Die maximale Datengeschwindigkeit betrug damals bei diesem Basisbandübertragungsverfahren 10MBit/s. Auch wenn das heutzutage sich am meisten im Einsatz befindende Ethernet 100Base-T (IEEE 802.3 Clause 24) eine Übertragung von 100MBit/s aufweist existiert bereits das so genannte Gigabit Ethernet mit dem eine Übertragungsgeschwindigkeit von 10 000Mbit/s erreicht werden kann. Das 10Gigabit-Ethernet ist in der 1000BaseX-Implementierung und ihren Untergruppen definiert.
-Während in der ersten Generation noch mit Kabeln die einen halben Zoll dick waren, so genannte Thick Ethernet  Kabel, gearbeitet wurde, werden beim 100Base-T Kabel flexible 6mm dicke twisted-pair Kabel, so genannte Thin Ethernet Kabel, verwendet. Das Gigabit Ethernet sendet seine Daten vornehmlich über Glasfaserkabel. 
-Das Ethernet-Protokoll sieht nicht vor das die Binärsignale direkt über das betreffende Kabel geschickt wird, da bei dieser Methode der Empfänger nicht entscheiden kann, wann ein Bit anfängt oder endet. Deshalb wird hier die so genannte Manchester-Codierung eingesetzt. Bei der Manchester-Codierung wird jedes Bit in zwei gleichlange Intervalle unterteilt. Falls das erste Intervall auf dem high-Pegel liegt und das zweite auf dem low-Pegel interpretiert der Empfänger das Bit als eine logische 1. Eine logische 0 wird bei umgekehrter Reihenfolge detektiert. Durch diese Codierung ist sichergestellt, dass während der Dauer, die zur Übertragung eines Datenbits benötigt wird, auf jeden Fall eine Pegeländerung stattfindet. Ein weiterer Vorteil außer der sehr einfachen Synchronisierungsmöglichkeit des Empfängers ist, dass sich auf dem Kabel kein gleichförmiges Signal bildet. Ein Nachteil ist allerdings, dass die Bandbreite doppelt so groß sein muss wie bei reiner Bitcodierung da die Pulsbreite nur noch halb so groß ist.
-Um diesen Nachteil zu mildern wurde beim Übergang vom 10BaseT zum 100BaseT die Manchester Codierung erweitert zur 4B/5B-Umwandlung. Bei dieser Umwandlung werden aus den Daten jeweils 4Bit herausgenommen und dann so in 5Bit umgewandelt, dass in jedem sich ergebenen 5Bit Block maximal 2Nullen enthalten sind, daraus ergibt sich dann Umwandlungstabelle \ref{tab:umwandlung} die natürlich Sender und Empfänger bekannt ist.
+Ethernet arbeitet auf den zwei untersten Schichten OSI-Referenzmodells und deckt damit die Bitbertragungsschicht sowie die Sicherungsschicht ab. Ethernet ist also die Verbindung zur physikalischen Ebene und den oberen immer abstrakter werdenden Schichten.
+Der erste Standard des Ethernets wurde erstmals auf der 10 Base 5-Implementierung des IEEE festgeschrieben. Die maximale Datengeschwindigkeit betrug damals bei diesem Basisbandbertragungsverfahren 10MBit/s. Auch wenn das heutzutage sich am meisten im Einsatz befindende Ethernet 100Base-T (IEEE 802.3 Clause 24) eine bertragung von 100MBit/s aufweist existiert bereits das so genannte Gigabit Ethernet mit dem eine bertragungsgeschwindigkeit von 10 000Mbit/s erreicht werden kann. Das 10Gigabit-Ethernet ist in der 1000BaseX-Implementierung und ihren Untergruppen definiert.
+Whrend in der ersten Generation noch mit Kabeln die einen halben Zoll dick waren, so genannte Thick Ethernet  Kabel, gearbeitet wurde, werden beim 100Base-T Kabel flexible 6mm dicke twisted-pair Kabel, so genannte Thin Ethernet Kabel, verwendet. Das Gigabit Ethernet sendet seine Daten vornehmlich ber Glasfaserkabel. 
+Das Ethernet-Protokoll sieht nicht vor das die Binrsignale direkt ber das betreffende Kabel geschickt wird, da bei dieser Methode der Empfnger nicht entscheiden kann, wann ein Bit anfngt oder endet. Deshalb wird hier die so genannte Manchester-Codierung eingesetzt. Bei der Manchester-Codierung wird jedes Bit in zwei gleichlange Intervalle unterteilt. Falls das erste Intervall auf dem high-Pegel liegt und das zweite auf dem low-Pegel interpretiert der Empfnger das Bit als eine logische 1. Eine logische 0 wird bei umgekehrter Reihenfolge detektiert. Durch diese Codierung ist sichergestellt, dass whrend der Dauer, die zur bertragung eines Datenbits bentigt wird, auf jeden Fall eine Pegelnderung stattfindet. Ein weiterer Vorteil auer der sehr einfachen Synchronisierungsmglichkeit des Empfngers ist, dass sich auf dem Kabel kein gleichfrmiges Signal bildet. Ein Nachteil ist allerdings, dass die Bandbreite doppelt so gro sein muss wie bei reiner Bitcodierung da die Pulsbreite nur noch halb so gro ist.
+Um diesen Nachteil zu mildern wurde beim bergang vom 10BaseT zum 100BaseT die Manchester Codierung erweitert zur 4B/5B-Umwandlung. Bei dieser Umwandlung werden aus den Daten jeweils 4Bit herausgenommen und dann so in 5Bit umgewandelt, dass in jedem sich ergebenen 5Bit Block maximal 2Nullen enthalten sind, daraus ergibt sich dann Umwandlungstabelle \ref{tab:umwandlung} die natrlich Sender und Empfnger bekannt ist.
  
 
 \begin{table}
@@ -245,7 +245,7 @@ Um diesen Nachteil zu mildern wurde beim Übergang vom 10BaseT zum 100BaseT die M
 
 Falls also die Bitfolge: \newline
 1010 0001 1011 0010 \newline
-gesendet werden soll so würde auf dem Bus die dekodierte bitfolge:\newline
+gesendet werden soll so wrde auf dem Bus die dekodierte bitfolge:\newline
 10110 01001 10111 10100\newline
 anliegen. Wie auch Abbildung \ref{fig:manu} zeigt.
 
@@ -256,7 +256,7 @@ anliegen. Wie auch Abbildung \ref{fig:manu} zeigt.
 	\label{fig:manu}
 \end{figure}
 
-Der Zugriff auf das Ethernet-Kabel wird vom Media Access Control (MAC) geregelt. MAC arbeitet auf der Schicht 2 des OSI-Referenzmodells und stellt somit einen wichtigen Teil vom Ethernet da. Der im MAC-Standard enthaltene CSMA/CD-Mechanismus behandelt alle Netzwerkteilnehmer gleich. Dies ist dadurch realisiert, dass Alle Ethernet-Stationen haben jederzeit und immer uneingeschränkten Zugriff auf das Netz. Der CSMA/CD (Carrier Sense Multiple Access/Collision Detection)-Mechanismus ein Teil von MAC steuert den Zugriff auf das Übertragungsmedium. Vor dem Senden von Daten wird getestet, ob das Medium zum senden frei (Carrier Sense) oder besetzt ist. Ist das Medium frei wird das Senden gestartet. Für den Fall das eine weitere Ethernet-Station zur selben Zeit angefangen hat zu Senden, stellen die beide Netzteilnehmer fest und stoppen beide ihren Sendevorgang zudem wird noch ein jam-Signal auf das Kabel gelegt um sicherzugehen das alle Netzteilnehmer die Kollision ebenfalls entdecken. Nach einer zufälligen Zeitspanne versuchen beide Stationen nochmals zu senden.
+Der Zugriff auf das Ethernet-Kabel wird vom Media Access Control (MAC) geregelt. MAC arbeitet auf der Schicht 2 des OSI-Referenzmodells und stellt somit einen wichtigen Teil vom Ethernet da. Der im MAC-Standard enthaltene CSMA/CD-Mechanismus behandelt alle Netzwerkteilnehmer gleich. Dies ist dadurch realisiert, dass Alle Ethernet-Stationen haben jederzeit und immer uneingeschrnkten Zugriff auf das Netz. Der CSMA/CD (Carrier Sense Multiple Access/Collision Detection)-Mechanismus ein Teil von MAC steuert den Zugriff auf das bertragungsmedium. Vor dem Senden von Daten wird getestet, ob das Medium zum senden frei (Carrier Sense) oder besetzt ist. Ist das Medium frei wird das Senden gestartet. Fr den Fall das eine weitere Ethernet-Station zur selben Zeit angefangen hat zu Senden, stellen die beide Netzteilnehmer fest und stoppen beide ihren Sendevorgang zudem wird noch ein jam-Signal auf das Kabel gelegt um sicherzugehen das alle Netzteilnehmer die Kollision ebenfalls entdecken. Nach einer zuflligen Zeitspanne versuchen beide Stationen nochmals zu senden.
 
 
 
@@ -442,10 +442,156 @@ then there is another rtpbondd process running on the system, using the same por
 $ killall rtpbondd
 \end{verbatim}
 
-
-
+%$ - highlighting help
 
 \section{\texttt{rtpconf} Script}
+\subsection{Overview}
+
+The \emph{rtpconf} script is a command line tool to ease the usage of the introduced \emph{rtpbond}-setup. It is written completely in bash to allow best flexibility and portability in usage and expansion of features.
+
+On software side, an end-user of a \emph{rtpbond}-setup will meet in most cases all his requirements in configuration and maintenance with \emph{rtpconf}.
+
+\subsection{Features}
+
+\begin{itemize}
+\item Generating an overview of properties of all devices in setup
+\item Changing properties (i.e. IP-address, port number, baudrate etc.)
+\item Changing properties of remote devices through network connection
+\item 'Easy to use' configuration-routine to customize the behavior of remote devices
+\item Flexible instruction set to transmit possible future commands to remote devices
+\item Error preventing user guiding
+\end{itemize}
+
+\subsection{Usage}
+Under your bash terminal environment you can start \emph{rtpconf}.
+\subsubsection{Starting with \emph{help}}
+\begin{verbatim}
+user@machine:~/rtpbond/rtpconf$ ./rtpconf
+rtpconf v0.9.9 (2009/11/25)
+> help
+rtpconf v0.9.9 (2009/11/25)
+Usage: ./rtpconf [command] [command-parameter/device]
+If no command is committed, rtpconf will start in 'interactive mode'. All following commands can be used either in interactive mode or as a single command
+* help        print this
+* quit        quits the interactive mode (alias: exit)
+* status      prints status output - if remote status available even this
+* version     print current version of this script
+
+Remote commands:
+* open        opens a device for easy use
+* close       close current opened device
+* send        transmit text to device. first open a device or use syntax 'send FIFONAME TEXT'
+* configure   starts a configuration routine to set up a remote device
+* restart     restarts remote device (aliases: reset, reboot) ACHTUNG: BISHER NUR RESTART VON TTY_NET-THREAD
+* dump        dump configuration for rtpbondd (based on internal device states)
+* configtype  print/set payload-type for configuration channels
+> quit
+user@machine:~/rtpbond/rtpconf$
+\end{verbatim}
+
+\subsubsection{Status output}
+Example with 4 devices configured in rtpbondd (called FIFO1, FIFO2, FIFO3, FIFO4). FIFO1 \& FIFO2 and FIFO3 \& FIFO4 are representing two physical remote devices. Each device consists of a configuration channel and a data transmisson channel (note: Payload Type '37' versus '77').
+
+Global Status print:
+
+\begin{verbatim}
+rtpconf v0.9.9 (2009/11/25)
+> stat
+FIFO1:                                                  
+	path: .                               
+	destIp4Addr: 192.168.22.23     destPort: 9000  
+	listenPort: 9000                               
+	baudRate: 1000  TMax: 1000                      
+	payloadType: 37                                 
+	Packets sent: 11 (0 data/11 alive)      Packets received: 0 (0 data/0 alive)    status: inactive
+	Avg payload sent: 0.00 byte      Avg payload received: 0.00 byte                                
+	Packets lost: 0                                                                                 
+
+	Availability check: Positive
+
+	Remote Status:
+	  IP: 192.168.22.23
+	  Netmask: 255.255.255.0
+	  Gateway: 192.168.22.1
+	  Mac-Address: 00:00:00:00:00:01
+	  Data_Dest_IP: 192.168.22.100
+	  Data_Dest_Port: 9000
+	  Config_Dest_IP: 192.168.22.100
+	  Config_Dest_Port: 9000
+	  Baudrate: 9600
+FIFO2:                                                                                                  
+	path: .                                                                                         
+	destIp4Addr: 192.168.22.129     destPort: 34567                                                 
+	listenPort: 56789                                                                               
+	baudRate: 1500  TMax: 2000                                                                      
+	payloadType: 77                                                                                 
+	Packets sent: 5 (0 data/5 alive)        Packets received: 0 (0 data/0 alive)    status: inactive
+	Avg payload sent: 0.00 byte      Avg payload received: 0.00 byte                                
+	Packets lost: 0
+FIFO3:                                                  
+	path: .                               
+	destIp4Addr: 192.168.22.42     destPort: 9001  
+	listenPort: 9001                               
+	baudRate: 1000  TMax: 1000                      
+	payloadType: 37                                 
+	Packets sent: 11 (0 data/11 alive)      Packets received: 0 (0 data/0 alive)    status: inactive
+	Avg payload sent: 0.00 byte      Avg payload received: 0.00 byte                                
+	Packets lost: 0                                                                                 
+
+	Availability check: Positive
+
+	Remote Status:
+	  IP: 192.168.22.42
+	  Netmask: 255.255.255.0
+	  Gateway: 192.168.22.1
+	  Mac-Address: 00:00:00:00:00:02
+	  Data_Dest_IP: 192.168.22.100
+	  Data_Dest_Port: 9001
+	  Config_Dest_IP: 192.168.22.100
+	  Config_Dest_Port: 9001
+	  Baudrate: 115200
+FIFO4:                                                                                                  
+	path: .                                                                                         
+	destIp4Addr: 192.168.22.131     destPort: 34567                                                 
+	listenPort: 56789                                                                               
+	baudRate: 1500  TMax: 2000                                                                      
+	payloadType: 77                                                                                 
+	Packets sent: 5 (0 data/5 alive)        Packets received: 0 (0 data/0 alive)    status: inactive
+	Avg payload sent: 0.00 byte      Avg payload received: 0.00 byte                                
+	Packets lost: 0
+> 
+\end{verbatim}
+
+By selecting (\emph{opening}) a particular device it is much more clear and handy:
+\begin{verbatim}
+> open FIFO1
+Selecting remote device 'FIFO1' ...
+FIFO1> stat
+Status of 'FIFO1'
+FIFO1:                                                  
+	path: .                               
+	destIp4Addr: 192.168.22.23     destPort: 9000  
+	listenPort: 9000                               
+	baudRate: 1000  TMax: 1000                      
+	payloadType: 37                                 
+	Packets sent: 11 (0 data/11 alive)      Packets received: 0 (0 data/0 alive)    status: inactive
+	Avg payload sent: 0.00 byte      Avg payload received: 0.00 byte                                
+	Packets lost: 0                                                                                 
+
+	Availability check: Positive
+
+	Remote Status:
+	  IP: 192.168.22.23
+	  Netmask: 255.255.255.0
+	  Gateway: 192.168.22.1
+	  Mac-Address: 00:00:00:00:00:01
+	  Data_Dest_IP: 192.168.22.100
+	  Data_Dest_Port: 9000
+	  Config_Dest_IP: 192.168.22.100
+	  Config_Dest_Port: 9000
+	  Baudrate: 9600
+FIFO1>
+\end{verbatim}
 
 \section{Example}
 
@@ -454,25 +600,25 @@ $ killall rtpbondd
 \section{Hardware}
 \section{Software}
 
-\subsection{Sende- und Empfangsprozess der seriellen Brücke}
+\subsection{Sende- und Empfangsprozess der seriellen Brcke}
 
 \subsubsection{COM-Schnittstelle RS-232}
 
-Die RS-232 Schnittstelle allgemein bekannt auch als COM-Schnittstelle wurde bereits in den frühen 1960ern von einem US-amerikanischen Standardisierungskomitee (heute EIA - Electronic Industries Alliance) eingeführt. Die RS232 gehört zur Kategorie seriellen Datenverbindungen und ist sehr flexibel und einfach einsetzbar. Dies ist der Grund dafür dass diese Schnittstelle auch heute noch in der Industrie sehr häufig verwendet wird. Auch in der Messtechnik ist diese Schnittstelle noch sehr gebräuchlich und kann auch bei High-End Geräten noch häufig angetroffen werden. Die Verbindung kann hierbei je nach Anforderung speziell auf jedes Gerät eingestellt werden, man kann hier zum Beispiel die Anzahl der Datenbits zwischen eins und neun einstellen oder auch die Anzahl der Stoppbits festlegen. Die Stoppbits kennzeichnen jeweils das Ende eines Datenframes. Um eine mögliche Inkonsistenz der Daten bei Übertragungsfehlern zu verringern gibt es zusätzlich noch ein so genanntes Paritätsbit. Dieses Paritätsbit gibt an ob das Ergebnis einer XOR-Verknüpfung der Datenbits gerade oder ungerade ist. Grundsätzlich lässt sich mit der RS232 Schnittstelle ein synchroner aber auch ein asynchroner Datenaustausch zwischen den UARTs realisieren.
-Ein UART ist ein elektronisches Bauelement, welches zur Realisierung von digitalen seriellen Schnittstellen dient. Eine UART-Schnittstelle dient zum Senden und Empfangen von Daten über eine Datenleitung und bildet den Standard der seriellen Schnittstellen an PCs und Mikrocontrollern. 
-Auch kann über zusätzliche Steuerleitungen Leitungen die Verbindung kontrolliert werden.
-Es gibt unter anderem RTS (Request to Send) eine logische Null an diesem Ausgang signalisiert der Gegenstelle, dass sie Daten senden kann sowie das Signal CTS (Clear to Send) welches angibt das Daten empfangen werden können. Bei der Schnittstelle des Messadapter welche für das Debugging verwendet wird werden diese beiden ständig auf logisch 0 gesetzt, daher nicht verwendet, es kann also gesendet werden auch wenn die Empfangstelle nicht bereit ist. Dafür dass die Schnittstelle nur zum Debugging verwendet werden soll reicht das allerdings vollkommen aus. Auf das Thema Debugging wird in einem späteren Kapitel nochmals genauer eingegangen.
+Die RS-232 Schnittstelle allgemein bekannt auch als COM-Schnittstelle wurde bereits in den frhen 1960ern von einem US-amerikanischen Standardisierungskomitee (heute EIA - Electronic Industries Alliance) eingefhrt. Die RS232 gehrt zur Kategorie seriellen Datenverbindungen und ist sehr flexibel und einfach einsetzbar. Dies ist der Grund dafr dass diese Schnittstelle auch heute noch in der Industrie sehr hufig verwendet wird. Auch in der Messtechnik ist diese Schnittstelle noch sehr gebruchlich und kann auch bei High-End Gerten noch hufig angetroffen werden. Die Verbindung kann hierbei je nach Anforderung speziell auf jedes Gert eingestellt werden, man kann hier zum Beispiel die Anzahl der Datenbits zwischen eins und neun einstellen oder auch die Anzahl der Stoppbits festlegen. Die Stoppbits kennzeichnen jeweils das Ende eines Datenframes. Um eine mgliche Inkonsistenz der Daten bei bertragungsfehlern zu verringern gibt es zustzlich noch ein so genanntes Parittsbit. Dieses Parittsbit gibt an ob das Ergebnis einer XOR-Verknpfung der Datenbits gerade oder ungerade ist. Grundstzlich lsst sich mit der RS232 Schnittstelle ein synchroner aber auch ein asynchroner Datenaustausch zwischen den UARTs realisieren.
+Ein UART ist ein elektronisches Bauelement, welches zur Realisierung von digitalen seriellen Schnittstellen dient. Eine UART-Schnittstelle dient zum Senden und Empfangen von Daten ber eine Datenleitung und bildet den Standard der seriellen Schnittstellen an PCs und Mikrocontrollern. 
+Auch kann ber zustzliche Steuerleitungen Leitungen die Verbindung kontrolliert werden.
+Es gibt unter anderem RTS (Request to Send) eine logische Null an diesem Ausgang signalisiert der Gegenstelle, dass sie Daten senden kann sowie das Signal CTS (Clear to Send) welches angibt das Daten empfangen werden knnen. Bei der Schnittstelle des Messadapter welche fr das Debugging verwendet wird werden diese beiden stndig auf logisch 0 gesetzt, daher nicht verwendet, es kann also gesendet werden auch wenn die Empfangstelle nicht bereit ist. Dafr dass die Schnittstelle nur zum Debugging verwendet werden soll reicht das allerdings vollkommen aus. Auf das Thema Debugging wird in einem spteren Kapitel nochmals genauer eingegangen.
 Die Schnittstelle wird in unserem Fall mit einer Baud-Rate von 115,2KByte betrieben.
 
 
 
 \subsubsection{ttyS0(RS232) to Ethernet}
 
-Die Hauptaufgabe des Messadapters ist es Messungen anzuregen, daher Pakete vom Netzwerk entgegen zunehmen und dem Messgerät zu schicken und daruafhin die gewonnen Messergebnisse wieder einem bestimmten Ethernet fähigem Gerät zurück zusenden. Es soll hier nun näher auf die Datenrichtung vom Messgerät zum Netzwerk eingegangen werden.
-Um dies zu realisieren wird, falls Daten RS232 Schnittstelle ankommen, ein Interrupt ausgelöst der die ankommenden Daten in einen davor vorgesehenen 150Byte  (kann per Compilerschalter COM0\_MAX\_RX\_BUF eingestellt werden)  großen Buffer geschrieben. Ist der Buffer voll soll dieser an den Netzwerkteilnehmer, der im EEPROM gespeichert ist, gesendet werden. Um das Echtzeitverhalten des Messadapters zu verbessern kann allerdings auch eine obere Schranke eingestellt werden ab welcher der Buffer schon früher gesendet werden, hierzu mehr in Kapitel \ref{chapter:konfig}.
-Um einen stetigen Datenfluss von Ethernet-Paketen zu erreichen  sendet der Messadapter nicht nur ein Ethernet-Paket wenn der 150Byte große Buffer voll ist, bzw. die angesprochene Schranke erreicht wird, sondern kann bei geringem Datenaufkommen, durch einen Timer gesteuert, schon früher  senden. Das wird auch im Programmablaufplan \ref{fig:aufbauPaket} gezeigt, man sieht, dass entweder ein abgelaufener Timer oder ein voller Buffer zu einem Aufruf der Funktion com0RotateRecvBuffer() führt.
+Die Hauptaufgabe des Messadapters ist es Messungen anzuregen, daher Pakete vom Netzwerk entgegen zunehmen und dem Messgert zu schicken und daruafhin die gewonnen Messergebnisse wieder einem bestimmten Ethernet fhigem Gert zurck zusenden. Es soll hier nun nher auf die Datenrichtung vom Messgert zum Netzwerk eingegangen werden.
+Um dies zu realisieren wird, falls Daten RS232 Schnittstelle ankommen, ein Interrupt ausgelst der die ankommenden Daten in einen davor vorgesehenen 150Byte  (kann per Compilerschalter COM0\_MAX\_RX\_BUF eingestellt werden)  groen Buffer geschrieben. Ist der Buffer voll soll dieser an den Netzwerkteilnehmer, der im EEPROM gespeichert ist, gesendet werden. Um das Echtzeitverhalten des Messadapters zu verbessern kann allerdings auch eine obere Schranke eingestellt werden ab welcher der Buffer schon frher gesendet werden, hierzu mehr in Kapitel \ref{chapter:konfig}.
+Um einen stetigen Datenfluss von Ethernet-Paketen zu erreichen  sendet der Messadapter nicht nur ein Ethernet-Paket wenn der 150Byte groe Buffer voll ist, bzw. die angesprochene Schranke erreicht wird, sondern kann bei geringem Datenaufkommen, durch einen Timer gesteuert, schon frher  senden. Das wird auch im Programmablaufplan \ref{fig:aufbauPaket} gezeigt, man sieht, dass entweder ein abgelaufener Timer oder ein voller Buffer zu einem Aufruf der Funktion com0RotateRecvBuffer() fhrt.
 Die Funktion com0RotateRcvBuffer() schreibt den Buffer, der bei keinem Datenaufkommen durchaus auch 0Bytes lang sein kann, als Element in die Ausgangs-FiFo-Queue (out-Fifo des Data Devices). Erst wenn in dieser FiFo-Queue ein Element bereit liegt wird der Messadapter senden.
-Wie im Programmablaufplan \ref{fig:onmain} zu sehen ist, wird die Funktion OnSerial() ständig aufgerufen, die Funktion übergibt ein Element, bestehend aus dem Buffer der die angekommenen Daten der RS232-Schnittstelle enthält, der Ausgangs-FiFo-Queue an die Funktion OnSerialData(). Die Funktion OnSerialData() ruft wiederum die Funktion rtpSendCDPData() auf.
+Wie im Programmablaufplan \ref{fig:onmain} zu sehen ist, wird die Funktion OnSerial() stndig aufgerufen, die Funktion bergibt ein Element, bestehend aus dem Buffer der die angekommenen Daten der RS232-Schnittstelle enthlt, der Ausgangs-FiFo-Queue an die Funktion OnSerialData(). Die Funktion OnSerialData() ruft wiederum die Funktion rtpSendCDPData() auf.
 
 \begin{figure}[H]
 	\centering
@@ -511,11 +657,11 @@ Wie im Programmablaufplan \ref{fig:onmain} zu sehen ist, wird die Funktion OnSer
 \end{figure}
 
 An dieser Stelle beginnt nun der inkrementelle Aufbau des Ethernet-Paketes, und damit auch die Realisierung der in Kapitel 1 betrachteten Schichten.
-Dazu wird zuallererst eine allgemeine Paketstruktur mit einem Zeiger auf den Speicherbereich des späteren Headers  und einen Zeiger auf den Speicherbereich des Payloads angelegt.
-Der Zeiger auf den Payload-Speicherbereich dieses innersten Pakets wird zu NULL gesetzt, um eine geschickte Abbruchbedingung für eine Schleife beim eigentlichen Senden zu erhalten. In den Speicherbereich des Headers wird nun der CDP-Header sowie die Daten des zu sendenden Buffers geschrieben. Der CDP-Header besteht aus den drei in Kapitel 1 bereits erwähnten Speicherbereichen: Zum einen die Länge der Daten und zum anderen ein  Feld für die relative Systemzeit des Senders sowie ein Reserved-Byte das später eventuell als Sub-Type Erkennung verwendet werden kann. Benutzt wird von diesen drei Feldern bisher allerdings nur das Längen-Feld die anderen werden konstant zu 0 gesetzt. Das erhaltene Paket wird daraufhin der Funktion onRtpRequest() übergeben. Die Funktion onRtpRequest() legt wiederum eine wie oben beschriebene Paketstruktur an, setzt den Zeiger des Payloads aber diesmal auf das bereits angelegte Paket. Der Header wird nun mit den Daten eines RTP-Headers gefüllt. Wie auch Abb. \ref{fig:speicherabbild} entnommen werden kann enthält der RTP-Header einige wichtige Information bezüglich Echtzeitdatenübertragung. Vom Messadapter verwendet wird das Versionsfeld in das konstant die 80 eingetragen wird, das Typenfeld welches angibt ob es sich um weitergeleitete Daten oder ein Steuerungsbefehl handelt hierbei steht die hexadezimalen Zahlen 4D für Daten und die 25 für Steuerungsbefehle, ein Feld für einen Zeitstempel in dem die aktuell gelaufene Systemzeit in der Einheit 976,56 Mikrosekunden steht und ein Feld Sequenz das mit dem Wert eines einfachen Paketcounter befüllt wird. 
-Dieses erhaltene RTP-Paket wird daraufhin der Funktion onUdpRequest() übergeben die, die Daten eines UDP-Headers hinzufügen. Dieser Header enthält den Quellport des Messadapters sowie den Zielport des Netzwerkgerätes das die Ethernet-Pakete empfangen soll. Außerdem ist noch ein Feld für eine Checksumme enthalten welches allerdings nicht benutzt wird sowie ein Längen-Feld das die Länge des bisher erstellten Paketes übergeben bekommt. Daraufhin wird dem Paket in der Funktion onIPv4Request()ein IP-Header angefügt. Die vom Messadapter benutzten Felder des IP-Header sind  einmal das Versionsfeld in dem die Version des benutzten IP-Headers gespeichert wird, das Type of Service Feld welches heutzutage kaum benutzt und auch vom Messadapter nicht in Benutzung genommen wird und zu 0 gesetzt, ein Längen-Feld das die Länge des bisher erstellten Paketes übergeben bekommt, das  Identifications-Feld das eine Seriennummer darstellt um zuerkennen welche Fragemente zu welchen IP-Paketen gehören und von einem Paketzähler gefüllt wird, das Feld zur Bestimmung der Fragmentierung wird derart beschrieben das..,das Time To Live Feld wird mit der 128 gefüllt und gibt die Anzahl der maximal zu passierenden Netzwerknoten an, das Protokoll-Feld wird mit der hexadezimalen 11 gefüllt was angibt das es sich um ein UDP-Paket im Datenfeld des IP-Paketes handelt und zuletzt wird noch eine Prüfsumme angehängt um die Konsistenz der Daten zu gewährleisten. Aus dem neu entstandenem IP-Paket wird durch Anfügen eines Ethernet-Headers ein Ethernet-Paket gemacht. In dem angefügten Header steht zum einen die Mac-Adresse des Messadapters die aus dem EEPROM ausgelesen wird und zum anderen die Mac-Adresse des Netzwerkgerätes, welche über das Address Resolution Protocol in Erfahrung gebracht werden kann. Außerdem wird in dem Typen-Feld noch vermerkt das in dem Payloadbereich des Ethernet-Paketes sich ein IPv4 Paket befindet.
+Dazu wird zuallererst eine allgemeine Paketstruktur mit einem Zeiger auf den Speicherbereich des spteren Headers  und einen Zeiger auf den Speicherbereich des Payloads angelegt.
+Der Zeiger auf den Payload-Speicherbereich dieses innersten Pakets wird zu NULL gesetzt, um eine geschickte Abbruchbedingung fr eine Schleife beim eigentlichen Senden zu erhalten. In den Speicherbereich des Headers wird nun der CDP-Header sowie die Daten des zu sendenden Buffers geschrieben. Der CDP-Header besteht aus den drei in Kapitel 1 bereits erwhnten Speicherbereichen: Zum einen die Lnge der Daten und zum anderen ein  Feld fr die relative Systemzeit des Senders sowie ein Reserved-Byte das spter eventuell als Sub-Type Erkennung verwendet werden kann. Benutzt wird von diesen drei Feldern bisher allerdings nur das Lngen-Feld die anderen werden konstant zu 0 gesetzt. Das erhaltene Paket wird daraufhin der Funktion onRtpRequest() bergeben. Die Funktion onRtpRequest() legt wiederum eine wie oben beschriebene Paketstruktur an, setzt den Zeiger des Payloads aber diesmal auf das bereits angelegte Paket. Der Header wird nun mit den Daten eines RTP-Headers gefllt. Wie auch Abb. \ref{fig:speicherabbild} entnommen werden kann enthlt der RTP-Header einige wichtige Information bezglich Echtzeitdatenbertragung. Vom Messadapter verwendet wird das Versionsfeld in das konstant die 80 eingetragen wird, das Typenfeld welches angibt ob es sich um weitergeleitete Daten oder ein Steuerungsbefehl handelt hierbei steht die hexadezimalen Zahlen 4D fr Daten und die 25 fr Steuerungsbefehle, ein Feld fr einen Zeitstempel in dem die aktuell gelaufene Systemzeit in der Einheit 976,56 Mikrosekunden steht und ein Feld Sequenz das mit dem Wert eines einfachen Paketcounter befllt wird. 
+Dieses erhaltene RTP-Paket wird daraufhin der Funktion onUdpRequest() bergeben die, die Daten eines UDP-Headers hinzufgen. Dieser Header enthlt den Quellport des Messadapters sowie den Zielport des Netzwerkgertes das die Ethernet-Pakete empfangen soll. Auerdem ist noch ein Feld fr eine Checksumme enthalten welches allerdings nicht benutzt wird sowie ein Lngen-Feld das die Lnge des bisher erstellten Paketes bergeben bekommt. Daraufhin wird dem Paket in der Funktion onIPv4Request()ein IP-Header angefgt. Die vom Messadapter benutzten Felder des IP-Header sind  einmal das Versionsfeld in dem die Version des benutzten IP-Headers gespeichert wird, das Type of Service Feld welches heutzutage kaum benutzt und auch vom Messadapter nicht in Benutzung genommen wird und zu 0 gesetzt, ein Lngen-Feld das die Lnge des bisher erstellten Paketes bergeben bekommt, das  Identifications-Feld das eine Seriennummer darstellt um zuerkennen welche Fragemente zu welchen IP-Paketen gehren und von einem Paketzhler gefllt wird, das Feld zur Bestimmung der Fragmentierung wird derart beschrieben das..,das Time To Live Feld wird mit der 128 gefllt und gibt die Anzahl der maximal zu passierenden Netzwerknoten an, das Protokoll-Feld wird mit der hexadezimalen 11 gefllt was angibt das es sich um ein UDP-Paket im Datenfeld des IP-Paketes handelt und zuletzt wird noch eine Prfsumme angehngt um die Konsistenz der Daten zu gewhrleisten. Aus dem neu entstandenem IP-Paket wird durch Anfgen eines Ethernet-Headers ein Ethernet-Paket gemacht. In dem angefgten Header steht zum einen die Mac-Adresse des Messadapters die aus dem EEPROM ausgelesen wird und zum anderen die Mac-Adresse des Netzwerkgertes, welche ber das Address Resolution Protocol in Erfahrung gebracht werden kann. Auerdem wird in dem Typen-Feld noch vermerkt das in dem Payloadbereich des Ethernet-Paketes sich ein IPv4 Paket befindet.
 Die sich im Speicher dann ergebene Struktur ist in Abb. \ref{fig:speicherabbild} dargestellt.
-Dieses Paket wird jetzt wieder Schrittweise dem Sendepuffer des ENC28J60 übergeben. Um das zu realisieren weist  Paketzeiger auf den Header des Ethernet-Paketes und übergibt diesen. Daraufhin wird der Zeiger auf den Payloadbereich umgesetzt was wiederum der Anfang des nächsten Headers (IP-Header) darstellt. Dieses umsetzen des Zeigers und senden wird solange gemacht bis der umgesetzte Zeiger auf NULL weist(Abbruchbedingung). Wenn dies passiert wurde das komplette Paket gesendet.
+Dieses Paket wird jetzt wieder Schrittweise dem Sendepuffer des ENC28J60 bergeben. Um das zu realisieren weist  Paketzeiger auf den Header des Ethernet-Paketes und bergibt diesen. Daraufhin wird der Zeiger auf den Payloadbereich umgesetzt was wiederum der Anfang des nchsten Headers (IP-Header) darstellt. Dieses umsetzen des Zeigers und senden wird solange gemacht bis der umgesetzte Zeiger auf NULL weist(Abbruchbedingung). Wenn dies passiert wurde das komplette Paket gesendet.
 
 
 
@@ -530,7 +676,7 @@ Dieses Paket wird jetzt wieder Schrittweise dem Sendepuffer des ENC28J60 übergeb
 
 
 \subsubsection{Ethernet to ttyS0(RS232)}
-Um ein Messgerät zu steuern müssen Daten am Netzwerkinterface entgegen genommen und an die RS232 Schnittstelle weitergegeben werden können. Dieser Ablauf ist in Abb. \ref{fig:ethernettors232 part1} dargestellt. Zuallererst wird am ENC28J60 abgefragt werden ob angekommene Pakete bereitliegen. Falls ein Ethernet-Paket bereit liegt wird die Länge des Paketes abgespeichert, zusätzliche auch vorliegende Informationen wie zum Beispiel ob ein CRC Error vorlag oder der Opcode nicht erkannt wurde werden allerdings nicht ausgewertet. Nun wird angefangen Header für Header des Paketes aus dem Empfangs-Buffer des ENC28J60 auszulesen. Angefangen wird dieser Prozess in der Funktion OnEthernetResponse(), welche den Ethernet-Header ausliest. Darauhin wird zunächst geprüft ob die Datenlänge des eingelesenen Headers die richtige Länge hat. Trifft dies zu, wird als nächstes mithilfe des Ethernet-Type Feldes ausgewertet ob ein ARP-Paket oder ein IP-Paket vorliegt. Im Falle eines ARP-Paketes wird mithilfe von Diesem der ARP-Cache aktualisiert. Falls ein  IP-Paket vorliegt wird der dazugehörige IP-Header ausgelesen und mithilfe des Destination IP Address Feldes geprüft ob der Messadapter überhaupt der richtige Empfänger ist. Falls dies nicht der Fall ist wird das Paket sofort fallengelassen. Bei Übereinstimmung der Adresse des Adapters aus dem EEPROM mit der Zieladresse aus dem IP-Header wird die Adresse des sendenden Netzwerkelementes in den ARP-Cache geschrieben. Beim darauf folgenden Test stellt sich heraus ob das Paket ein UDP-Paket ist. Ist das Paket ein UDP-Paket wird der UDP-Header eingelesen. Mithilfe von diesem Header kann festgestellt werden ob eine TFTP-Verbindung aufgenommen werden soll oder ob ein RTP-Paket mit Daten angekommen ist. Im Falle eines RTP-Paketes wird der RTP-Header ausgelesen. Nun kann anhand des RTP-Typen-Feldes festgestellt werden ob das Paket zum Schreiben beziehungsweise Lesen von Konfigurationseinstellungen gesendet wurde. Ist das Paket kein Konfigurationspaket sondern für die RS232-Schnittstelle bestimmt werden die angekommenen Daten erst der Funktion onRtpData(), danach serialSendBytes() und schließlich der Funktion com0SendBytes() übergeben. Zum Senden der Daten wird zunächst festgestellt ob die FiFo zum senden leer oder gefüllt ist. Bei einer nicht leeren FiFo-Queue wird der Buffer in dieser abgelegt. War die FiFo-Queue leer wird das senden der Daten direkt angeregt.
+Um ein Messgert zu steuern mssen Daten am Netzwerkinterface entgegen genommen und an die RS232 Schnittstelle weitergegeben werden knnen. Dieser Ablauf ist in Abb. \ref{fig:ethernettors232 part1} dargestellt. Zuallererst wird am ENC28J60 abgefragt werden ob angekommene Pakete bereitliegen. Falls ein Ethernet-Paket bereit liegt wird die Lnge des Paketes abgespeichert, zustzliche auch vorliegende Informationen wie zum Beispiel ob ein CRC Error vorlag oder der Opcode nicht erkannt wurde werden allerdings nicht ausgewertet. Nun wird angefangen Header fr Header des Paketes aus dem Empfangs-Buffer des ENC28J60 auszulesen. Angefangen wird dieser Prozess in der Funktion OnEthernetResponse(), welche den Ethernet-Header ausliest. Darauhin wird zunchst geprft ob die Datenlnge des eingelesenen Headers die richtige Lnge hat. Trifft dies zu, wird als nchstes mithilfe des Ethernet-Type Feldes ausgewertet ob ein ARP-Paket oder ein IP-Paket vorliegt. Im Falle eines ARP-Paketes wird mithilfe von Diesem der ARP-Cache aktualisiert. Falls ein  IP-Paket vorliegt wird der dazugehrige IP-Header ausgelesen und mithilfe des Destination IP Address Feldes geprft ob der Messadapter berhaupt der richtige Empfnger ist. Falls dies nicht der Fall ist wird das Paket sofort fallengelassen. Bei bereinstimmung der Adresse des Adapters aus dem EEPROM mit der Zieladresse aus dem IP-Header wird die Adresse des sendenden Netzwerkelementes in den ARP-Cache geschrieben. Beim darauf folgenden Test stellt sich heraus ob das Paket ein UDP-Paket ist. Ist das Paket ein UDP-Paket wird der UDP-Header eingelesen. Mithilfe von diesem Header kann festgestellt werden ob eine TFTP-Verbindung aufgenommen werden soll oder ob ein RTP-Paket mit Daten angekommen ist. Im Falle eines RTP-Paketes wird der RTP-Header ausgelesen. Nun kann anhand des RTP-Typen-Feldes festgestellt werden ob das Paket zum Schreiben beziehungsweise Lesen von Konfigurationseinstellungen gesendet wurde. Ist das Paket kein Konfigurationspaket sondern fr die RS232-Schnittstelle bestimmt werden die angekommenen Daten erst der Funktion onRtpData(), danach serialSendBytes() und schlielich der Funktion com0SendBytes() bergeben. Zum Senden der Daten wird zunchst festgestellt ob die FiFo zum senden leer oder gefllt ist. Bei einer nicht leeren FiFo-Queue wird der Buffer in dieser abgelegt. War die FiFo-Queue leer wird das senden der Daten direkt angeregt.
 
 
 
@@ -553,8 +699,8 @@ Um ein Messgerät zu steuern müssen Daten am Netzwerkinterface entgegen genommen 
 
 \subsection{Timer und Echtzeitverhalten}
 \subsubsection{Realisierung beim Messadapter}
-Als Timer bezeichnet man eine Variable oder im Falle eines Mikrocontollers ein Register das immer in gleichen Zeitabständen inkrementiert oder decrementiert wird. Bei  erreichen eines vorher definierten Wertes arbeitet man einen bestimmten Codeabschnitt ab. Der Zeitabschnitt in welchem der Wert gezählt wird kann in der Regel eingestellt werden und ist meist ein Bruchteil des Systemtaktes. Ein vorher bestimmter Wert kann zum Beispiel ein Overflow des Registers sein und der angesprochene Codeabschnitt eine so genannte ISR (Interrupt Service Routine). Auf diese Weise lässt sich Interruptgesteuert sehr einfach ein bis mehrere, je nach Mikrocontroller, Timer realisieren. Im Falle des Messadapters wird bereits ein Interrupt beim ankommen von Daten an der RS232 Schnittstelle ausgelöst so dass, der Interrupt für  den Timer und der Interrupt für ankommende Daten durchaus gleichzeitig auslösen könnten. Im allgemeinen Fall kann bei Mikrocontrollern nicht eingestellt werden welcher Interrupt bevorzugt behandelt wird. Auch wenn der UART mehrere Zeichen, in der Regel 4Byte, zwischenspeichern kann, ist dieser Puffer zu gering  da bei hohem Datenaufkommen das Abarbeiten der Interrupt Routine für den Timer zu lange dauert. Auch ist so nur eine begrenzte Anzahl an Timern realisierbar. Daher wurde bei dem Messadapter eine andere Realisierung für die Timer gewählt. Für die Timer wurde als Speicherstruktur eine verkettete Liste gewählt die den Aufbau wie in Abbildung \ref{fig:speicherstruktur} hat. Jedes Mal wenn ein Timer hinzugefügt werden soll wird er in die Liste nach dem Wert timebomb sortiert abgelegt.  Der Vorteil bei einer sortierten List ist, dass man bei der Suche nach einem abgelaufenem Timer nicht alle Elemente durchlaufen werden müssen sondern nur das erste Element betrachtet werden muss. Zusätzlich zu dieser Speicherstuktur wird eine globale Variable overflows durch einen Interrupt inkrementiert, dies ist betreffend Datenverlust nicht kritisch da hier nur ein Befehl ausgeführt wird und dann wieder zum ursprünglichen Programmablauf zurückgegangen wird. Der Interrupt ist so konfiguriert das overflows 4 mal pro Sekunde inkrementiert wird. Über die Funktion rtcGetTime64() wird  der Wert von overflow in ms umgerechnet zurückgegeben, womit man zu jeder Zeit abfragen kann wie lange in Millisekunden der Mikrocontroller bereits läuft. Nun wird bei jedem zyklischen Durchlauf der main-Methode die Funktion onTimer() aufgerufen. Die Funktion onTimer überprüft ob vom ersten Element in der geordneten Liste der eingetragene Zeitwert erreicht wurde oder nicht. Falls dieser erreicht wurde wird die Adresse der Funktion, welche in der Variable callback in jedem TimerElement gespeichert wird, zwischengspeichert. Daraufhin wird, um keinen Speicherplatz zu verlieren, das komplette TimerElement gelöscht. Jetzt kann die zum abgelaufenen Timer gehörende Callback-Funktion aufgerufen werden. Soll ein Timer kontinuiertlich nach einer bestimmten Zeitspanne auslösen muss in der Callback-Funktion ein neues TimerElement erstellt werden.
-Mit dieser Technik können keine hochpräzisen Timer realisert werden, da ein ablaufen eines Timers immer erst in der Funktion onTimer() bemerkt wird. Da bei dem Messadpater kein preemptives Scheduling verwendet  werden soll, ist diese technik ausreichend.
+Als Timer bezeichnet man eine Variable oder im Falle eines Mikrocontollers ein Register das immer in gleichen Zeitabstnden inkrementiert oder decrementiert wird. Bei  erreichen eines vorher definierten Wertes arbeitet man einen bestimmten Codeabschnitt ab. Der Zeitabschnitt in welchem der Wert gezhlt wird kann in der Regel eingestellt werden und ist meist ein Bruchteil des Systemtaktes. Ein vorher bestimmter Wert kann zum Beispiel ein Overflow des Registers sein und der angesprochene Codeabschnitt eine so genannte ISR (Interrupt Service Routine). Auf diese Weise lsst sich Interruptgesteuert sehr einfach ein bis mehrere, je nach Mikrocontroller, Timer realisieren. Im Falle des Messadapters wird bereits ein Interrupt beim ankommen von Daten an der RS232 Schnittstelle ausgelst so dass, der Interrupt fr  den Timer und der Interrupt fr ankommende Daten durchaus gleichzeitig auslsen knnten. Im allgemeinen Fall kann bei Mikrocontrollern nicht eingestellt werden welcher Interrupt bevorzugt behandelt wird. Auch wenn der UART mehrere Zeichen, in der Regel 4Byte, zwischenspeichern kann, ist dieser Puffer zu gering  da bei hohem Datenaufkommen das Abarbeiten der Interrupt Routine fr den Timer zu lange dauert. Auch ist so nur eine begrenzte Anzahl an Timern realisierbar. Daher wurde bei dem Messadapter eine andere Realisierung fr die Timer gewhlt. Fr die Timer wurde als Speicherstruktur eine verkettete Liste gewhlt die den Aufbau wie in Abbildung \ref{fig:speicherstruktur} hat. Jedes Mal wenn ein Timer hinzugefgt werden soll wird er in die Liste nach dem Wert timebomb sortiert abgelegt.  Der Vorteil bei einer sortierten List ist, dass man bei der Suche nach einem abgelaufenem Timer nicht alle Elemente durchlaufen werden mssen sondern nur das erste Element betrachtet werden muss. Zustzlich zu dieser Speicherstuktur wird eine globale Variable overflows durch einen Interrupt inkrementiert, dies ist betreffend Datenverlust nicht kritisch da hier nur ein Befehl ausgefhrt wird und dann wieder zum ursprnglichen Programmablauf zurckgegangen wird. Der Interrupt ist so konfiguriert das overflows 4 mal pro Sekunde inkrementiert wird. ber die Funktion rtcGetTime64() wird  der Wert von overflow in ms umgerechnet zurckgegeben, womit man zu jeder Zeit abfragen kann wie lange in Millisekunden der Mikrocontroller bereits luft. Nun wird bei jedem zyklischen Durchlauf der main-Methode die Funktion onTimer() aufgerufen. Die Funktion onTimer berprft ob vom ersten Element in der geordneten Liste der eingetragene Zeitwert erreicht wurde oder nicht. Falls dieser erreicht wurde wird die Adresse der Funktion, welche in der Variable callback in jedem TimerElement gespeichert wird, zwischengspeichert. Daraufhin wird, um keinen Speicherplatz zu verlieren, das komplette TimerElement gelscht. Jetzt kann die zum abgelaufenen Timer gehrende Callback-Funktion aufgerufen werden. Soll ein Timer kontinuiertlich nach einer bestimmten Zeitspanne auslsen muss in der Callback-Funktion ein neues TimerElement erstellt werden.
+Mit dieser Technik knnen keine hochprzisen Timer realisert werden, da ein ablaufen eines Timers immer erst in der Funktion onTimer() bemerkt wird. Da bei dem Messadpater kein preemptives Scheduling verwendet  werden soll, ist diese technik ausreichend.
 
 
 \begin{figure}[H]
@@ -572,13 +718,13 @@ Mit dieser Technik können keine hochpräzisen Timer realisert werden, da ein abla
 
 \subsubsection{Echtzeitverhalten}
 
-Das Echtzeitverhalten des Messadapters hängt stark von der Menge der ankommenden Daten an der seriellen Schnittstelle ab,
-da der Sendebuffer sofort per Ethernet gesendet wird falls die 150 Bytes voll sind. Ist die Menge der Daten allerdings eher gering werden die angekommenden Daten im Buffer maximal 500ms Sekunden gehalten und erst dann versendet, was ein erhebliches Delay bedeutet. Das sich ergebene Sendediagramm zeigt Abbildung \ref{fig:sendedia}. Man sieht hier deutlich wann die Pakete aufgrund des Timers bzw. aufrgund des hohen Datenaufkommens versendet werden. Dies ist genau dann der Fall wenn an der RS232 Schnittstelle mehr als 2400Bit/sec anfallen. Dieser Wert berechnet sich aus der Größe des Paketes, welches 150Bytes=1200Bit enthält, dividiert durch die Zeit welche in unserem Fall eine halbe Sekunde ist.
+Das Echtzeitverhalten des Messadapters hngt stark von der Menge der ankommenden Daten an der seriellen Schnittstelle ab,
+da der Sendebuffer sofort per Ethernet gesendet wird falls die 150 Bytes voll sind. Ist die Menge der Daten allerdings eher gering werden die angekommenden Daten im Buffer maximal 500ms Sekunden gehalten und erst dann versendet, was ein erhebliches Delay bedeutet. Das sich ergebene Sendediagramm zeigt Abbildung \ref{fig:sendedia}. Man sieht hier deutlich wann die Pakete aufgrund des Timers bzw. aufrgund des hohen Datenaufkommens versendet werden. Dies ist genau dann der Fall wenn an der RS232 Schnittstelle mehr als 2400Bit/sec anfallen. Dieser Wert berechnet sich aus der Gre des Paketes, welches 150Bytes=1200Bit enthlt, dividiert durch die Zeit welche in unserem Fall eine halbe Sekunde ist.
 \newline
 \newline
 
 Falls das Datenaufkommen gering ist aber an das Echtzeitverhalten hohe Anforderungen gestellt werden, ist die bisherige Behandlung der Daten eher
-unzureichend. Um diese Verzögerung, in der Elektrotechnik beziehungsweise Übertragungstechnik auch Jitter genannt, zu verringern wurde die obere Schranke von 150Bytes nicht mehr nur als Konstante im Sourcecode eingegeben sondern liegt als Wert im EEPROM und kann hier flexibel über den Konfigurationskanal eingestellt werden. Die Befehle zum einstellen sind wie in Tabelle \ref{tab:kommandos} noch erwähnt: "`:setSendLimit X?"' und "`:getSendLimit?"'.
+unzureichend. Um diese Verzgerung, in der Elektrotechnik beziehungsweise bertragungstechnik auch Jitter genannt, zu verringern wurde die obere Schranke von 150Bytes nicht mehr nur als Konstante im Sourcecode eingegeben sondern liegt als Wert im EEPROM und kann hier flexibel ber den Konfigurationskanal eingestellt werden. Die Befehle zum einstellen sind wie in Tabelle \ref{tab:kommandos} noch erwhnt: "`:setSendLimit X?"' und "`:getSendLimit?"'.
 Wenn der Wert jetzt auf 30Byts gestellt wird und es nur ein geringes Datenaufkommen gibt tritt das maximal auftretende Delay von einer halben Sekunde wesentlich seltener auf daher der Jitter wurde also verringert.
 
 
@@ -599,30 +745,30 @@ Wenn der Wert jetzt auf 30Byts gestellt wird und es nur ein geringes Datenaufkom
 
 \label{chapter:konfig}
 
-Da der Messadapter universell verwendet werden soll und man sich nicht schon beim programmieren des Mikrocontrollers sich für eine Messumgebung entscheiden müssen soll, wurde der Messadapter so erstellt das man seine Konfiguration jederzeit beliebig ändern kann.
-So kann zum einen bei der RS232-Schnittstelle jede Datenrate eingestellt oder auch die Anzahl der Daten- und Stopbits flexibel konfiguriert werden. Auch ist es möglich die Adresse und den Destination Port des Zielrechners für Daten im Betrieb zu ändern sowie die Mac-Adresse oder den Source-Port für die Pakete zum versenden. All dies kann einmal über die ttyS1 (RS232) oder auch über das Ethernet geschehen. Dazu wird im Identifier des RTP-Headers festgehalten um was für eine Art von Paket es sich handelt und dann entweder an die ttyS0(RS232)  wieder ausgegeben oder aber es wird der Konfigurationsbefehl vom Mikrocontroller dekodiert und umgesetzt. Falls Daten an der ttyS1-Schnittstelle ankommen werden diese Daten immer als Konfigurationsbefehle interpretiert. Dazu wurden von Martin Schwarz im Rahmen seiner Studienarbeit diverse Befehle erstellt und von mir um die folgenden Befehle noch erweitert.
+Da der Messadapter universell verwendet werden soll und man sich nicht schon beim programmieren des Mikrocontrollers sich fr eine Messumgebung entscheiden mssen soll, wurde der Messadapter so erstellt das man seine Konfiguration jederzeit beliebig ndern kann.
+So kann zum einen bei der RS232-Schnittstelle jede Datenrate eingestellt oder auch die Anzahl der Daten- und Stopbits flexibel konfiguriert werden. Auch ist es mglich die Adresse und den Destination Port des Zielrechners fr Daten im Betrieb zu ndern sowie die Mac-Adresse oder den Source-Port fr die Pakete zum versenden. All dies kann einmal ber die ttyS1 (RS232) oder auch ber das Ethernet geschehen. Dazu wird im Identifier des RTP-Headers festgehalten um was fr eine Art von Paket es sich handelt und dann entweder an die ttyS0(RS232)  wieder ausgegeben oder aber es wird der Konfigurationsbefehl vom Mikrocontroller dekodiert und umgesetzt. Falls Daten an der ttyS1-Schnittstelle ankommen werden diese Daten immer als Konfigurationsbefehle interpretiert. Dazu wurden von Martin Schwarz im Rahmen seiner Studienarbeit diverse Befehle erstellt und von mir um die folgenden Befehle noch erweitert.
 
 \vspace{1 cm}
 
 \begin{table}[H]
 
-\caption[Kommando-Übersicht]{Kommando-Übersicht}
+\caption[Kommando-bersicht]{Kommando-bersicht}
 \label{tab:kommandos}
 
 \begin{tabular}[H]{llll}\toprule
 Befehlsname  & Parameter   							& Kommentar und Beispiel\\ \midrule
-getParity    &   												& :getParity? Gibt die Parität (siehe Tabelle \ref{parity}) zurück   \\
-setParity    & Parität								  & :setParity 2? Setzt Parität auf : Enabled, Even Parity     \\
+getParity    &   												& :getParity? Gibt die Paritt (siehe Tabelle \ref{parity}) zurck   \\
+setParity    & Paritt								  & :setParity 2? Setzt Paritt auf : Enabled, Even Parity     \\
 \hline
-getStopBits  & 											    & :getStopBits? Gibt die Anzahl der Stopbits zurück   \\
+getStopBits  & 											    & :getStopBits? Gibt die Anzahl der Stopbits zurck   \\
 setStopBits  & Anzahl Stopbits					& :setStopBits 1? Setz die Anzahl der Stopbits auf 1 \\ 
 \hline
-getDataBits  &  												& :getDataBits? Gibt die Anzahl der Datenbits zurück \\ 
+getDataBits  &  												& :getDataBits? Gibt die Anzahl der Datenbits zurck \\ 
 setDataBits  & Anzahl Datenbits 				& :setDataBits 7? Setzt die Anzahl der Datenbits auf 7\\ 
 \hline
 getSendLimit  &  												& :getSendLimit? Gibt an ab welcher Datenmenge der\\
 							&													&  Sendbuffer versendet wird \\ 
-setSendLimit  & Anzahl Datenbits 				& :setSendLimit 60? Setzt die Größe des \\
+setSendLimit  & Anzahl Datenbits 				& :setSendLimit 60? Setzt die Gre des \\
 							&													&  Sendebuffer-Limits auf 60Bytes\\ 
 \hline
 getConfig    & 													& :getConfig? Liefert Gesamtkonfig. Siehe \ref{fig:getconfig}  \\ \bottomrule
@@ -663,8 +809,8 @@ Parity  & Parity Modus \\ \midrule
 
 \vspace{1 cm}
 
-Der Befehl "`setBaud X "` setzt wie in \ref{tab:kommandos} bereits beschreiben die Baudrate. Dabei wird nach der Dekodierung des Befehls zunächst
-geprüft ob es sich hier um eine gültige Baudrate handelt. Ist diese Überprüfung positiv wird im EEROM an der entsprechenden Stelle der neue Wert
+Der Befehl "`setBaud X "` setzt wie in \ref{tab:kommandos} bereits beschreiben die Baudrate. Dabei wird nach der Dekodierung des Befehls zunchst
+geprft ob es sich hier um eine gltige Baudrate handelt. Ist diese berprfung positiv wird im EEROM an der entsprechenden Stelle der neue Wert
 eingetragen. Nach einem Neustart des Messadapters wird der Wert dann wieder eingelesen und die eingegebene Baudrate benutzt.
 Was ein EEPROM ist und welche Werte hier vom Messadapter noch gespeichert werden wird in \ref{chp:eeprom} beschrieben.
 
@@ -683,12 +829,12 @@ Was ein EEPROM ist und welche Werte hier vom Messadapter noch gespeichert werden
 \subsubsection{EEPROM} 
 \label{chp:eeprom}
 
-EEPROM (engl. Abk. für electrically erasable programmable read-only memory, wörtlich elektrisch löschbarer programmierbarer Nur-Lese-Speicher) ist ein nichtflüchtiger, elektronischer Speicherbaustein, der häufigen Einsatz in eingebetteten Systemen findet, auch gängige Mikrocontroller wie die der ATMega-Reihe besitzen durchgängig interne EEPROM-Speicher.
-EEPROMs können byteweise beschrieben und gelöscht werden.
-FlashEEPROMs benötigen zwischen 1s und 1 ms für einen Schreibzyklus, wohingegen herkömmliche EEPROMs mit 1 ms bis 10 ms erheblich langsamer sind. Daher verwendet man EEPROMS bevorzugt, wenn einzelne Datenbytes in größeren Zeitabständen verändert und auch ohne Spannungs-Strom-Versorgung weiter gespeichert werden müssen, wie zum Beispiel bei den Konfigurationsdaten des Messadapters. Es werden alle 
-Konfigurationsdaten im EEPROM gespeichert die für den Einsatz des Messadapters wichtig sind. So werden Einstellungen wie die Baud-Rate der RS232-Schnittstelle oder die IP-Adresse des Netzwerkcontrollers nur selten geändert was den EEPROM dazu prädestiniert hierfür verwendet zu werden. 
+EEPROM (engl. Abk. fr electrically erasable programmable read-only memory, wrtlich elektrisch lschbarer programmierbarer Nur-Lese-Speicher) ist ein nichtflchtiger, elektronischer Speicherbaustein, der hufigen Einsatz in eingebetteten Systemen findet, auch gngige Mikrocontroller wie die der ATMega-Reihe besitzen durchgngig interne EEPROM-Speicher.
+EEPROMs knnen byteweise beschrieben und gelscht werden.
+FlashEEPROMs bentigen zwischen 1s und 1 ms fr einen Schreibzyklus, wohingegen herkmmliche EEPROMs mit 1 ms bis 10 ms erheblich langsamer sind. Daher verwendet man EEPROMS bevorzugt, wenn einzelne Datenbytes in greren Zeitabstnden verndert und auch ohne Spannungs-Strom-Versorgung weiter gespeichert werden mssen, wie zum Beispiel bei den Konfigurationsdaten des Messadapters. Es werden alle 
+Konfigurationsdaten im EEPROM gespeichert die fr den Einsatz des Messadapters wichtig sind. So werden Einstellungen wie die Baud-Rate der RS232-Schnittstelle oder die IP-Adresse des Netzwerkcontrollers nur selten gendert was den EEPROM dazu prdestiniert hierfr verwendet zu werden. 
 Der Messadapter legt seine Daten wie in Abbildung \ref{fig:eeprom} zu sehen ist ab.
-Ab der Adresse 0x100 liegen Daten die mit der Konfiguration des Netzwerkcontrollers zu tun haben, außer der Mac-Adresse welche ab der Adresse 0x200 abgelegt ist. Ab der Adresse 0x300 liegen dann alle benötigten Informationen um eine Verbindung über die RS232-Schnittstelle aufzubauen. Ab 0x400 sind dann noch nacheinander die Adressen der Zielrechner einmal für den Daten und zum anderen für 
+Ab der Adresse 0x100 liegen Daten die mit der Konfiguration des Netzwerkcontrollers zu tun haben, auer der Mac-Adresse welche ab der Adresse 0x200 abgelegt ist. Ab der Adresse 0x300 liegen dann alle bentigten Informationen um eine Verbindung ber die RS232-Schnittstelle aufzubauen. Ab 0x400 sind dann noch nacheinander die Adressen der Zielrechner einmal fr den Daten und zum anderen fr 
 
 
 \begin{figure}[H]
@@ -702,11 +848,11 @@ Ab der Adresse 0x100 liegen Daten die mit der Konfiguration des Netzwerkcontroll
 
 
 
-\subsubsection{Debugging über COM-Schnittstelle (ttyS1)}
+\subsubsection{Debugging ber COM-Schnittstelle (ttyS1)}
 
 hier noch ein Bild das da eine zweite COM ist
 
-Beim Debugging wir der Vorgang in der Softwareerstellung benannt bei dem es darum ein ausgemachtes Fehlverhalten(Bug) zu lokalisieren. Dabei gibt es verschiedene Vorgehensweisen die wohl am effektivsten und am längsten dauernde ist die den Code zeilenweise ausführen zulassen und dabei die Werte der Variablen zu betrachten. Dies ist nicht nur bei Software für den Computer möglich sondern auf auch für Mikrocontroller. Eine Möglichkeit ist es einen Debugger zu benutzen. Bei Mikrocontrollern von AVR kommt hier der JTAG in frage mit dessen Hilfe kann die Taktrate des Mikrocontrollers herabgesetzt werden und der Code Schritt für Schritt durchlaufen werden. Allerdings ist dies nicht bei bei jeder Softwareart praktikabel, beim Messadapter zum Beispiel läuft alle 50ms ein Timer ab. Will man jetzt den Code debuggen springt der Debugger ständig nur in den Code der durch den Timer ausgeführt wird. Daher kann beim Messadapter die Kommunikationsschnittstelle ttyS1 (RS232) nicht nur zum konfigurieren benutzt werden sondern es können auch an bestimmten Stellen im  Programm Meldungen abgegeben werden. Damit kann geprüft werden ob ein bestimmter Codeabschnitt überhaupt ausgeführt wird oder welchen Wert eine Variable zu welchem Zeitpunkt annimmt. Ein Beispiel bei welchem diese Verfahren erfolgreich angewandt wurde ist als Fehler beim Senden eines Paketes gesucht. Deshalb wurde in allen beteiligten Funktionen ein Funktionsaufruf zum debuggen integriert. Als Ergebnis kam dann die Antwort welche in Abbildung \ref{fig:debug-ausgabe} dargestellt ist. Man sieht hier, dass alle Debugaufrufe aus den Funktionen onSerial(),onCom0RecvBytes(), rtpSendCDPData(), onRtpRequest und onUdpRequest() erfolgreich aufgerufen wurden. In der Funktion onIP4Request() gab es allerdings zwei Debugaufrufe wie in Abbildung \ref{fig:debug-code} zu sehen ist. In dem Debug-Protokoll ist aber nur der erste Aufruf verzwichnet, was bedeutet, dass der Fehler arpLookupMacByIPv4() zu finden war.
+Beim Debugging wir der Vorgang in der Softwareerstellung benannt bei dem es darum ein ausgemachtes Fehlverhalten(Bug) zu lokalisieren. Dabei gibt es verschiedene Vorgehensweisen die wohl am effektivsten und am lngsten dauernde ist die den Code zeilenweise ausfhren zulassen und dabei die Werte der Variablen zu betrachten. Dies ist nicht nur bei Software fr den Computer mglich sondern auf auch fr Mikrocontroller. Eine Mglichkeit ist es einen Debugger zu benutzen. Bei Mikrocontrollern von AVR kommt hier der JTAG in frage mit dessen Hilfe kann die Taktrate des Mikrocontrollers herabgesetzt werden und der Code Schritt fr Schritt durchlaufen werden. Allerdings ist dies nicht bei bei jeder Softwareart praktikabel, beim Messadapter zum Beispiel luft alle 50ms ein Timer ab. Will man jetzt den Code debuggen springt der Debugger stndig nur in den Code der durch den Timer ausgefhrt wird. Daher kann beim Messadapter die Kommunikationsschnittstelle ttyS1 (RS232) nicht nur zum konfigurieren benutzt werden sondern es knnen auch an bestimmten Stellen im  Programm Meldungen abgegeben werden. Damit kann geprft werden ob ein bestimmter Codeabschnitt berhaupt ausgefhrt wird oder welchen Wert eine Variable zu welchem Zeitpunkt annimmt. Ein Beispiel bei welchem diese Verfahren erfolgreich angewandt wurde ist als Fehler beim Senden eines Paketes gesucht. Deshalb wurde in allen beteiligten Funktionen ein Funktionsaufruf zum debuggen integriert. Als Ergebnis kam dann die Antwort welche in Abbildung \ref{fig:debug-ausgabe} dargestellt ist. Man sieht hier, dass alle Debugaufrufe aus den Funktionen onSerial(),onCom0RecvBytes(), rtpSendCDPData(), onRtpRequest und onUdpRequest() erfolgreich aufgerufen wurden. In der Funktion onIP4Request() gab es allerdings zwei Debugaufrufe wie in Abbildung \ref{fig:debug-code} zu sehen ist. In dem Debug-Protokoll ist aber nur der erste Aufruf verzwichnet, was bedeutet, dass der Fehler arpLookupMacByIPv4() zu finden war.
 
 
 \vspace{1 cm}
@@ -736,10 +882,10 @@ Beim Debugging wir der Vorgang in der Softwareerstellung benannt bei dem es daru
 \subsubsection{Bootloader}
 
 
-Mikrocontroller können auf verschiedene Art und Weisen programmiert werden. Die am weitesten verbreite Art ist mithilfe eines Programmiergerätes (engl.: programmer). Mit diesem Programmiergerät können entweder über COM, USB oder auch Bussystemen wie CAN der Programmcode des Mikrocontrollers als Daten übertragen und im Flash werden. Der Nachteil dieser Programmiergeräte ist der das diese meist teuer sind und zudem nur speziell für einige wenige Mikrocontroller hergestellt wurden.
+Mikrocontroller knnen auf verschiedene Art und Weisen programmiert werden. Die am weitesten verbreite Art ist mithilfe eines Programmiergertes (engl.: programmer). Mit diesem Programmiergert knnen entweder ber COM, USB oder auch Bussystemen wie CAN der Programmcode des Mikrocontrollers als Daten bertragen und im Flash werden. Der Nachteil dieser Programmiergerte ist der das diese meist teuer sind und zudem nur speziell fr einige wenige Mikrocontroller hergestellt wurden.
 Ein weiter Weg den Mikrocontroller Flash zu beschreiben ist das Programmieren von einem selbst geschriebenen Bootloader. 
-Ein Bootloader ist ein Programm, dass in einem bestimmten Speicherbereich (Boot Loader Flash Section) liegt. Im falle eines Neustarts des Mikrocontroller erwartet dieser ein bestimmtes Ereignis wie zum Beispiel: Das Drücken eines Schalters oder bestimmte Daten über eine Kommunikationsschnitstelle wie der RS232 oder im Falle des Messadapters auf Daten vom Netzwerkcontroller kommend. Falls dieses Ereignis nicht eintritt wird der Mikrocontroller normal gestartet. Der Bootloader bekommt den Programmcode wiederum von Kommunikationsschnittstellen wie COM, USB, CAN oder auch von Speichermedien wie SD-Karten oder MMC Karte.
-Bei dem Messadapter wurde als Datenquelle das Netzwerk genommen. Das bedeutet, dass der Bootloader eine Netzwerkverbindung, in diesem Fall FTP-Verbindung,  aufnimmt und den Programmcode neuschreibt. Hier kann allerdings ein Problem auftreten, nämlich dann wenn der Bootloader sich selber überschreiben würde. Dieses Problem wird bei heutigen Mikrocontrollern derart gelöst, dass der Flashspeicher in zwei Bereiche aufgeteilt wird.
+Ein Bootloader ist ein Programm, dass in einem bestimmten Speicherbereich (Boot Loader Flash Section) liegt. Im falle eines Neustarts des Mikrocontroller erwartet dieser ein bestimmtes Ereignis wie zum Beispiel: Das Drcken eines Schalters oder bestimmte Daten ber eine Kommunikationsschnitstelle wie der RS232 oder im Falle des Messadapters auf Daten vom Netzwerkcontroller kommend. Falls dieses Ereignis nicht eintritt wird der Mikrocontroller normal gestartet. Der Bootloader bekommt den Programmcode wiederum von Kommunikationsschnittstellen wie COM, USB, CAN oder auch von Speichermedien wie SD-Karten oder MMC Karte.
+Bei dem Messadapter wurde als Datenquelle das Netzwerk genommen. Das bedeutet, dass der Bootloader eine Netzwerkverbindung, in diesem Fall FTP-Verbindung,  aufnimmt und den Programmcode neuschreibt. Hier kann allerdings ein Problem auftreten, nmlich dann wenn der Bootloader sich selber berschreiben wrde. Dieses Problem wird bei heutigen Mikrocontrollern derart gelst, dass der Flashspeicher in zwei Bereiche aufgeteilt wird.
 
 
 
@@ -755,9 +901,9 @@ Bei dem Messadapter wurde als Datenquelle das Netzwerk genommen. Das bedeutet, d
 
 
 
-Es gibt zum einen den Bereich für den Programmcode der Anwendung (Application Flash Section) und zum anderen den Bereich für den Bootloader (Boot Loader Flash Section). 
-Dies eröffnet die Möglichkeit, den Programm-Flash während der Laufzeit vom Bootloader aus zu manipulieren.
-In dem Programmablaufplan \ref{fig:bootloader} ist zu sehen wie der Bootloader sich in das gesamte Programm des Mikrocontrollers einfügt. Zunächst wird ein Timer erstellt der nach 10 Sekunden ausgelöst wird. Falls der Timer auslöst werden ab diesem Zeitpunkt keine FTP-Verbindungen mehr angenommen. Falls vor diesen 10 Sekunden eine FTP-Verbindung zu dem Messadapter hergestellt wird, muss zunächst der Timer außer Kraft gesetzt werden. Daraufhin muss unterschieden werden ob die daraufhin ankommenden Pakete Daten für den Applikation Flash sind oder als Daten im EEPROM abgelegt werden soll. Dies geschieht anhand des im ersten Paket mitgelieferten Dateinamen. Lautet der Dateiname "`"' werden die Daten in den Programmspeicher (Application Section) geschrieben. Lautet er hingegen "`"' wird mit den Daten das komplette EEPROM mit neuen Werten bespielt. Nun werden die Daten der  darauf folgenden Pakete im gewünschten Speicher solange abgelegt bis alle Daten übertragen wurden. Nach Abschluss des Datentransfers führt der Mikrocontroller einen Reset durch und startet danach mit der neuen oder aktualisierten Anwendung, bzw. mit der neuen EEPROM-Belegung neu.
+Es gibt zum einen den Bereich fr den Programmcode der Anwendung (Application Flash Section) und zum anderen den Bereich fr den Bootloader (Boot Loader Flash Section). 
+Dies erffnet die Mglichkeit, den Programm-Flash whrend der Laufzeit vom Bootloader aus zu manipulieren.
+In dem Programmablaufplan \ref{fig:bootloader} ist zu sehen wie der Bootloader sich in das gesamte Programm des Mikrocontrollers einfgt. Zunchst wird ein Timer erstellt der nach 10 Sekunden ausgelst wird. Falls der Timer auslst werden ab diesem Zeitpunkt keine FTP-Verbindungen mehr angenommen. Falls vor diesen 10 Sekunden eine FTP-Verbindung zu dem Messadapter hergestellt wird, muss zunchst der Timer auer Kraft gesetzt werden. Daraufhin muss unterschieden werden ob die daraufhin ankommenden Pakete Daten fr den Applikation Flash sind oder als Daten im EEPROM abgelegt werden soll. Dies geschieht anhand des im ersten Paket mitgelieferten Dateinamen. Lautet der Dateiname "`"' werden die Daten in den Programmspeicher (Application Section) geschrieben. Lautet er hingegen "`"' wird mit den Daten das komplette EEPROM mit neuen Werten bespielt. Nun werden die Daten der  darauf folgenden Pakete im gewnschten Speicher solange abgelegt bis alle Daten bertragen wurden. Nach Abschluss des Datentransfers fhrt der Mikrocontroller einen Reset durch und startet danach mit der neuen oder aktualisierten Anwendung, bzw. mit der neuen EEPROM-Belegung neu.
 
 \begin{figure}[H]
 	\centering
